@@ -5,7 +5,7 @@
   
 
 
-<html class="theme-next pisces use-motion" lang="">
+<html class="theme-next pisces use-motion" lang="zh-Hans">
 <head>
   <meta charset="UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -96,7 +96,7 @@ how?1.写一个自定义类继承View;2.在values文件夹中创建attrs.xml文�
 <meta property="og:type" content="article">
 <meta property="og:title" content="自定义View_2">
 <meta property="og:url" content="http://yoursite.com/2017/03/06/customView-2/index.html">
-<meta property="og:site_name" content="Hexo">
+<meta property="og:site_name" content="lorensong">
 <meta property="og:description" content="why?效果图:
 how?1.写一个自定义类继承View;2.在values文件夹中创建attrs.xml文件(这是自定义的属性)3.在自定义类的构造中获取到attrs的属性值;4.重写onMeasure();5.重写onDraw();6.在相应的布局文件中使用自定义view;
 具体实现
@@ -127,7 +127,7 @@ how?1.写一个自定义类继承View;2.在values文件夹中创建attrs.xml文�
     motion: true,
     duoshuo: {
       userId: '0',
-      author: 'Author'
+      author: '博主'
     },
     algolia: {
       applicationID: '',
@@ -147,10 +147,10 @@ how?1.写一个自定义类继承View;2.在values文件夹中创建attrs.xml文�
 
 
 
-  <title> 自定义View_2 | Hexo </title>
+  <title> 自定义View_2 | lorensong </title>
 </head>
 
-<body itemscope itemtype="http://schema.org/WebPage" lang="">
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
 
   
 
@@ -183,12 +183,12 @@ how?1.写一个自定义类继承View;2.在values文件夹中创建attrs.xml文�
     <div class="custom-logo-site-title">
       <a href="/"  class="brand" rel="start">
         <span class="logo-line-before"><i></i></span>
-        <span class="site-title">Hexo</span>
+        <span class="site-title">lorensong</span>
         <span class="logo-line-after"><i></i></span>
       </a>
     </div>
       
-        <p class="site-subtitle"></p>
+        <p class="site-subtitle">If you love life, life will love you back.</p>
       
   </div>
 
@@ -213,7 +213,7 @@ how?1.写一个自定义类继承View;2.在values文件夹中创建attrs.xml文�
             
               <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
             
-            Startseite
+            首页
           </a>
         </li>
       
@@ -223,7 +223,7 @@ how?1.写一个自定义类继承View;2.在values文件夹中创建attrs.xml文�
             
               <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
             
-            Kategorien
+            分类
           </a>
         </li>
       
@@ -233,7 +233,7 @@ how?1.写一个自定义类继承View;2.在values文件夹中创建attrs.xml文�
             
               <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
             
-            Über
+            关于
           </a>
         </li>
       
@@ -243,7 +243,7 @@ how?1.写一个自定义类继承View;2.在values文件夹中创建attrs.xml文�
             
               <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
             
-            Archiv
+            归档
           </a>
         </li>
       
@@ -253,7 +253,7 @@ how?1.写一个自定义类继承View;2.在values文件夹中创建attrs.xml文�
             
               <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
             
-            Tags
+            标签
           </a>
         </li>
       
@@ -263,7 +263,7 @@ how?1.写一个自定义类继承View;2.在values文件夹中创建attrs.xml文�
             
               <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
             
-            Commonweal 404
+            公益404
           </a>
         </li>
       
@@ -299,13 +299,13 @@ how?1.写一个自定义类继承View;2.在values文件夹中创建attrs.xml文�
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/03/06/customView-2/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="John Doe">
+      <meta itemprop="name" content="lorensong">
       <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="image" content="/images/avatar.jpg">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
+      <meta itemprop="name" content="lorensong">
     </span>
 
     
@@ -330,9 +330,9 @@ how?1.写一个自定义类继承View;2.在values文件夹中创建attrs.xml文�
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Veröffentlicht am</span>
+                <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-03-06T17:54:44+08:00">
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-06T17:54:44+08:00">
                 2017-03-06
               </time>
             
@@ -624,10 +624,10 @@ protected void onDraw(Canvas canvas) {
       
         <ul class="sidebar-nav motion-element">
           <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
-            Inhaltsverzeichnis
+            文章目录
           </li>
           <li class="sidebar-nav-overview" data-target="site-overview">
-            Übersicht
+            站点概览
           </li>
         </ul>
       
@@ -635,11 +635,11 @@ protected void onDraw(Canvas canvas) {
       <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
-               src="/images/avatar.gif"
-               alt="John Doe" />
-          <p class="site-author-name" itemprop="name">John Doe</p>
+               src="/images/avatar.jpg"
+               alt="lorensong" />
+          <p class="site-author-name" itemprop="name">lorensong</p>
            
-              <p class="site-description motion-element" itemprop="description"></p>
+              <p class="site-description motion-element" itemprop="description">If you love life, life will love you back.</p>
           
         </div>
         <nav class="site-state motion-element">
@@ -648,7 +648,7 @@ protected void onDraw(Canvas canvas) {
             <div class="site-state-item site-state-posts">
               <a href="/archives">
                 <span class="site-state-item-count">19</span>
-                <span class="site-state-item-name">Artikel</span>
+                <span class="site-state-item-name">日志</span>
               </a>
             </div>
           
@@ -659,7 +659,7 @@ protected void onDraw(Canvas canvas) {
             <div class="site-state-item site-state-categories">
               <a href="/categories/index.html">
                 <span class="site-state-item-count">2</span>
-                <span class="site-state-item-name">Kategorien</span>
+                <span class="site-state-item-name">分类</span>
               </a>
             </div>
           
@@ -670,7 +670,7 @@ protected void onDraw(Canvas canvas) {
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
                 <span class="site-state-item-count">8</span>
-                <span class="site-state-item-name">Tags</span>
+                <span class="site-state-item-name">标签</span>
               </a>
             </div>
           
@@ -731,16 +731,16 @@ protected void onDraw(Canvas canvas) {
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
-  <span class="author" itemprop="copyrightHolder">John Doe</span>
+  <span class="author" itemprop="copyrightHolder">lorensong</span>
 </div>
 
 
 <div class="powered-by">
-  Erstellt mit  <a class="theme-link" href="https://hexo.io">Hexo</a>
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
 </div>
 
 <div class="theme-info">
-  Theme -
+  主题 -
   <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
     NexT.Pisces
   </a>
