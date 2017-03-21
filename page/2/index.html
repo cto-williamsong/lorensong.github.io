@@ -280,6 +280,1013 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/03/07/customView-4/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="lorensong">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="lorensong">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/03/07/customView-4/" itemprop="url">
+                  自定义View-4
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-07T17:16:59+08:00">
+                2017-03-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="why"><a href="#why" class="headerlink" title="why?"></a>why?</h3><h3 id="how"><a href="#how" class="headerlink" title="how?"></a>how?</h3><p>1.自定义类继承View<br>2.在包名/values文件夹中创建attrs.xml文件<br>3.在自定义类中获取相应的属性值<br>4.重写onMeasure();[不需要]<br>5.重写ondraw();<br>6.在相应的布局文件中使用.<br>7.根据手势设置音量大小</p>
+<h3 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h3><p>1.自定义类(省略);<br>2.创建attrs.xml文件<br><em>分析:</em>需要中间图片一张,音量有和无的颜色,音量的宽度,音量的点的个数,音量的间隙大小  </p>
+<pre><code>&lt;attr name=&quot;ValumefirstColor&quot; format=&quot;color&quot;/&gt;
+&lt;attr name=&quot;ValumeSecondColor&quot; format=&quot;color&quot;/&gt;
+&lt;attr name=&quot;ValumeCircleWidth&quot; format=&quot;dimension&quot;/&gt;
+&lt;attr name=&quot;ValumeDotCount&quot; format=&quot;integer&quot;/&gt;
+&lt;attr name=&quot;ValumeSplitSize&quot; format=&quot;integer&quot;/&gt;
+&lt;attr name=&quot;Valumebg&quot; format=&quot;reference&quot;/&gt;
+
+&lt;declare-styleable name=&quot;CustomValumeView&quot;&gt;
+    &lt;attr name=&quot;ValumefirstColor&quot;/&gt;
+    &lt;attr name=&quot;ValumeSecondColor&quot;/&gt;
+    &lt;attr name=&quot;ValumeCircleWidth&quot;/&gt;
+    &lt;attr name=&quot;ValumeDotCount&quot;/&gt;
+    &lt;attr name=&quot;ValumeSplitSize&quot;/&gt;
+    &lt;attr name=&quot;Valumebg&quot;/&gt;
+&lt;/declare-styleable&gt;
+</code></pre><p>3.自定义类获取属性值</p>
+<pre><code>private void initView(Context context, AttributeSet attrs, int defStyleAttr) {
+    TypedArray typedArray = context.getTheme()
+            .obtainStyledAttributes(attrs, R.styleable.CustomValumeView, defStyleAttr, 0);
+    int indexCount = typedArray.getIndexCount();
+    for (int i = 0; i &lt; indexCount; i++) {
+        int attr = typedArray.getIndex(i);
+        switch (attr) {
+
+            case R.styleable.CustomValumeView_ValumefirstColor:
+                mFirstColor = typedArray.getColor(attr, Color.BLACK);
+                break;
+            case R.styleable.CustomValumeView_ValumeSecondColor:
+                mSecondColor = typedArray.getColor(attr, Color.BLUE);
+                break;
+            case R.styleable.CustomValumeView_Valumebg:
+                mImage = BitmapFactory.decodeResource(getResources(), typedArray.getResourceId(attr, 0));
+                break;
+            case R.styleable.CustomValumeView_ValumeCircleWidth:
+                mCircleWidth = typedArray.getDimensionPixelSize(attr, (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX, 16, getResources().getDisplayMetrics()));
+                break;
+            case R.styleable.CustomValumeView_ValumeDotCount:
+                mDotCount = typedArray.getInt(attr, 20);//默认值
+                break;
+            case R.styleable.CustomValumeView_ValumeSplitSize:
+                mSplitSize = typedArray.getInt(attr, 20);
+                break;
+            default:
+                break;
+        }
+
+    }
+    typedArray.recycle();
+    mPaint = new Paint();
+    mRectF = new RectF();
+}
+</code></pre><p>5.重写onDraw();</p>
+<pre><code>@Override
+protected void onDraw(Canvas canvas) {
+    mPaint.setAntiAlias(true);//消除锯齿
+    mPaint.setStrokeWidth(mCircleWidth);//设置音量宽度
+    mPaint.setStrokeCap(Paint.Cap.ROUND);//设置线段断开的地方是圆头
+    mPaint.setStyle(Paint.Style.STROKE);//空心
+    int center = getWidth() / 2;//获取圆心坐标
+    int radius = center - mCircleWidth / 2;//半径
+    drawValumePiece(canvas, center, radius);
+    drawImage(canvas, radius);
+}
+//画出内部的音量图片
+private void drawImage(Canvas canvas, int radius) {
+    //计算内切正方形的位置
+    int relRadius = radius - mCircleWidth / 2;//获取内圆半径
+    //内切正方形的距离顶部 = mCircleWidth + relRadius - √2 / 2
+    mRectF.left = (int) ((relRadius - Math.sqrt(2) * 1.0f / 2 * relRadius) + mCircleWidth);
+    //内切正方形的距离左边 = mCircleWidth + relRadius - √2 / 2
+    mRectF.top = (int) ((relRadius - Math.sqrt(2) * 1.0f / 2 * relRadius) + mCircleWidth);
+
+    mRectF.bottom = (int) (mRectF.left + Math.sqrt(2) * relRadius);
+    mRectF.right = (int) (mRectF.left + Math.sqrt(2) * relRadius);
+
+    //设置图片到中心,如果图片宽度太小,就设置到中间
+    if (mImage.getWidth() &lt; Math.sqrt(2) * relRadius) {
+        mRectF.left = (int) (mRectF.left + Math.sqrt(2) * relRadius * 1.0f / 2 - mImage.getWidth() * 1.0f / 2);
+        mRectF.top = (int) (mRectF.top + Math.sqrt(2) * relRadius * 1.0f / 2 - mImage.getHeight() * 1.0f / 2);
+        mRectF.right = (mRectF.left + mImage.getWidth());
+        mRectF.bottom = (mRectF.top + mImage.getHeight());
+    }
+    canvas.drawBitmap(mImage, null, mRectF, mPaint);
+}
+//主要用来画旁边小块
+private void drawValumePiece(Canvas canvas, int center, int radius) {
+    //根据需要画出小快递的个数和间隙算出每个小块所应当占用的比例*360;
+    float itemSize = (360 * 1.0f - mDotCount * mSplitSize) / mDotCount;
+    //定义圆环的界限的矩形,外接矩形
+    RectF oval = new RectF(center - radius, center - radius, center + radius, center + radius);
+    mPaint.setColor(mFirstColor);//设置圆环颜色
+    for (int i = 0; i &lt; mDotCount; i++) {
+        canvas.drawArc(oval, i * (itemSize + mSplitSize), itemSize, false, mPaint);
+    }
+    mPaint.setColor(mSecondColor);
+    for (int i = 0; i &lt; mCurrentCount; i++) {
+        canvas.drawArc(oval, i * (itemSize + mSplitSize), itemSize, false, mPaint);
+    }
+}
+</code></pre><p>6.在布局文件中使用</p>
+<pre><code>&lt;LinearLayout
+xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
+xmlns:custom=&quot;http://schemas.android.com/apk/res-auto&quot;
+android:id=&quot;@+id/activity_main&quot;
+android:layout_width=&quot;match_parent&quot;
+android:layout_height=&quot;match_parent&quot;
+android:orientation=&quot;vertical&quot;&gt;
+&lt;com.loren.customview.view.CustomValumeView
+    android:layout_width=&quot;100dp&quot;
+    android:layout_height=&quot;100dp&quot;
+    custom:ValumefirstColor=&quot;#4400ff&quot;
+    custom:ValumeSecondColor=&quot;#992255&quot;
+    custom:ValumeCircleWidth=&quot;3dp&quot;
+    custom:ValumeDotCount=&quot;50&quot;
+    custom:ValumeSplitSize=&quot;5&quot;
+    custom:Valumebg=&quot;@mipmap/ic_launcher&quot;/&gt;
+&lt;com.loren.customview.view.CustomValumeView
+    android:layout_width=&quot;200dp&quot;
+    android:layout_height=&quot;200dp&quot;
+    custom:ValumefirstColor=&quot;#4400ff&quot;
+    custom:ValumeSecondColor=&quot;#992255&quot;
+    custom:ValumeCircleWidth=&quot;3dp&quot;
+    android:layout_gravity=&quot;center&quot;
+    custom:ValumeDotCount=&quot;30&quot;
+    custom:ValumeSplitSize=&quot;5&quot;
+    custom:Valumebg=&quot;@mipmap/p1&quot;/&gt;
+&lt;/LinearLayout&gt;
+</code></pre><p>7.添加手势监听<br>当我们手机上下移动的时候,会指定增加或减少</p>
+<pre><code>//点击添加
+public void up() {
+    if (mCurrentCount &lt; mDotCount) {
+        mCurrentCount++;
+    }
+
+    postInvalidate();
+}
+
+public void down() {
+    if (mCurrentCount &gt; 0) {
+        mCurrentCount--;
+    }
+    postInvalidate();
+}
+
+private int mDownY;
+
+@Override
+public boolean onTouchEvent(MotionEvent event) {
+    switch (event.getAction()) {
+
+        case MotionEvent.ACTION_DOWN:
+            mDownY = (int) event.getY();
+            mLastMoveY = mDownY;
+            break;
+        case MotionEvent.ACTION_MOVE:
+            mCurrentMoveY = (int) event.getY();
+            mDifY = mCurrentMoveY - mLastMoveY;
+            //用5做判断是为了减小方块着色的速度
+            if(mDifY &gt; 5) {
+                up();
+            }else if(mDifY &lt; -5) {
+                down();
+            }
+            mLastMoveY = mCurrentMoveY;
+            break;
+
+        default:
+            break;
+    }
+
+    return true;
+}
+</code></pre><h3 id="备注"><a href="#备注" class="headerlink" title="备注"></a>备注</h3><h3 id="所有代码"><a href="#所有代码" class="headerlink" title="所有代码"></a>所有代码</h3><pre><code>public class CustomValumeView extends View {
+
+private Paint  mPaint;
+private int    mFirstColor;
+private int    mSecondColor;
+private Bitmap mImage;
+private int    mCircleWidth;
+private int    mDotCount;
+private int    mSplitSize;//每个方块之间的间隙
+private RectF  mRectF;
+private int    mCurrentCount;//当前的数量;
+private int    mCurrentMoveY;
+private int    mDifY;
+private int mLastMoveY;
+
+public CustomValumeView(Context context) {
+    this(context, null);
+}
+
+public CustomValumeView(Context context, AttributeSet attrs) {
+    this(context, attrs, 0);
+}
+
+public CustomValumeView(Context context, AttributeSet attrs, int defStyleAttr) {
+    super(context, attrs, defStyleAttr);
+    initView(context, attrs, defStyleAttr);
+}
+
+private void initView(Context context, AttributeSet attrs, int defStyleAttr) {
+    TypedArray typedArray = context.getTheme()
+            .obtainStyledAttributes(attrs, R.styleable.CustomValumeView, defStyleAttr, 0);
+    int indexCount = typedArray.getIndexCount();
+    for (int i = 0; i &lt; indexCount; i++) {
+        int attr = typedArray.getIndex(i);
+        switch (attr) {
+
+            case R.styleable.CustomValumeView_ValumefirstColor:
+                mFirstColor = typedArray.getColor(attr, Color.BLACK);
+                break;
+            case R.styleable.CustomValumeView_ValumeSecondColor:
+                mSecondColor = typedArray.getColor(attr, Color.BLUE);
+                break;
+            case R.styleable.CustomValumeView_Valumebg:
+                mImage = BitmapFactory.decodeResource(getResources(), typedArray.getResourceId(attr, 0));
+                break;
+            case R.styleable.CustomValumeView_ValumeCircleWidth:
+                mCircleWidth = typedArray.getDimensionPixelSize(attr, (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX, 16, getResources().getDisplayMetrics()));
+                break;
+            case R.styleable.CustomValumeView_ValumeDotCount:
+                mDotCount = typedArray.getInt(attr, 20);//默认值
+                break;
+            case R.styleable.CustomValumeView_ValumeSplitSize:
+                mSplitSize = typedArray.getInt(attr, 20);
+                break;
+            default:
+                break;
+        }
+
+    }
+    typedArray.recycle();
+    mPaint = new Paint();
+    mRectF = new RectF();
+}
+
+@Override
+protected void onDraw(Canvas canvas) {
+    mPaint.setAntiAlias(true);//消除锯齿
+    mPaint.setStrokeWidth(mCircleWidth);//设置音量宽度
+    mPaint.setStrokeCap(Paint.Cap.ROUND);//设置线段断开的地方是圆头
+    mPaint.setStyle(Paint.Style.STROKE);//空心
+    int center = getWidth() / 2;//获取圆心坐标
+    int radius = center - mCircleWidth / 2;//半径
+    drawValumePiece(canvas, center, radius);
+    drawImage(canvas, radius);
+}
+//画出内部的音量图片
+private void drawImage(Canvas canvas, int radius) {
+    //计算内切正方形的位置
+    int relRadius = radius - mCircleWidth / 2;//获取内圆半径
+    //内切正方形的距离顶部 = mCircleWidth + relRadius - √2 / 2
+    mRectF.left = (int) ((relRadius - Math.sqrt(2) * 1.0f / 2 * relRadius) + mCircleWidth);
+    //内切正方形的距离左边 = mCircleWidth + relRadius - √2 / 2
+    mRectF.top = (int) ((relRadius - Math.sqrt(2) * 1.0f / 2 * relRadius) + mCircleWidth);
+
+    mRectF.bottom = (int) (mRectF.left + Math.sqrt(2) * relRadius);
+    mRectF.right = (int) (mRectF.left + Math.sqrt(2) * relRadius);
+
+    //设置图片到中心,如果图片宽度太小,就设置到中间
+    if (mImage.getWidth() &lt; Math.sqrt(2) * relRadius) {
+        mRectF.left = (int) (mRectF.left + Math.sqrt(2) * relRadius * 1.0f / 2 - mImage.getWidth() * 1.0f / 2);
+        mRectF.top = (int) (mRectF.top + Math.sqrt(2) * relRadius * 1.0f / 2 - mImage.getHeight() * 1.0f / 2);
+        mRectF.right = (mRectF.left + mImage.getWidth());
+        mRectF.bottom = (mRectF.top + mImage.getHeight());
+    }
+    canvas.drawBitmap(mImage, null, mRectF, mPaint);
+}
+//主要用来画旁边小块
+private void drawValumePiece(Canvas canvas, int center, int radius) {
+    //根据需要画出小快递的个数和间隙算出每个小块所应当占用的比例*360;
+    float itemSize = (360 * 1.0f - mDotCount * mSplitSize) / mDotCount;
+    //定义圆环的界限的矩形,外接矩形
+    RectF oval = new RectF(center - radius, center - radius, center + radius, center + radius);
+    mPaint.setColor(mFirstColor);//设置圆环颜色
+    for (int i = 0; i &lt; mDotCount; i++) {
+        canvas.drawArc(oval, i * (itemSize + mSplitSize), itemSize, false, mPaint);
+    }
+    mPaint.setColor(mSecondColor);
+    for (int i = 0; i &lt; mCurrentCount; i++) {
+        canvas.drawArc(oval, i * (itemSize + mSplitSize), itemSize, false, mPaint);
+    }
+}
+
+//点击添加
+public void up() {
+    if (mCurrentCount &lt; mDotCount) {
+        mCurrentCount++;
+    }
+
+    postInvalidate();
+}
+
+public void down() {
+    if (mCurrentCount &gt; 0) {
+        mCurrentCount--;
+    }
+    postInvalidate();
+}
+
+private int mDownY;
+
+@Override
+public boolean onTouchEvent(MotionEvent event) {
+    switch (event.getAction()) {
+
+        case MotionEvent.ACTION_DOWN:
+            mDownY = (int) event.getY();
+            mLastMoveY = mDownY;
+            break;
+        case MotionEvent.ACTION_MOVE:
+            mCurrentMoveY = (int) event.getY();
+            mDifY = mCurrentMoveY - mLastMoveY;
+            //用5做判断是为了减小方块着色的速度
+            if(mDifY &gt; 5) {
+                up();
+            }else if(mDifY &lt; -5) {
+                down();
+            }
+            mLastMoveY = mCurrentMoveY;
+            break;
+
+        default:
+            break;
+    }
+
+    return true;
+}
+}
+</code></pre><hr>
+<h3 id="参看文档"><a href="#参看文档" class="headerlink" title="参看文档"></a>参看文档</h3><p><a href="http://blog.csdn.net/lmj623565791/article/details/24529807" target="_blank" rel="external">Android 自定义View (四) 视频音量调控</a></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/03/07/customView-3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="lorensong">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="lorensong">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/03/07/customView-3/" itemprop="url">
+                  自定义View-3
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-07T12:08:39+08:00">
+                2017-03-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index">
+                    <span itemprop="name">Android</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="why"><a href="#why" class="headerlink" title="why?"></a>why?</h3><p><img width="" height="" align="center" src="customView-3\why_realize_result_2017-3-7.png" alt="why_realize_result_2017-3-7"></p>
+<h3 id="how"><a href="#how" class="headerlink" title="how?"></a>how?</h3><p><em>老司机-老套路-老路线:</em><br>1.自定义一个类继承View<br>2.在包名/values文件夹中创建attrs.xml文件<br>3.在自定义的类中获取attrs中的属性<br>4.重写onMeasure(); <em>不需要</em><br>5.重写ondraw();<br>6.在相应的布局文件是使用View;  </p>
+<h3 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h3><p>1.自定义View类:<br>省略<br>2.创建attrs文件:</p>
+<pre><code><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">attr</span> <span class="attr">name</span>=<span class="string">"firstColor"</span> <span class="attr">format</span>=<span class="string">"color"</span>/&gt;</span></div><div class="line">   <span class="tag">&lt;<span class="name">attr</span> <span class="attr">name</span>=<span class="string">"secondColor"</span> <span class="attr">format</span>=<span class="string">"color"</span>/&gt;</span></div><div class="line">   <span class="tag">&lt;<span class="name">attr</span> <span class="attr">name</span>=<span class="string">"circleWidth"</span> <span class="attr">format</span>=<span class="string">"dimension"</span>/&gt;</span></div><div class="line">   <span class="tag">&lt;<span class="name">attr</span> <span class="attr">name</span>=<span class="string">"speed"</span> <span class="attr">format</span>=<span class="string">"integer"</span>/&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">declare-styleable</span> <span class="attr">name</span>=<span class="string">"CustomProgressBar"</span>&gt;</span></div><div class="line">       <span class="tag">&lt;<span class="name">attr</span> <span class="attr">name</span>=<span class="string">"firstColor"</span>/&gt;</span></div><div class="line">       <span class="tag">&lt;<span class="name">attr</span> <span class="attr">name</span>=<span class="string">"secondColor"</span>/&gt;</span></div><div class="line">       <span class="tag">&lt;<span class="name">attr</span> <span class="attr">name</span>=<span class="string">"circleWidth"</span>/&gt;</span></div><div class="line">       <span class="tag">&lt;<span class="name">attr</span> <span class="attr">name</span>=<span class="string">"speed"</span>/&gt;</span></div><div class="line">       <span class="tag">&lt;/<span class="name">declare-styleable</span>&gt;</span></div></pre></td></tr></table></figure>
+</code></pre><p>3.获取attrs文件的属性</p>
+<pre><code><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">initView</span><span class="params">(Context context, AttributeSet attrs, <span class="keyword">int</span> defStyleAttr)</span> </span>&#123;</div><div class="line">	TypedArray typedArray = context.getTheme()</div><div class="line">			.obtainStyledAttributes(attrs, R.styleable.CustomProgressBar, defStyleAttr, <span class="number">0</span>);</div><div class="line">	<span class="keyword">int</span> indexCount = typedArray.getIndexCount();</div><div class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; indexCount; i++) &#123;</div><div class="line">		<span class="keyword">int</span> attr = typedArray.getIndex(i);</div><div class="line">		<span class="keyword">switch</span> (attr) &#123;</div><div class="line"></div><div class="line">			<span class="keyword">case</span> R.styleable.CustomProgressBar_firstColor:</div><div class="line">				mFirstColor = typedArray.getColor(attr, Color.BLACK);</div><div class="line">				<span class="keyword">break</span>;</div><div class="line">			<span class="keyword">case</span> R.styleable.CustomProgressBar_secondColor:</div><div class="line">				mSecondColor = typedArray.getColor(attr, Color.BLUE);</div><div class="line">				<span class="keyword">break</span>;</div><div class="line">			<span class="keyword">case</span> R.styleable.CustomProgressBar_circleWidth:</div><div class="line">				mCircleWidth = typedArray.getDimensionPixelSize(attr, (<span class="keyword">int</span>) TypedValue.applyDimension</div><div class="line">					(TypedValue.COMPLEX_UNIT_PX, <span class="number">20</span>, getResources().getDisplayMetrics()));</div><div class="line">				<span class="keyword">break</span>;</div><div class="line">			<span class="keyword">case</span> R.styleable.CustomProgressBar_speed:</div><div class="line">				mSpeed = typedArray.getInt(attr, <span class="number">20</span>);</div><div class="line">				<span class="keyword">break</span>;</div><div class="line">			<span class="keyword">default</span>:</div><div class="line">				<span class="keyword">new</span> IllegalArgumentException(<span class="string">"参数错误"</span>);</div><div class="line">				<span class="keyword">break</span>;</div><div class="line">		&#125;</div><div class="line"></div><div class="line">	&#125;</div><div class="line">	typedArray.recycle();</div><div class="line">	mPaint = <span class="keyword">new</span> Paint();</div><div class="line">	<span class="comment">//绘图线程</span></div><div class="line">	<span class="keyword">new</span> Thread(<span class="keyword">new</span> Runnable() &#123;</div><div class="line">		<span class="meta">@Override</span></div><div class="line">		<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">			<span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</div><div class="line">				mProgress++;</div><div class="line">				<span class="keyword">if</span>(mProgress == <span class="number">360</span>) &#123;</div><div class="line">					<span class="comment">//在进行到360度的时候要改变颜色</span></div><div class="line">					mProgress = <span class="number">0</span>;</div><div class="line">					<span class="keyword">if</span>(!isNext) &#123;</div><div class="line">						isNext = <span class="keyword">true</span>;</div><div class="line">					&#125;<span class="keyword">else</span> &#123;</div><div class="line">						isNext = <span class="keyword">false</span>;</div><div class="line">					&#125;</div><div class="line">				&#125;</div><div class="line">				postInvalidate();</div><div class="line">				<span class="keyword">try</span> &#123;</div><div class="line">					<span class="comment">//延迟</span></div><div class="line">					Thread.sleep(mSpeed);</div><div class="line">				&#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</div><div class="line">					e.printStackTrace();</div><div class="line">				&#125;</div><div class="line"></div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">	&#125;).start();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</code></pre><p>5.重写onDraw();</p>
+<pre><code>@Override
+protected void onDraw(Canvas canvas) {
+    int center = getWidth() / 2;//获取圆心坐标
+    int radius = center - mCircleWidth / 2;//获取半径
+    mPaint.setStrokeWidth(mCircleWidth);//设置线框宽度
+    mPaint.setAntiAlias(true);//消除锯齿
+    mPaint.setStyle(Paint.Style.STROKE);//设置为空心
+    //定义外接圆,也就是限定整个圆的区域
+    RectF oval = new RectF(center - radius, center - radius, center + radius, center + radius);
+    if(!isNext) {
+        mPaint.setColor(mFirstColor);//设置底部圆环颜色
+        canvas.drawCircle(center, center, radius, mPaint);//画出底部圆环
+        mPaint.setColor(mSecondColor);
+        /*
+        oval：圆弧所在的椭圆对象 startAngle：圆弧的起始角度 sweepAngle：圆弧的角度 
+        useCenter：是否显示半径连线，true表示显示圆弧与圆心的半径连线，false表示不显示。
+        paint：绘制时所使用的画笔。
+         */
+        canvas.drawArc(oval, -90, mProgress, false, mPaint);//根据进度画圆弧
+    }else {
+        mPaint.setColor(mSecondColor);
+        canvas.drawCircle(center, center, radius, mPaint);
+        mPaint.setColor(mFirstColor);
+        canvas.drawArc(oval, -90, mProgress, false, mPaint);
+    }
+}
+</code></pre><h3 id="完整代码"><a href="#完整代码" class="headerlink" title="完整代码"></a>完整代码</h3><pre><code>public class CustomProgressBar extends View {
+
+private Paint mPaint;
+private int   mFirstColor;//开始颜色
+private int   mSecondColor;//第二次的颜色
+private int   mCircleWidth;//圆环的厚度
+private int   mSpeed;//滚动的速度
+private int   mProgress;//当前的角度
+private boolean isNext = false;//是否要切换下一个
+
+public CustomProgressBar(Context context) {
+    this(context, null);
+}
+
+public CustomProgressBar(Context context, AttributeSet attrs) {
+    this(context, attrs, 0);
+}
+
+public CustomProgressBar(Context context, AttributeSet attrs, int defStyleAttr) {
+    super(context, attrs, defStyleAttr);
+    initView(context, attrs, defStyleAttr);
+
+}
+
+private void initView(Context context, AttributeSet attrs, int defStyleAttr) {
+    TypedArray typedArray = context.getTheme()
+            .obtainStyledAttributes(attrs, R.styleable.CustomProgressBar, defStyleAttr, 0);
+    int indexCount = typedArray.getIndexCount();
+    for (int i = 0; i &lt; indexCount; i++) {
+        int attr = typedArray.getIndex(i);
+        switch (attr) {
+
+            case R.styleable.CustomProgressBar_firstColor:
+                mFirstColor = typedArray.getColor(attr, Color.BLACK);
+                break;
+            case R.styleable.CustomProgressBar_secondColor:
+                mSecondColor = typedArray.getColor(attr, Color.BLUE);
+                break;
+            case R.styleable.CustomProgressBar_circleWidth:
+                mCircleWidth = typedArray.getDimensionPixelSize(attr, (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX, 20, getResources().getDisplayMetrics()));
+                break;
+            case R.styleable.CustomProgressBar_speed:
+                mSpeed = typedArray.getInt(attr, 20);
+                break;
+            default:
+                new IllegalArgumentException(&quot;参数错误&quot;);
+                break;
+        }
+
+    }
+    typedArray.recycle();
+    mPaint = new Paint();
+    //绘图线程
+    new Thread(new Runnable() {
+        @Override
+        public void run() {
+            while (true) {
+                mProgress++;
+                if (mProgress == 360) {
+                    //在进行到360度的时候要改变颜色
+                    mProgress = 0;
+                    if (!isNext) {
+                        isNext = true;
+                    } else {
+                        isNext = false;
+                    }
+                }
+                postInvalidate();
+                try {
+                    //延迟
+                    Thread.sleep(mSpeed);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }
+    }).start();
+}
+
+@Override
+protected void onDraw(Canvas canvas) {
+    int center = getWidth() / 2;//获取圆心坐标
+    int radius = center - mCircleWidth / 2;//获取半径
+    mPaint.setStrokeWidth(mCircleWidth);//设置线框宽度
+    mPaint.setAntiAlias(true);//消除锯齿
+    mPaint.setStyle(Paint.Style.STROKE);//设置为空心
+    //定义外接圆,也就是限定整个圆的区域
+    RectF oval = new RectF(center - radius, center - radius, center + radius, center + radius);
+    if (!isNext) {
+        mPaint.setColor(mFirstColor);//设置底部圆环颜色
+        canvas.drawCircle(center, center, radius, mPaint);//画出底部圆环
+        mPaint.setColor(mSecondColor);
+        /*
+        oval：圆弧所在的椭圆对象 startAngle：圆弧的起始角度 sweepAngle：圆弧的角度
+        useCenter：是否显示半径连线，true表示显示圆弧与圆心的半径连线，false表示不显示。
+        paint：绘制时所使用的画笔。
+         */
+        canvas.drawArc(oval, -90, mProgress, false, mPaint);//根据进度画圆弧
+    } else {
+        mPaint.setColor(mSecondColor);
+        canvas.drawCircle(center, center, radius, mPaint);
+        mPaint.setColor(mFirstColor);
+        canvas.drawArc(oval, -90, mProgress, false, mPaint);
+    }
+}
+}
+</code></pre><hr>
+<h3 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h3><p><a href="http://blog.csdn.net/lmj623565791/article/details/24500107" target="_blank" rel="external">Android 自定义View (三) 圆环交替 等待效果</a><br><a href="http://book.51cto.com/art/201204/328276.htm" target="_blank" rel="external">drawArc方法：绘制圆弧</a>  </p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/03/06/customView-2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="lorensong">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="lorensong">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/03/06/customView-2/" itemprop="url">
+                  自定义View_2
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-06T17:54:44+08:00">
+                2017-03-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="why"><a href="#why" class="headerlink" title="why?"></a>why?</h3><p>效果图:<br><img width="" height="50%" align="center" src="customView-2\customView_result_2017-3-6.png" alt="customView_result_2017-3-6"></p>
+<h3 id="how"><a href="#how" class="headerlink" title="how?"></a>how?</h3><p>1.写一个自定义类继承View;<br>2.在values文件夹中创建attrs.xml文件(这是自定义的属性)<br>3.在自定义类的构造中获取到attrs的属性值;<br>4.重写onMeasure();<br>5.重写onDraw();<br>6.在相应的布局文件中使用自定义view;</p>
+<h3 id="具体实现"><a href="#具体实现" class="headerlink" title="具体实现"></a>具体实现</h3><ol>
+<li>自定义CustomImageView类,并重写构造方法;</li>
+<li><p>创建attrs.xml文件</p>
+<p>其中<code>CustomTitleView</code>是自定义<code>TextView</code>的代码,可以见笔者 自定义View-1,笔者只是将两种自定义写在一起了.<br>而<code>CustomImageView</code>是本次需要的内容</p>
+  <resources><br>  <attr name="titleText" format="string"><br>  <attr name="titleColor" format="color"><br>  <attr name="titleSize" format="dimension"><br><br>  <attr name="titleImageText" format="string"><br>  <attr name="titleImageTextSize" format="dimension"><br>  <attr name="titleImageTextColor" format="color"><br>  <attr name="image" format="reference"><br>  <attr name="imageScaleType"><br>  <enum name="fillXY" value="0"><br>  <enum name="center" value="1"><br>  </enum></enum></attr><br>  <declare-styleable name="CustomTitleView"><br>  <attr name="titleText"><br>  <attr name="titleColor"><br>  <attr name="titleSize"><br>  </attr></attr></attr></declare-styleable><br><br>  <declare-styleable name="CustomImageView"><br>  <attr name="titleImageText"><br>  <attr name="titleImageTextSize"><br>  <attr name="titleImageTextColor"><br>  <attr name="image"><br>  <attr name="imageScaleType"><br>  </attr></attr></attr></attr></attr></declare-styleable><br>  </attr></attr></attr></attr></attr></attr></attr></resources></li>
+<li><p>在自定义类中获取属性值</p>
+<p>private void initView(AttributeSet attrs, int defStyleAttr) {<br>  TypedArray typedArray = mContext.getTheme()</p>
+<pre><code>.obtainStyledAttributes(attrs, R.styleable.CustomImageView, defStyleAttr, 0);
+</code></pre><p>  int indexCount = typedArray.getIndexCount();</p>
+<p>  for (int i = 0; i &lt; indexCount; i++) {</p>
+<pre><code>int attr = typedArray.getIndex(i);
+switch (attr) {
+
+    case R.styleable.CustomImageView_image:
+        mBitmap = BitmapFactory.decodeResource(getResources(), typedArray.getResourceId(attr, 0));
+        break;
+    case R.styleable.CustomImageView_imageScaleType:
+        mScaleType = typedArray.getInt(attr, 0);
+        break;
+
+    case R.styleable.CustomImageView_titleImageText:
+        mTitleImageText = typedArray.getString(attr);
+
+        break;
+    case R.styleable.CustomImageView_titleImageTextColor:
+        mTextColor = typedArray.getColor(attr, Color.BLACK);
+
+        break;
+    case R.styleable.CustomImageView_titleImageTextSize:
+        mTitleSize = typedArray.getDimensionPixelSize(attr, (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 16, getResources().getDisplayMetrics()));
+
+        break;
+}
+</code></pre><p>  }<br>  typedArray.recycle();<br>  mPaint = new Paint();<br>  mRect = new Rect();<br>  mTextBound = new Rect();<br>  mPaint.setTextSize(mTitleSize);<br>  //计算文字所在矩形,获取宽高值<br>  mPaint.getTextBounds(mTitleImageText, 0, mTitleImageText.length(), mTextBound);<br>  }   </p>
+</li>
+</ol>
+<p>4.重写onMeasure()方法</p>
+<pre><code>@Override
+protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+    //宽度
+    int widthMode = MeasureSpec.getMode(widthMeasureSpec);
+    int widthSize = MeasureSpec.getSize(widthMeasureSpec);
+
+    if (widthMode == MeasureSpec.EXACTLY) {
+        mWidth = widthSize;
+    } else {
+        //测量出图片和文字的宽度,看整个view的宽度由谁决定
+
+        //图片宽度
+        int desiredByImg = getPaddingLeft() + getPaddingRight() + mBitmap.getWidth();
+        //字体宽度
+        int desirdeByText = getPaddingLeft() + getPaddingRight() + mTextBound.width();
+        //判断宽度模式是否warp_content
+        if (widthMode == MeasureSpec.AT_MOST) {
+            int desiredWidth = Math.max(desiredByImg, desirdeByText);
+            //因为是wrap_content,默认值是宽度整个父类的view的宽度,所以这里需要取最小值,整个布局仅仅包裹我们需要的内容
+            mWidth = Math.min(desiredWidth, widthSize);
+        }
+    }
+    //高度
+    int heightMode = MeasureSpec.getMode(heightMeasureSpec);
+    int heightSize = MeasureSpec.getSize(heightMeasureSpec);
+    if (heightMode == MeasureSpec.EXACTLY) {
+        mHeight = heightSize;
+    } else {
+        int desire = getPaddingTop() + getPaddingBottom() + mBitmap.getHeight() + mTextBound.height();
+        if (heightMode == MeasureSpec.AT_MOST) {
+            mHeight = Math.min(desire, heightSize);
+        }
+    }
+    setMeasuredDimension(mWidth, mHeight);
+
+}
+</code></pre><p>5.重写ondraw()方法</p>
+<pre><code>@Override
+protected void onDraw(Canvas canvas) {
+    //设置边框
+    mPaint.setStrokeWidth(4);
+    mPaint.setStyle(Paint.Style.STROKE);
+    mPaint.setColor(Color.CYAN);
+    canvas.drawRect(0, 0, getMeasuredWidth(), getMeasuredHeight(), mPaint);
+
+    mRect.left = getPaddingLeft();
+    mRect.right = mWidth - getPaddingRight();
+    mRect.top = getPaddingTop();
+    mRect.bottom = mHeight - getPaddingBottom();
+
+    mPaint.setColor(mTextColor);
+    mPaint.setStyle(Paint.Style.FILL);
+
+    //当前设置的宽度小于字体需要的宽度,将字体大小设置为指定的省略号...;
+    if (mTextBound.width() &gt; mWidth) {
+        TextPaint textPaint = new TextPaint(mPaint);
+
+        //TextUtils.ellipsize()截取指定长度字符串
+        String s = TextUtils.ellipsize(mTitleImageText, textPaint, mWidth - getPaddingLeft() - getPaddingRight(), TextUtils.TruncateAt.END)
+                .toString();
+        canvas.drawText(s, getPaddingLeft(), mHeight - getPaddingRight(), mPaint);
+    } else {
+        //正常情况,将字体居中
+        canvas.drawText(mTitleImageText, mWidth / 2 - mTextBound.width() * 1.0f / 2, mHeight - getPaddingBottom() / 2, mPaint);
+    }
+    //取消文字使用的块,用于设置图片
+    //如果不减掉的话使用fillXY模式时，会把下面的文字覆盖
+    mRect.bottom = mRect.bottom -  mTextBound.height();
+
+    if (mScaleType == IMAGE_SCALE_FITXY) {
+        canvas.drawBitmap(mBitmap, null, mRect, mPaint);
+    } else {
+        //如果图片的缩放是居中类型的,需要将图片设置为居中
+        //计算居中的矩形范围;
+        mRect.left = mWidth / 2 - mBitmap.getWidth() / 2;
+        mRect.right = mWidth / 2 + mBitmap.getWidth() / 2;
+        mRect.top = (mHeight - mTextBound.height()) / 2 - mBitmap.getHeight() / 2;
+        mRect.bottom = (mHeight - mTextBound.height()) / 2 + mBitmap.getHeight() / 2;
+        canvas.drawBitmap(mBitmap, null, mRect, mPaint);
+    }
+}
+</code></pre><p>6.使用</p>
+<pre><code>&lt;com.loren.customview.view.CustomImageView
+    android:layout_width=&quot;wrap_content&quot;
+    android:layout_height=&quot;150dp&quot;
+    custom:image=&quot;@mipmap/ic_launcher&quot;
+    custom:imageScaleType=&quot;center&quot;
+    custom:titleImageText=&quot;p1图片p1图片p1图片p1图片p1图片p1图片&quot;
+    custom:titleImageTextSize=&quot;16sp&quot;
+    custom:titleImageTextColor=&quot;#ff0000&quot;
+    android:id=&quot;@+id/customImageView&quot;/&gt;
+
+&lt;com.loren.customview.view.CustomImageView
+    android:layout_width=&quot;100dp&quot;
+    android:layout_height=&quot;50dp&quot;
+    custom:image=&quot;@mipmap/ic_launcher&quot;
+    custom:imageScaleType=&quot;center&quot;
+    custom:titleImageText=&quot;p2图片p2图片p2图片p2图片p2图片p2图片&quot;
+    custom:titleImageTextSize=&quot;18sp&quot;
+    custom:titleImageTextColor=&quot;#ff00ff&quot;
+    /&gt;
+&lt;com.loren.customview.view.CustomImageView
+    android:layout_width=&quot;wrap_content&quot;
+    android:layout_height=&quot;wrap_content&quot;
+    custom:image=&quot;@mipmap/p3&quot;
+    custom:imageScaleType=&quot;fillXY&quot;
+    custom:titleImageText=&quot;p3图片&quot;
+    custom:titleImageTextSize=&quot;12sp&quot;
+    custom:titleImageTextColor=&quot;#ff2299&quot;
+    /&gt;
+</code></pre><p><em>效果图见开始处</em></p>
+<h4 id="备注"><a href="#备注" class="headerlink" title="备注:"></a>备注:</h4><p>计算文字在控件中间的两种方式：  </p>
+<ul>
+<li><p>方法2是绝对准确，推荐使用。</p>
+</li>
+<li><p>方法1有时候会测量不准确，高度不能居中显示<br>1.宽 = （控件宽 - 文字宽）/2<br>  高 = (控件高 + 文字稿) /2<br>2.宽 = （控件宽 - 文字宽）/2<br>  高 = （控件高 - （文字上边界 + 文字下边界）/2   </p>
+</li>
+</ul>
+<hr>
+<h3 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h3><p><a href="http://blog.csdn.net/lmj623565791/article/details/24300125" target="_blank" rel="external">Android 自定义View(二)进阶</a><br><a href="http://blog.csdn.net/qin9r3y/article/details/8607014" target="_blank" rel="external">Android drawText获取text宽度的三种方式</a></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/03/03/customView-1/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1483,371 +2490,6 @@ protected void onDraw(Canvas canvas) {
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/02/24/test/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="lorensong">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="lorensong">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/02/24/test/" itemprop="url">
-                  test
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-02-24T17:33:47+08:00">
-                2017-02-24
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p><img src="test/p1.jpg" alt="logo"><br>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/02/24/test/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/02/23/带你玩转Git/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="lorensong">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="lorensong">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/02/23/带你玩转Git/" itemprop="url">
-                  带你玩转Git
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-02-23T13:45:05+08:00">
-                2017-02-23
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>#Git命令</p>
-<p>###配置<br>1.用户名和密码:<br>    在github上注册账号或者公司提供的用户名和密码<br>    <code>博主的username: lorensong@github.com
-    `` 
-    密码passphrase: 888888</code><br>2.安装好git软件后<br>    采用以下命令:<br>    <code>ssh-keygen -t rsa -C &quot;lorensong@github.com&quot;</code>  –回车<br>    提示输入密码:</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/02/21/RecycleView/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="lorensong">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="lorensong">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/02/21/RecycleView/" itemprop="url">
-                  RecycleView
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-02-21T13:52:07+08:00">
-                2017-02-21
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>#RecycleView<br>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/02/21/RecycleView/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1897,7 +2539,7 @@ protected void onDraw(Canvas canvas) {
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">21</span>
+                <span class="site-state-item-count">24</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -1908,7 +2550,7 @@ protected void onDraw(Canvas canvas) {
             
             <div class="site-state-item site-state-categories">
               <a href="/categories/index.html">
-                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-count">4</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>

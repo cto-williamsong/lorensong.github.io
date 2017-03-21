@@ -105,7 +105,7 @@
 属性动画(property animation)[Android3.0才提出来的]
 
 属性动画完全可以替换掉帧动画和补间动画,所以也就是学习属性动画的目的">
-<meta property="og:updated_time" content="2017-03-14T12:50:03.496Z">
+<meta property="og:updated_time" content="2017-03-16T02:25:20.695Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="propertyAnimation">
 <meta name="twitter:description" content="what?Android一开始提供了3种动画:    
@@ -431,7 +431,9 @@
 <p>那么如果想要将TextView先向左移出屏幕，然后再移动回来，就可以这样写：</p>
 <pre><code><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">float</span> curTranslationX = textview.getTranslationX();  </div><div class="line">ObjectAnimator animator = ObjectAnimator.ofFloat(textview, <span class="string">"translationX"</span>, curTranslationX, -<span class="number">500f</span>, curTranslationX);  </div><div class="line">animator.setDuration(<span class="number">5000</span>);  </div><div class="line">animator.start();</div></pre></td></tr></table></figure>
 </code></pre><p>这里我们先是调用了TextView的<code>getTranslationX()</code>方法来获取到当前TextView的translationX的位置，然后ofFloat()方法的第二个参数传入”translationX”，紧接着后面三个参数用于告诉系统TextView应该怎么移动，现在运行一下代码，效果如下图所示：</p>
-<p>然后我们还可以TextView进行缩放操作，比如说将TextView在垂直方向上放大3倍再还原，就可以这样写：</p>
+<p>简单的链式调用:</p>
+<pre><code><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 通过静态方法构建一个ObjectAnimator对象</span></div><div class="line">      <span class="comment">// 设置作用对象、属性名称、数值集合</span></div><div class="line">      ObjectAnimator.ofFloat(view, <span class="string">"translationX"</span>, <span class="number">0.0F</span>, <span class="number">200.0F</span>)</div><div class="line">      <span class="comment">// 设置执行时间(1000ms)</span></div><div class="line">              .setDuration(<span class="number">1000</span>)</div><div class="line">              <span class="comment">// 开始动画</span></div><div class="line">              .start();</div></pre></td></tr></table></figure>
+</code></pre><p>然后我们还可以TextView进行缩放操作，比如说将TextView在垂直方向上放大3倍再还原，就可以这样写：</p>
 <pre><code><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">ObjectAnimator animator = ObjectAnimator.ofFloat(textview, <span class="string">"scaleY"</span>, <span class="number">1f</span>, <span class="number">3f</span>, <span class="number">1f</span>);  </div><div class="line">animator.setDuration(<span class="number">5000</span>);  </div><div class="line">animator.start();</div></pre></td></tr></table></figure>
 </code></pre><p>这里将ofFloat()方法的第二个参数改成了”scaleY”，表示在垂直方向上进行缩放，现在重新运行一下程序，效果如下图所示：</p>
 <p>对于ObjectAnimator的使用是十分简单的,ofFloat()中的第二个参数可以存放:<code>alpha</code>,<code>translation</code>,<code>rotation</code>,<code>scale</code>;但是ObjectAnimator在设计的时候就没有针对View进行设计,而是针对的任意对象,它所负责的工作就是不断地向某个对象中的某个属性进行赋值，然后对象根据属性值的改变再来决定如何展现出来。<br>比如下面代码中:</p>
@@ -470,9 +472,10 @@
 </code></pre><p>最后XML文件是编写好了，那么我们如何在代码中把文件加载进来并将动画启动呢？只需调用如下代码即可：</p>
 <pre><code><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">Animator animator = AnimatorInflater.loadAnimator(context, R.animator.anim_file);  </div><div class="line">animator.setTarget(view);  </div><div class="line">animator.start();</div></pre></td></tr></table></figure>
 </code></pre><p>调用<code>AnimatorInflater</code>的<code>loadAnimator</code>来将XML动画文件加载进来，然后再调用<code>setTarget()</code>方法将这个动画设置到某一个对象上面，最后再调用start()方法启动动画就可以了.<br>如果设置了执行了多次的<code>setTarget()</code>方法,那么只会对<em>最后一个</em>有效</p>
-<h3 id="补充"><a href="#补充" class="headerlink" title="补充"></a>补充</h3><h4 id="view-getX-和view-getTranslation-的区别："><a href="#view-getX-和view-getTranslation-的区别：" class="headerlink" title="view.getX()和view.getTranslation()的区别："></a>view.getX()和view.getTranslation()的区别：</h4><p>见参考文档;</p>
+<h3 id="补充"><a href="#补充" class="headerlink" title="补充"></a>补充</h3><h4 id="属性动画的各种组成类"><a href="#属性动画的各种组成类" class="headerlink" title="属性动画的各种组成类"></a>属性动画的各种组成类</h4><p>1.<code>ObjectAnimator</code> ：对象动画执行类。<br>2.<code>ValueAnimator</code> ：值动画执行类，常配合<code>AnimatorUpdateListener</code>使用。<br>3.<code>PropertyValuesHolder</code> : 属性存储器，为两个执行类提供更新多个属性的功能。<br>4.<code>Keyframe</code> ：为 <code>PropertyValuesHolder</code>提供多个关键帧的操作值。<br>5.<code>AnimatorSet</code> ：一组动画的执行集合类：设置执行的先后顺序，时间等。<br>6.<code>AnimatorUpdateListener</code> ：动画更新监听。<br>7.<code>AnimatorListener</code> ：动画执行监听，在动画开始、重复、结束、取消时进行回调。<br>8.<code>AnimatorInflater</code> ：加载属性动画的xml文件。<br>9.<code>TypeEvaluator</code> ：类型估值，用于设置复杂的动画操作属性的值。<br>10.<code>TimeInterpolator</code> ：时间插值，用于控制动画执行过程。  </p>
+<h4 id="view-getX-和view-getTranslation-的区别："><a href="#view-getX-和view-getTranslation-的区别：" class="headerlink" title="view.getX()和view.getTranslation()的区别："></a>view.getX()和view.getTranslation()的区别：</h4><p>见参考文档;</p>
 <hr>
-<h3 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h3><p><a href="http://blog.csdn.net/guolin_blog/article/details/43536355" target="_blank" rel="external">Android属性动画完全解析(上)，初识属性动画的基本用法</a><br><a href="http://blog.csdn.net/lmj623565791/article/details/38067475" target="_blank" rel="external">Android 属性动画（Property Animation）完全解析(上)</a><br><a href="http://bbs.itheima.com/forum.php?mod=viewthread&amp;tid=172632" target="_blank" rel="external">Android属性动画</a><br><a href="http://blog.csdn.net/chdjj/article/details/42293753" target="_blank" rel="external">view.getX和view.getTranslationX区别</a>  </p>
+<h3 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h3><p><a href="http://blog.csdn.net/guolin_blog/article/details/43536355" target="_blank" rel="external">Android属性动画完全解析(上)，初识属性动画的基本用法</a><br><a href="http://blog.csdn.net/lmj623565791/article/details/38067475" target="_blank" rel="external">Android 属性动画（Property Animation）完全解析(上)</a><br><a href="http://bbs.itheima.com/forum.php?mod=viewthread&amp;tid=172632" target="_blank" rel="external">Android属性动画</a><br><a href="http://blog.csdn.net/chdjj/article/details/42293753" target="_blank" rel="external">view.getX和view.getTranslationX区别</a><br><a href="http://www.runoob.com/w3cnote/android-tutorial-valueanimator.html" target="_blank" rel="external">Android动画合集之属性动画-初见</a>  </p>
 
       
     </div>
@@ -595,7 +598,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">21</span>
+                <span class="site-state-item-count">24</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -606,7 +609,7 @@
             
             <div class="site-state-item site-state-categories">
               <a href="/categories/index.html">
-                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-count">4</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -652,7 +655,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#what"><span class="nav-number">1.</span> <span class="nav-text">what?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#why"><span class="nav-number">2.</span> <span class="nav-text">why?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#how"><span class="nav-number">3.</span> <span class="nav-text">how?</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#ValueAnimator"><span class="nav-number">3.1.</span> <span class="nav-text">ValueAnimator</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ObjectAnimator"><span class="nav-number">3.2.</span> <span class="nav-text">ObjectAnimator</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#组合动画"><span class="nav-number">4.</span> <span class="nav-text">组合动画</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Animator监听器"><span class="nav-number">5.</span> <span class="nav-text">Animator监听器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用XML编写动画"><span class="nav-number">6.</span> <span class="nav-text">使用XML编写动画</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#补充"><span class="nav-number">7.</span> <span class="nav-text">补充</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#view-getX-和view-getTranslation-的区别："><span class="nav-number">7.1.</span> <span class="nav-text">view.getX()和view.getTranslation()的区别：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考文档"><span class="nav-number">8.</span> <span class="nav-text">参考文档</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#what"><span class="nav-number">1.</span> <span class="nav-text">what?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#why"><span class="nav-number">2.</span> <span class="nav-text">why?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#how"><span class="nav-number">3.</span> <span class="nav-text">how?</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#ValueAnimator"><span class="nav-number">3.1.</span> <span class="nav-text">ValueAnimator</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ObjectAnimator"><span class="nav-number">3.2.</span> <span class="nav-text">ObjectAnimator</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#组合动画"><span class="nav-number">4.</span> <span class="nav-text">组合动画</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Animator监听器"><span class="nav-number">5.</span> <span class="nav-text">Animator监听器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用XML编写动画"><span class="nav-number">6.</span> <span class="nav-text">使用XML编写动画</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#补充"><span class="nav-number">7.</span> <span class="nav-text">补充</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#属性动画的各种组成类"><span class="nav-number">7.1.</span> <span class="nav-text">属性动画的各种组成类</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#view-getX-和view-getTranslation-的区别："><span class="nav-number">7.2.</span> <span class="nav-text">view.getX()和view.getTranslation()的区别：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考文档"><span class="nav-number">8.</span> <span class="nav-text">参考文档</span></a></li></ol></div>
             
 
           </div>
