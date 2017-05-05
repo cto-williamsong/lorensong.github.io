@@ -1,0 +1,1213 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="自定义View," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="why?how?1.自定义类继承View2.在包名/values文件夹中创建attrs.xml文件3.在自定义类中获取相应的属性值4.重写onMeasure();[不需要]5.重写ondraw();6.在相应的布局文件中使用.7.根据手势设置音量大小
+实现1.自定义类(省略);2.创建attrs.xml文件分析:需要中间图片一张,音量有和无的颜色,音量的宽度,音量的点的个数,音量的间隙大小">
+<meta property="og:type" content="article">
+<meta property="og:title" content="自定义View-4">
+<meta property="og:url" content="https://lorensong.github.io/2017/03/07/Android自定义View/customView-4/index.html">
+<meta property="og:site_name" content="lorensong">
+<meta property="og:description" content="why?how?1.自定义类继承View2.在包名/values文件夹中创建attrs.xml文件3.在自定义类中获取相应的属性值4.重写onMeasure();[不需要]5.重写ondraw();6.在相应的布局文件中使用.7.根据手势设置音量大小
+实现1.自定义类(省略);2.创建attrs.xml文件分析:需要中间图片一张,音量有和无的颜色,音量的宽度,音量的点的个数,音量的间隙大小">
+<meta property="og:updated_time" content="2017-03-30T08:58:24.811Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="自定义View-4">
+<meta name="twitter:description" content="why?how?1.自定义类继承View2.在包名/values文件夹中创建attrs.xml文件3.在自定义类中获取相应的属性值4.重写onMeasure();[不需要]5.重写ondraw();6.在相应的布局文件中使用.7.根据手势设置音量大小
+实现1.自定义类(省略);2.创建attrs.xml文件分析:需要中间图片一张,音量有和无的颜色,音量的宽度,音量的点的个数,音量的间隙大小">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://lorensong.github.io/2017/03/07/Android自定义View/customView-4/"/>
+
+
+
+
+
+  <title> 自定义View-4 | lorensong </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">lorensong</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">If you love life, life will love you back.</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404.html" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            Commonweal 404
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://lorensong.github.io/2017/03/07/Android自定义View/customView-4/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="lorensong">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="lorensong">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                自定义View-4
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-03-07T17:16:59+08:00">
+                2017-03-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index">
+                    <span itemprop="name">Android</span>
+                  </a>
+                </span>
+
+                
+                
+                  , 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/学习/" itemprop="url" rel="index">
+                    <span itemprop="name">学习</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2017/03/07/Android自定义View/customView-4/" class="leancloud_visitors" data-flag-title="自定义View-4">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">Visitors </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <a id="more"></a>
+<h3 id="why"><a href="#why" class="headerlink" title="why?"></a>why?</h3><h3 id="how"><a href="#how" class="headerlink" title="how?"></a>how?</h3><p>1.自定义类继承View<br>2.在包名/values文件夹中创建attrs.xml文件<br>3.在自定义类中获取相应的属性值<br>4.重写onMeasure();[不需要]<br>5.重写ondraw();<br>6.在相应的布局文件中使用.<br>7.根据手势设置音量大小</p>
+<h3 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h3><p>1.自定义类(省略);<br>2.创建attrs.xml文件<br><em>分析:</em>需要中间图片一张,音量有和无的颜色,音量的宽度,音量的点的个数,音量的间隙大小  </p>
+<pre><code>&lt;attr name=&quot;ValumefirstColor&quot; format=&quot;color&quot;/&gt;
+&lt;attr name=&quot;ValumeSecondColor&quot; format=&quot;color&quot;/&gt;
+&lt;attr name=&quot;ValumeCircleWidth&quot; format=&quot;dimension&quot;/&gt;
+&lt;attr name=&quot;ValumeDotCount&quot; format=&quot;integer&quot;/&gt;
+&lt;attr name=&quot;ValumeSplitSize&quot; format=&quot;integer&quot;/&gt;
+&lt;attr name=&quot;Valumebg&quot; format=&quot;reference&quot;/&gt;
+
+&lt;declare-styleable name=&quot;CustomValumeView&quot;&gt;
+    &lt;attr name=&quot;ValumefirstColor&quot;/&gt;
+    &lt;attr name=&quot;ValumeSecondColor&quot;/&gt;
+    &lt;attr name=&quot;ValumeCircleWidth&quot;/&gt;
+    &lt;attr name=&quot;ValumeDotCount&quot;/&gt;
+    &lt;attr name=&quot;ValumeSplitSize&quot;/&gt;
+    &lt;attr name=&quot;Valumebg&quot;/&gt;
+&lt;/declare-styleable&gt;
+</code></pre><p>3.自定义类获取属性值</p>
+<pre><code>private void initView(Context context, AttributeSet attrs, int defStyleAttr) {
+    TypedArray typedArray = context.getTheme()
+            .obtainStyledAttributes(attrs, R.styleable.CustomValumeView, defStyleAttr, 0);
+    int indexCount = typedArray.getIndexCount();
+    for (int i = 0; i &lt; indexCount; i++) {
+        int attr = typedArray.getIndex(i);
+        switch (attr) {
+
+            case R.styleable.CustomValumeView_ValumefirstColor:
+                mFirstColor = typedArray.getColor(attr, Color.BLACK);
+                break;
+            case R.styleable.CustomValumeView_ValumeSecondColor:
+                mSecondColor = typedArray.getColor(attr, Color.BLUE);
+                break;
+            case R.styleable.CustomValumeView_Valumebg:
+                mImage = BitmapFactory.decodeResource(getResources(), typedArray.getResourceId(attr, 0));
+                break;
+            case R.styleable.CustomValumeView_ValumeCircleWidth:
+                mCircleWidth = typedArray.getDimensionPixelSize(attr, (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX, 16, getResources().getDisplayMetrics()));
+                break;
+            case R.styleable.CustomValumeView_ValumeDotCount:
+                mDotCount = typedArray.getInt(attr, 20);//默认值
+                break;
+            case R.styleable.CustomValumeView_ValumeSplitSize:
+                mSplitSize = typedArray.getInt(attr, 20);
+                break;
+            default:
+                break;
+        }
+
+    }
+    typedArray.recycle();
+    mPaint = new Paint();
+    mRectF = new RectF();
+}
+</code></pre><p>5.重写onDraw();</p>
+<pre><code>@Override
+protected void onDraw(Canvas canvas) {
+    mPaint.setAntiAlias(true);//消除锯齿
+    mPaint.setStrokeWidth(mCircleWidth);//设置音量宽度
+    mPaint.setStrokeCap(Paint.Cap.ROUND);//设置线段断开的地方是圆头
+    mPaint.setStyle(Paint.Style.STROKE);//空心
+    int center = getWidth() / 2;//获取圆心坐标
+    int radius = center - mCircleWidth / 2;//半径
+    drawValumePiece(canvas, center, radius);
+    drawImage(canvas, radius);
+}
+//画出内部的音量图片
+private void drawImage(Canvas canvas, int radius) {
+    //计算内切正方形的位置
+    int relRadius = radius - mCircleWidth / 2;//获取内圆半径
+    //内切正方形的距离顶部 = mCircleWidth + relRadius - √2 / 2
+    mRectF.left = (int) ((relRadius - Math.sqrt(2) * 1.0f / 2 * relRadius) + mCircleWidth);
+    //内切正方形的距离左边 = mCircleWidth + relRadius - √2 / 2
+    mRectF.top = (int) ((relRadius - Math.sqrt(2) * 1.0f / 2 * relRadius) + mCircleWidth);
+
+    mRectF.bottom = (int) (mRectF.left + Math.sqrt(2) * relRadius);
+    mRectF.right = (int) (mRectF.left + Math.sqrt(2) * relRadius);
+
+    //设置图片到中心,如果图片宽度太小,就设置到中间
+    if (mImage.getWidth() &lt; Math.sqrt(2) * relRadius) {
+        mRectF.left = (int) (mRectF.left + Math.sqrt(2) * relRadius * 1.0f / 2 - mImage.getWidth() * 1.0f / 2);
+        mRectF.top = (int) (mRectF.top + Math.sqrt(2) * relRadius * 1.0f / 2 - mImage.getHeight() * 1.0f / 2);
+        mRectF.right = (mRectF.left + mImage.getWidth());
+        mRectF.bottom = (mRectF.top + mImage.getHeight());
+    }
+    canvas.drawBitmap(mImage, null, mRectF, mPaint);
+}
+//主要用来画旁边小块
+private void drawValumePiece(Canvas canvas, int center, int radius) {
+    //根据需要画出小快递的个数和间隙算出每个小块所应当占用的比例*360;
+    float itemSize = (360 * 1.0f - mDotCount * mSplitSize) / mDotCount;
+    //定义圆环的界限的矩形,外接矩形
+    RectF oval = new RectF(center - radius, center - radius, center + radius, center + radius);
+    mPaint.setColor(mFirstColor);//设置圆环颜色
+    for (int i = 0; i &lt; mDotCount; i++) {
+        canvas.drawArc(oval, i * (itemSize + mSplitSize), itemSize, false, mPaint);
+    }
+    mPaint.setColor(mSecondColor);
+    for (int i = 0; i &lt; mCurrentCount; i++) {
+        canvas.drawArc(oval, i * (itemSize + mSplitSize), itemSize, false, mPaint);
+    }
+}
+</code></pre><p>6.在布局文件中使用</p>
+<pre><code>&lt;LinearLayout
+xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
+xmlns:custom=&quot;http://schemas.android.com/apk/res-auto&quot;
+android:id=&quot;@+id/activity_main&quot;
+android:layout_width=&quot;match_parent&quot;
+android:layout_height=&quot;match_parent&quot;
+android:orientation=&quot;vertical&quot;&gt;
+&lt;com.loren.customview.view.CustomValumeView
+    android:layout_width=&quot;100dp&quot;
+    android:layout_height=&quot;100dp&quot;
+    custom:ValumefirstColor=&quot;#4400ff&quot;
+    custom:ValumeSecondColor=&quot;#992255&quot;
+    custom:ValumeCircleWidth=&quot;3dp&quot;
+    custom:ValumeDotCount=&quot;50&quot;
+    custom:ValumeSplitSize=&quot;5&quot;
+    custom:Valumebg=&quot;@mipmap/ic_launcher&quot;/&gt;
+&lt;com.loren.customview.view.CustomValumeView
+    android:layout_width=&quot;200dp&quot;
+    android:layout_height=&quot;200dp&quot;
+    custom:ValumefirstColor=&quot;#4400ff&quot;
+    custom:ValumeSecondColor=&quot;#992255&quot;
+    custom:ValumeCircleWidth=&quot;3dp&quot;
+    android:layout_gravity=&quot;center&quot;
+    custom:ValumeDotCount=&quot;30&quot;
+    custom:ValumeSplitSize=&quot;5&quot;
+    custom:Valumebg=&quot;@mipmap/p1&quot;/&gt;
+&lt;/LinearLayout&gt;
+</code></pre><p>7.添加手势监听<br>当我们手机上下移动的时候,会指定增加或减少</p>
+<pre><code>//点击添加
+public void up() {
+    if (mCurrentCount &lt; mDotCount) {
+        mCurrentCount++;
+    }
+
+    postInvalidate();
+}
+
+public void down() {
+    if (mCurrentCount &gt; 0) {
+        mCurrentCount--;
+    }
+    postInvalidate();
+}
+
+private int mDownY;
+
+@Override
+public boolean onTouchEvent(MotionEvent event) {
+    switch (event.getAction()) {
+
+        case MotionEvent.ACTION_DOWN:
+            mDownY = (int) event.getY();
+            mLastMoveY = mDownY;
+            break;
+        case MotionEvent.ACTION_MOVE:
+            mCurrentMoveY = (int) event.getY();
+            mDifY = mCurrentMoveY - mLastMoveY;
+            //用5做判断是为了减小方块着色的速度
+            if(mDifY &gt; 5) {
+                up();
+            }else if(mDifY &lt; -5) {
+                down();
+            }
+            mLastMoveY = mCurrentMoveY;
+            break;
+
+        default:
+            break;
+    }
+
+    return true;
+}
+</code></pre><h3 id="备注"><a href="#备注" class="headerlink" title="备注"></a>备注</h3><h3 id="所有代码"><a href="#所有代码" class="headerlink" title="所有代码"></a>所有代码</h3><pre><code>public class CustomValumeView extends View {
+
+private Paint  mPaint;
+private int    mFirstColor;
+private int    mSecondColor;
+private Bitmap mImage;
+private int    mCircleWidth;
+private int    mDotCount;
+private int    mSplitSize;//每个方块之间的间隙
+private RectF  mRectF;
+private int    mCurrentCount;//当前的数量;
+private int    mCurrentMoveY;
+private int    mDifY;
+private int mLastMoveY;
+
+public CustomValumeView(Context context) {
+    this(context, null);
+}
+
+public CustomValumeView(Context context, AttributeSet attrs) {
+    this(context, attrs, 0);
+}
+
+public CustomValumeView(Context context, AttributeSet attrs, int defStyleAttr) {
+    super(context, attrs, defStyleAttr);
+    initView(context, attrs, defStyleAttr);
+}
+
+private void initView(Context context, AttributeSet attrs, int defStyleAttr) {
+    TypedArray typedArray = context.getTheme()
+            .obtainStyledAttributes(attrs, R.styleable.CustomValumeView, defStyleAttr, 0);
+    int indexCount = typedArray.getIndexCount();
+    for (int i = 0; i &lt; indexCount; i++) {
+        int attr = typedArray.getIndex(i);
+        switch (attr) {
+
+            case R.styleable.CustomValumeView_ValumefirstColor:
+                mFirstColor = typedArray.getColor(attr, Color.BLACK);
+                break;
+            case R.styleable.CustomValumeView_ValumeSecondColor:
+                mSecondColor = typedArray.getColor(attr, Color.BLUE);
+                break;
+            case R.styleable.CustomValumeView_Valumebg:
+                mImage = BitmapFactory.decodeResource(getResources(), typedArray.getResourceId(attr, 0));
+                break;
+            case R.styleable.CustomValumeView_ValumeCircleWidth:
+                mCircleWidth = typedArray.getDimensionPixelSize(attr, (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX, 16, getResources().getDisplayMetrics()));
+                break;
+            case R.styleable.CustomValumeView_ValumeDotCount:
+                mDotCount = typedArray.getInt(attr, 20);//默认值
+                break;
+            case R.styleable.CustomValumeView_ValumeSplitSize:
+                mSplitSize = typedArray.getInt(attr, 20);
+                break;
+            default:
+                break;
+        }
+
+    }
+    typedArray.recycle();
+    mPaint = new Paint();
+    mRectF = new RectF();
+}
+
+@Override
+protected void onDraw(Canvas canvas) {
+    mPaint.setAntiAlias(true);//消除锯齿
+    mPaint.setStrokeWidth(mCircleWidth);//设置音量宽度
+    mPaint.setStrokeCap(Paint.Cap.ROUND);//设置线段断开的地方是圆头
+    mPaint.setStyle(Paint.Style.STROKE);//空心
+    int center = getWidth() / 2;//获取圆心坐标
+    int radius = center - mCircleWidth / 2;//半径
+    drawValumePiece(canvas, center, radius);
+    drawImage(canvas, radius);
+}
+//画出内部的音量图片
+private void drawImage(Canvas canvas, int radius) {
+    //计算内切正方形的位置
+    int relRadius = radius - mCircleWidth / 2;//获取内圆半径
+    //内切正方形的距离顶部 = mCircleWidth + relRadius - √2 / 2
+    mRectF.left = (int) ((relRadius - Math.sqrt(2) * 1.0f / 2 * relRadius) + mCircleWidth);
+    //内切正方形的距离左边 = mCircleWidth + relRadius - √2 / 2
+    mRectF.top = (int) ((relRadius - Math.sqrt(2) * 1.0f / 2 * relRadius) + mCircleWidth);
+
+    mRectF.bottom = (int) (mRectF.left + Math.sqrt(2) * relRadius);
+    mRectF.right = (int) (mRectF.left + Math.sqrt(2) * relRadius);
+
+    //设置图片到中心,如果图片宽度太小,就设置到中间
+    if (mImage.getWidth() &lt; Math.sqrt(2) * relRadius) {
+        mRectF.left = (int) (mRectF.left + Math.sqrt(2) * relRadius * 1.0f / 2 - mImage.getWidth() * 1.0f / 2);
+        mRectF.top = (int) (mRectF.top + Math.sqrt(2) * relRadius * 1.0f / 2 - mImage.getHeight() * 1.0f / 2);
+        mRectF.right = (mRectF.left + mImage.getWidth());
+        mRectF.bottom = (mRectF.top + mImage.getHeight());
+    }
+    canvas.drawBitmap(mImage, null, mRectF, mPaint);
+}
+//主要用来画旁边小块
+private void drawValumePiece(Canvas canvas, int center, int radius) {
+    //根据需要画出小快递的个数和间隙算出每个小块所应当占用的比例*360;
+    float itemSize = (360 * 1.0f - mDotCount * mSplitSize) / mDotCount;
+    //定义圆环的界限的矩形,外接矩形
+    RectF oval = new RectF(center - radius, center - radius, center + radius, center + radius);
+    mPaint.setColor(mFirstColor);//设置圆环颜色
+    for (int i = 0; i &lt; mDotCount; i++) {
+        canvas.drawArc(oval, i * (itemSize + mSplitSize), itemSize, false, mPaint);
+    }
+    mPaint.setColor(mSecondColor);
+    for (int i = 0; i &lt; mCurrentCount; i++) {
+        canvas.drawArc(oval, i * (itemSize + mSplitSize), itemSize, false, mPaint);
+    }
+}
+
+//点击添加
+public void up() {
+    if (mCurrentCount &lt; mDotCount) {
+        mCurrentCount++;
+    }
+
+    postInvalidate();
+}
+
+public void down() {
+    if (mCurrentCount &gt; 0) {
+        mCurrentCount--;
+    }
+    postInvalidate();
+}
+
+private int mDownY;
+
+@Override
+public boolean onTouchEvent(MotionEvent event) {
+    switch (event.getAction()) {
+
+        case MotionEvent.ACTION_DOWN:
+            mDownY = (int) event.getY();
+            mLastMoveY = mDownY;
+            break;
+        case MotionEvent.ACTION_MOVE:
+            mCurrentMoveY = (int) event.getY();
+            mDifY = mCurrentMoveY - mLastMoveY;
+            //用5做判断是为了减小方块着色的速度
+            if(mDifY &gt; 5) {
+                up();
+            }else if(mDifY &lt; -5) {
+                down();
+            }
+            mLastMoveY = mCurrentMoveY;
+            break;
+
+        default:
+            break;
+    }
+
+    return true;
+}
+}
+</code></pre><hr>
+<h3 id="参看文档"><a href="#参看文档" class="headerlink" title="参看文档"></a>参看文档</h3><p><a href="http://blog.csdn.net/lmj623565791/article/details/24529807" target="_blank" rel="external">Android 自定义View (四) 视频音量调控</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/自定义View/" rel="tag"># 自定义View</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/03/07/Android自定义View/customView-3/" rel="next" title="自定义View-3 生成圆环进度条">
+                <i class="fa fa-chevron-left"></i> 自定义View-3 生成圆环进度条
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/03/08/Android自定义View/customView-5/" rel="prev" title="自定义View-5之彩虹横向进度条">
+                自定义View-5之彩虹横向进度条 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="lorensong" />
+          <p class="site-author-name" itemprop="name">lorensong</p>
+           
+              <p class="site-description motion-element" itemprop="description">If you love life, life will love you back.</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">31</span>
+                <span class="site-state-item-name">posts</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-name">categories</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-name">tags</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+
+        <div class="links-of-author motion-element">
+          
+
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#why"><span class="nav-number">1.</span> <span class="nav-text">why?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#how"><span class="nav-number">2.</span> <span class="nav-text">how?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实现"><span class="nav-number">3.</span> <span class="nav-text">实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#备注"><span class="nav-number">4.</span> <span class="nav-text">备注</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#所有代码"><span class="nav-number">5.</span> <span class="nav-text">所有代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参看文档"><span class="nav-number">6.</span> <span class="nav-text">参看文档</span></a></li></ol></div>
+            
+
+          </div>
+
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">lorensong</span>
+</div>
+
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="https://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+  
+  
+
+  
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("IgYqJPNpb10L1iNTSScMf1hh-gzGzoHsz", "u28SsFPTbxCDfhMYe2p9chlY");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+
+  
+
+</body>
+</html>
