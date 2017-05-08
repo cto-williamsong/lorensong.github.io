@@ -1,0 +1,1318 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="RxJava," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="what?RxBus就是根据所学的Rxjava知识,然后对比了EventBus而写出来的一个可以代替EventBus的总线控制的类;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RxJava进阶_RxBus">
+<meta property="og:url" content="https://lorensong.github.io/2017/02/28/RxJava/RxJava进阶_RxBus/index.html">
+<meta property="og:site_name" content="lorensong">
+<meta property="og:description" content="what?RxBus就是根据所学的Rxjava知识,然后对比了EventBus而写出来的一个可以代替EventBus的总线控制的类;">
+<meta property="og:image" content="https://lorensong.github.io/RxBus\how_rxbus_work_stream_2017-3-1.png">
+<meta property="og:image" content="https://lorensong.github.io/RxBus\sticky_subject_classification_2017-3-2.png">
+<meta property="og:image" content="https://lorensong.github.io/RxBus\deep_subject_2017-3-2.png">
+<meta property="og:image" content="https://lorensong.github.io/RxBus\deep_subject_2017-3-2_1.png">
+<meta property="og:image" content="https://lorensong.github.io/RxBus\deep_subject_2017-3-2_2.png">
+<meta property="og:image" content="https://lorensong.github.io/RxBus\deep_subject_2017-3-2_3.png">
+<meta property="og:image" content="https://lorensong.github.io/RxBus\deep_subject_2017-3-2_4.png">
+<meta property="og:updated_time" content="2017-05-08T03:03:22.075Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="RxJava进阶_RxBus">
+<meta name="twitter:description" content="what?RxBus就是根据所学的Rxjava知识,然后对比了EventBus而写出来的一个可以代替EventBus的总线控制的类;">
+<meta name="twitter:image" content="https://lorensong.github.io/RxBus\how_rxbus_work_stream_2017-3-1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://lorensong.github.io/2017/02/28/RxJava/RxJava进阶_RxBus/"/>
+
+
+
+
+
+  <title> RxJava进阶_RxBus | lorensong </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">lorensong</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">If you love life, life will love you back.</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404.html" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            Commonweal 404
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://lorensong.github.io/2017/02/28/RxJava/RxJava进阶_RxBus/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="lorensong">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="lorensong">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                RxJava进阶_RxBus
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-28T17:50:01+08:00">
+                2017-02-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Original/" itemprop="url" rel="index">
+                    <span itemprop="name">Original</span>
+                  </a>
+                </span>
+
+                
+                
+                  , 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Original/RxJava/" itemprop="url" rel="index">
+                    <span itemprop="name">RxJava</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2017/02/28/RxJava/RxJava进阶_RxBus/" class="leancloud_visitors" data-flag-title="RxJava进阶_RxBus">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">Visitors </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="what"><a href="#what" class="headerlink" title="what?"></a>what?</h2><p>RxBus就是根据所学的Rxjava知识,然后对比了EventBus而写出来的一个可以代替EventBus的总线控制的类;</p>
+<a id="more"></a>
+<h2 id="why"><a href="#why" class="headerlink" title="why?"></a>why?</h2><p>BroadcastReceiverd的特点:</p>
+<blockquote>
+<p>广播是四大组件之一，许多系统级的事件都是通过广播来通知的,广播也是消耗资源较多的方式。他的优势体现在与sdk连接紧密，如果需要同 android 交互的时候，广播的便捷性会抵消掉它过多的资源消耗，但是如果不同android交互，或者说，只做很少的交互，使用广播是一种浪费；<br>EventBus的特点:<br>代码逻辑不是很清楚,在 Subscriber 注册的时候，Subscriber 中的方法会被遍历查找以 onEvent 开头的 public 方法。这将带来一些问题，一旦对代码进行混淆，就无法查找到了。<br>写RxBus的目的:<br>根据EventBus的总线思想,同时考虑到RxJava的各种优点,也为了对最近学习Rxjava的一个练手.所有就写了RxBus</p>
+</blockquote>
+<h2 id="how"><a href="#how" class="headerlink" title="how?"></a>how?</h2><pre><code>public class MyRxBus {
+private static MyRxBus                 defaultInstance;
+private        Subject&lt;Object, Object&gt; bus;
+
+private MyRxBus() {
+    bus = new SerializedSubject&lt;&gt;(PublishSubject.create());
+}
+
+public static MyRxBus getInstance() {
+    if (defaultInstance == null) {
+        synchronized (MyRxBus.class) {
+            if (defaultInstance == null) {
+                defaultInstance = new MyRxBus();
+            }
+        }
+    }
+    return defaultInstance;
+}
+
+//发送事件
+public void post(Object o) {
+    bus.onNext(o);
+}
+//根据传递的类型,返回特定的数据;
+public &lt;T&gt;Observable&lt;T&gt; toObservable (Class&lt;T&gt; eventType) {
+    return bus.ofType(eventType);
+}
+
+}
+</code></pre><p>注意:  </p>
+<ol>
+<li>这里的<code>Subject</code>即可充当观察者和被观众者<code>Observer</code>和<code>Observable</code>两个角色,既是阴也是阳  </li>
+<li>Subject是非线程安全的，要避免该问题，需要将 Subject转换为一个 SerializedSubject 所以,上述RxBus类中把线程非安全的PublishSubject包装成线程安全的Subject。  </li>
+<li>PublishSubject只会把在订阅发生的时间点之后来自原始Observable的数据发射给观察者。</li>
+<li><p>ofType操作符只发射指定类型的数据</p>
+<p> //ofType内部原理:<br> public final <r> Observable<r> ofType(final Class<r> klass) {<br> return filter(new Func1<t, boolean="">() {</t,></r></r></r></p>
+<pre><code>@Override
+public final Boolean call(T t) {
+    return klass.isInstance(t);
+}
+</code></pre><p> }).cast(klass);<br> }</p>
+</li>
+</ol>
+<p>filter操作符可以使你提供一个指定的测试数据项，只有通过测试的数据才会被“发射”。<br>cast操作符可以将一个Observable转换成指定类型的Observable。</p>
+<p>RxBus的工作流程:  </p>
+<p><img width="100%" height="40%" align="center" src="RxBus\how_rxbus_work_stream_2017-3-1.png" alt="why_introduces_2017-2-28"></p>
+<p>使用<code>Subject</code>的目的:<br><code>Subject</code>可以看成是一个桥梁或者代理，在某些ReactiveX实现中（如RxJava），它同时充当了Observer和Observable的角色。因为它是一个Observer，它可以订阅一个或多个Observable；又因为它是一个Observable，它可以转发它收到(Observe)的数据，也可以发射新的数据。</p>
+<p>采用<code>PublishSubject</code>的目的;<br>Subject that, once an Observer has subscribed, emits all subsequently observed items to the subscriber.<br>其实RxJava提供了4中Subject:     </p>
+<ol>
+<li><code>PublishSubject</code>只会给在订阅者订阅的时间点之后的数据发送给观察者。   </li>
+<li><code>BehaviorSubject</code>在订阅者订阅时，会发送其最近发送的数据（如果此时还没有收到任何数据，它会发送一个默认值）。  </li>
+<li><code>ReplaySubject</code>在订阅者订阅时，会发送所有的数据给订阅者，无论它们是何时订阅的。  </li>
+<li><code>AsyncSubject</code>只在原Observable事件序列完成后，发送最后一个数据，后续如果还有订阅者继续订阅该Subject, 则可以直接接收到最后一个值。</li>
+</ol>
+<p>采用<code>serializedSubject</code>的目的,线程是安全的,具体见官方文档:   </p>
+<blockquote>
+<p>Wraps a Subject so that it is safe to call its various on methods from different threads.<br>When you use an ordinary Subject as a Subscriber, you must take care not to call its Observer.onNext(T) method (or its other on methods) from multiple threads, as this could lead to non-serialized calls, which violates the Observable contract and creates an ambiguity in the resulting Subject.<br>To protect a Subject from this danger, you can convert it into a SerializedSubject with code like the following:<br>mySafeSubject = new SerializedSubject( myUnsafeSubject );</p>
+</blockquote>
+<h5 id="使用方法"><a href="#使用方法" class="headerlink" title="使用方法"></a>使用方法</h5><p>1、首先创建一个可同时充当Observer和Observable的Subject；</p>
+<p>2、在需要接收事件的地方，订阅该Subject（此时Subject是作为Observable），在这之后，一旦Subject接收到事件，立即发射给该订阅者；</p>
+<p>3、在我们需要发送事件的地方，将事件post至Subject，此时Subject作为Observer接收到事件（onNext），然后会发射给所有订阅该Subject的订阅者。</p>
+<p>代码实现:<br>1.发送对象:<br>定义一个我们需要发送的对象,比如存放了id name,等其他数据;</p>
+<pre><code>public class UserEvent {
+private long id;
+private String name;
+public UserEvent(long id, String name) {
+    this.id = id;
+    this.name = name;
+}
+public long getId() {
+    return id;
+}
+public void setId(long id) {
+    this.id = id;
+}
+public String getName() {
+    return name;
+}
+public void setName(String name) {
+    this.name = name;
+}
+@Override
+public String toString() {
+    return &quot;UserEvent{&quot; +
+            &quot;id=&quot; + id +
+            &quot;, name=&apos;&quot; + name + &apos;\&apos;&apos; +
+            &apos;}&apos;;
+}
+}
+</code></pre><p>2.订阅RxBus,并处理接受事件:</p>
+<pre><code>//用于处理rxbus处理的事件;
+//这里的mRxSubscription 是Subscription的对象,是一个成员变量;
+    mRxSubscription = MyRxBus.getInstance()
+            .toObservable(UserEvent.class)
+            .subscribe(new Action1&lt;UserEvent&gt;() {
+                @Override
+                public void call(UserEvent userEvent) {
+                    long id = userEvent.getId();
+                    String name = userEvent.getName();
+                    Log.d(&quot;72==locall&quot;,  id + name + &quot; &gt;&gt;id + name---&lt;&lt; &quot;);
+                    mEtMainShowtext.setText(id + name);
+                }
+            }, new Action1&lt;Throwable&gt;() {
+                @Override
+                public void call(Throwable throwable) {
+                    Log.d(&quot;75==locall&quot;,  throwable.getMessage() + &quot; &gt;&gt;throwable.getMessage()---&lt;&lt; &quot;);
+                }
+            });
+</code></pre><p>3.发送事件:</p>
+<pre><code>MyRxBus.getInstance().post(new UserEvent(1,&quot;helloRxBus&quot;));
+</code></pre><p>4.取消订阅:<br>在订阅完成后,一定需要取消订阅事件,防止系统Rxjava的内存出现泄露的情况;</p>
+<pre><code>//取消订阅Rxbus;
+    if(!mRxSubscription.isUnsubscribed()) {
+        mRxSubscription.unsubscribe();
+    }
+</code></pre><p><strong>注意:</strong><br>好,上面已经完整的实现了Rxjava来代替EventBus的代码,但是我们在正常使用的时候,仍然会有一些其它的问题:<br>如果,我在一堆时间中,发送了空事件,如果不做处理的话,会造成整个RxBus都不会处理空事件之后的事情了;</p>
+<pre><code>MyRxBus.getInstance().post(new UserEvent(1,&quot;helloRxBus&quot;));
+MyRxBus.getInstance().post(null);//需要进行异常处理,不然这里出现异常,后面都无法执行了;
+MyRxBus.getInstance().post(new UserEvent(2,&quot;helloRxBus&quot;));
+MyRxBus.getInstance().post(new UserEvent(3,&quot;helloRxBus&quot;));
+</code></pre><p>这里就需要RxBus中需要异常处理的代码了；<br>上面的原因是，因为RxJava本身的特性原因,RxJava的事件序列机制，一个订阅事件是以<code>onCompleted()</code>或者<code>onError()</code>作为结束的，即：一旦订阅者的<code>onCompleted()</code>或<code>onError()</code>被调用，订阅者和被订阅者的订阅关系就解除了。而Rxjava的异常传递机制是:<br><code>onError()</code>在<code>Observable</code>序列传递过程中出现任何异常时被调用，然后终止Observable事件序列的传递，以此通知所有的订阅者发生了一个不可恢复的错误，即：异常总会传递到订阅者。<br>这里原本是RxJava的一个优点,但是在RxBus中我们需要处理一下,不然就会被EventBus嘲笑了;<br>1.常用的方案:捕捉异常;(在接收事件的地方我们对异常进行处理;)</p>
+<pre><code>//处理可能出现的异常,并保持Rxbus的持续性;
+try {
+    long id = userEvent.getId();
+    String name = userEvent.getName();
+    Log.d(&quot;72==locall&quot;, id + name + &quot; &gt;&gt;id + name---&lt;&lt; &quot;);
+    mEtMainShowtext.setText(id + name);
+} catch (Exception e) {
+     e.printStackTrace();
+}
+</code></pre><p>2.另外还有一个方法就是,在处理异常代码中的<code>onError()</code>中,我们<em>重新订阅</em>.但是,如果我们是一个<code>Sticky</code>特性的事件,如果出错,那就会陷入死循环的状态了;</p>
+<h3 id="Sticky事件"><a href="#Sticky事件" class="headerlink" title="Sticky事件"></a>Sticky事件</h3><h4 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h4><p>在Android开发中，<code>Sticky</code>事件只指事件消费者在<strong>事件发布之后才注册</strong>的也能接收到该事件的特殊类型。Android中就有这样的实例，也就是<code>Sticky Broadcast</code>，即<code>粘性广播</code>。正常情况下如果发送者发送了某个广播，而接收者在这个广播发送后才注册自己的Receiver，这时接收者便无法接收到刚才的广播，为此Android引入了<code>StickyBroadcast</code>，在广播发送结束后会保存刚刚发送的广播（Intent），这样当接收者注册完Receiver后就可以接收到刚才已经发布的广播。这就使得我们可以预先处理一些事件，让有消费者时再把这些事件投递给消费者;</p>
+<p><img width="100%" height="60%" align="center" src="RxBus\sticky_subject_classification_2017-3-2.png" alt="sticky_subject_classification_2017-3-2"></p>
+<p>从上图来看，似乎BehaviorSubject和ReplaySubject具备Sticky的特性。<br>BehaviorSubject方案<br>BehaviorSubject似乎完全符合Sticky的定义，但是你发现了它只能保存最近的那个事件。<br>有这样的场景：如果订阅者A订阅了Event1，订阅者B订阅了Event2，而此时BehaviorSubject事件队列里是［…, Event2, Event1］，当订阅者订阅时，因为保存的是最近的事件：即Event1，所以订阅者B是接收不到Event2的。<br>解决办法就是：<br>每个Event类型都各自创建一个对应的BehaviorSubject，这样的话资源开销比较大，并且该Sticky事件总线和普通的RxBus事件总线不能共享，即：普通事件和Sticky事件是独立的，因为普通事件是基于PublishSubject的， 暂时放弃该方案！<br>ReplaySubject方案<br>ReplaySubject可以保存发送过的所有数据事件。<br>因为保存了所有的数据事件，所以不管什么类型的Event，我们只要过滤该类型，并让其发送最近的那个Event即可满足Sticky事件了。但是获取最近的对应事件是个难点，因为最符合需求的操作符takeLast()仅在订阅事件结束时（即：onCompleted()）才会发送最后的那个数据事件，而我们的RxBus正常情况下应该是尽量避免其订阅事件结束的。（我没能找到合适的操作符，如果你知道，请告知我）<br>所以BehaviorSubject也是比较难实现Sticky特性的。</p>
+<p>并且，不管是BehaviorSubject还是ReplaySubject，它们还有一个棘手的问题：它们实现的EventBus和普通的RxBus（基于PublishSubject）之间的数据是相互独立的！</p>
+<p>总结：BehaviorSubject和BehaviorSubject都不能天然适合Sticky事件……</p>
+<h6 id="使用Map实现Sticky"><a href="#使用Map实现Sticky" class="headerlink" title="使用Map实现Sticky"></a>使用Map实现Sticky</h6><p>该方法思路是在原来PublishSubject实现的RxBus基础上，使用ConcurrentHashMap&lt;事件类型，事件&gt;保存每个事件的最近事件，不仅能实现Sticky特性，最重要的是可以和普通RxBus的事件数据共享，不独立。</p>
+<p>这个方案的思路我是根据EventBus的实现想到的，下面是大致流程：   </p>
+<ol>
+<li><p>Map的初始化：</p>
+<p> private final Map<class<?>, Object&gt; mStickyEventMap;<br>  public RxBus() {<br>  mBus = new SerializedSubject&lt;&gt;(PublishSubject.create());<br>  mStickyEventMap = new ConcurrentHashMap&lt;&gt;();<br>  }<br>ConcurrentHashMap是一个线程安全的HashMap， 采用stripping lock（分离锁），效率比HashTable高很多。  </class<?></p>
+</li>
+<li><p>在我们postSticky(Event)时，存入Map中：</p>
+<p> public void postSticky(Object event) {</p>
+<pre><code>synchronized (mStickyEventMap) {
+mStickyEventMap.put(event.getClass(), event);
+}
+post(event);
+</code></pre><p> }</p>
+</li>
+</ol>
+<p>3.订阅时toObservableSticky(Class<t> eventType)，先从Map中寻找是否包含该类型的事件，如果没有，则说明没有Sticky事件要发送，直接订阅Subject（此时作为被观察者Observable）；如果有，则说明有Sticky事件需要发送，订阅merge（Subject 和 Sticky事件）。</t></p>
+<pre><code>public &lt;T&gt; Observable&lt;T&gt; toObservableSticky(final Class&lt;T&gt; eventType) {
+  synchronized (mStickyEventMap) {
+      Observable&lt;T&gt; observable = mBus.ofType(eventType);
+      final Object event = mStickyEventMap.get(eventType);
+
+      if (event != null) {
+          return observable.mergeWith(Observable.create(new Observable.OnSubscribe&lt;T&gt;() {
+              @Override
+              public void call(Subscriber&lt;? super T&gt; subscriber) {
+                  subscriber.onNext(eventType.cast(event));
+              }
+          }));
+      } else {
+          return observable;
+      }
+  }
+  }  
+</code></pre><p>merge操作符：可以将多个Observables合并，就好像它们是单个的Observable一样。</p>
+<p>这样，Sticky的核心功能就完成了，使用上和普通RxBus一样，通过postSticky()发送事件，toObservableSticky()订阅事件。</p>
+<p>除此之外，我还提供了getStickyEvent(Class<t> eventType),removeStickyEvent(Class<t> eventType),removeAllStickyEvents()方法，供查找、移除对应事件类型的事件、移除全部Sticky事件。</t></t></p>
+<p><strong>注意:</strong></p>
+<p>在使用Sticky特性时，在不需要某Sticky事件时， 通过removeStickyEvent(Class<t> eventType)移除它，最保险的做法是：在主Activity的onDestroy里removeAllStickyEvents()。<br>因为我们的RxBus是个单例静态对象，再正常退出app时，该对象依然会存在于JVM，除非进程被杀死，这样的话导致StickyMap里的数据依然存在，为了避免该问题，需要在app退出时，清理StickyMap。</t></p>
+<pre><code>// 主Activity（一般是栈底Activity）
+@Override
+protected void onDestroy() {
+super.onDestroy();
+// 移除所有Sticky事件
+RxBus.getDefault().removeAllStickyEvents();
+}
+</code></pre><h2 id="完整代码-1-后面更新"><a href="#完整代码-1-后面更新" class="headerlink" title="完整代码(1)-后面更新"></a>完整代码(1)-后面更新</h2><pre><code>/**
+ * PublishSubject: 只会把在订阅发生的时间点之后来自原始Observable的数据发射给观察者
+ */
+public class RxBus {
+private static volatile RxBus mDefaultInstance;
+private final Subject&lt;Object, Object&gt; mBus;
+
+private final Map&lt;Class&lt;?&gt;, Object&gt; mStickyEventMap;
+
+public RxBus() {
+    mBus = new SerializedSubject&lt;&gt;(PublishSubject.create());
+    mStickyEventMap = new ConcurrentHashMap&lt;&gt;();
+}
+
+public static RxBus getDefault() {
+    if (mDefaultInstance == null) {
+        synchronized (RxBus.class) {
+            if (mDefaultInstance == null) {
+                mDefaultInstance = new RxBus();
+            }
+        }
+    }
+    return mDefaultInstance;
+}
+
+/**
+ * 发送事件
+ */
+public void post(Object event) {
+    mBus.onNext(event);
+}
+
+/**
+ * 根据传递的 eventType 类型返回特定类型(eventType)的 被观察者
+ */
+public &lt;T&gt; Observable&lt;T&gt; toObservable(Class&lt;T&gt; eventType) {
+    return mBus.ofType(eventType);
+}
+
+/**
+ * 判断是否有订阅者
+ */
+public boolean hasObservers() {
+    return mBus.hasObservers();
+}
+
+public void reset() {
+    mDefaultInstance = null;
+}
+
+/**
+ * Stciky 相关
+ */
+
+/**
+ * 发送一个新Sticky事件
+ */
+public void postSticky(Object event) {
+    synchronized (mStickyEventMap) {
+        mStickyEventMap.put(event.getClass(), event);
+    }
+    post(event);
+}
+
+/**
+ * 根据传递的 eventType 类型返回特定类型(eventType)的 被观察者
+ */
+public &lt;T&gt; Observable&lt;T&gt; toObservableSticky(final Class&lt;T&gt; eventType) {
+    synchronized (mStickyEventMap) {
+        Observable&lt;T&gt; observable = mBus.ofType(eventType);
+        final Object event = mStickyEventMap.get(eventType);
+
+        if (event != null) {
+             return observable.mergeWith(Observable.create(new Observable.OnSubscribe&lt;T&gt;() {
+                @Override
+                public void call(Subscriber&lt;? super T&gt; subscriber) {
+                    subscriber.onNext(eventType.cast(event));
+                }
+            }));
+        } else {
+            return observable;
+        }
+    }
+}
+/**
+ * 根据eventType获取Sticky事件
+ */
+public &lt;T&gt; T getStickyEvent(Class&lt;T&gt; eventType) {
+    synchronized (mStickyEventMap) {
+        return eventType.cast(mStickyEventMap.get(eventType));
+    }
+}
+
+/**
+ * 移除指定eventType的Sticky事件
+ */
+public &lt;T&gt; T removeStickyEvent(Class&lt;T&gt; eventType) {
+    synchronized (mStickyEventMap) {
+        return eventType.cast(mStickyEventMap.remove(eventType));
+    }
+}
+
+/**
+ * 移除所有的Sticky事件
+ */
+public void removeAllStickyEvents() {
+    synchronized (mStickyEventMap) {
+        mStickyEventMap.clear();
+    }
+}
+}
+</code></pre><p>虽然使用了线程安全的ConCurrentHashMap，但是依然大量使用了synchronized，可以发现锁住的是mStickyEventMap对象，这是为了保证对于读、写、查、删同步，即读时不能写，写时不能读…</p>
+<h4 id="深入RxBus"><a href="#深入RxBus" class="headerlink" title="深入RxBus"></a>深入RxBus</h4><p>RxBus采用了: Subject   SerializedSubject   PublishSubject  CompositeSubscription</p>
+<pre><code>//Subject既可以充当观察者和被观察者;
+//Subject的源码:
+public abstract class Subject&lt;T, R&gt; extends Observable&lt;R&gt; implements Observer&lt;T&gt; {
+protected Subject(OnSubscribe&lt;R&gt; onSubscribe) {
+    super(onSubscribe);
+}
+public abstract boolean hasObservers();
+public final SerializedSubject&lt;T, R&gt; toSerialized() {
+    if (getClass() == SerializedSubject.class) {
+        return (SerializedSubject&lt;T, R&gt;)this;
+    }
+    return new SerializedSubject&lt;T, R&gt;(this);//这里返回的是一个serializedSubject;返回后,就是线程安全的了;
+}
+</code></pre><p>Subject中有两个方法:<br>1.hasObservers()判断 Subject 是否已经有 observers 订阅了 有则返回 ture</p>
+<p>2.toSerialized()  包装 Subject 后让它可以安全的在不同线程中调用各种方法</p>
+<h6 id="PublishSubject-解释"><a href="#PublishSubject-解释" class="headerlink" title="PublishSubject 解释"></a>PublishSubject 解释</h6><p><img width="100%" height="40%" align="center" src="RxBus\deep_subject_2017-3-2.png" alt="deep_subject_2017-3-2"></p>
+<p>在 RxJava 里有一个抽象类 Subject，既是 Observable 又是 Observer，可以把 Subject 理解成一个管道或者转发器，数据从一端输入，然后从另一端输出。</p>
+<p>Subject 有好几种，这里可以使用最简单的 PublishSubject。订阅之后，一旦数据从一端传入，结果会里立刻从另一端输出。</p>
+<p>源码里给了用法例子：</p>
+<pre><code>PublishSubject&lt;Object&gt; subject = PublishSubject.create();
+// observer1 will receive all onNext and onCompleted events
+subject.subscribe(observer1);
+subject.onNext(&quot;one&quot;);
+subject.onNext(&quot;two&quot;);
+// observer2 will only receive &quot;three&quot; and onCompleted
+subject.subscribe(observer2);
+subject.onNext(&quot;three&quot;);
+subject.onCompleted();
+</code></pre><p>串行化:</p>
+<p>官方文档推荐我们：<br>如果你把 Subject 当作一个 Subscriber 使用，注意不要从多个线程中调用它的onNext方法（包括其它的on系列方法），这可能导致同时（非顺序）调用，这会违反Observable协议，给Subject的结果增加了不确定性。</p>
+<p>要避免此类问题，你可以将 Subject 转换为一个 SerializedSubject ，类似于这样：</p>
+<pre><code>mySafeSubject = new SerializedSubject( myUnsafeSubject );
+</code></pre><p>所以我们可以看到在 RxBus 初始化的时候我们做了这样一件事情：</p>
+<pre><code>private final Subject&lt;Object, Object&gt; BUS;
+private RxBus() {
+BUS = new SerializedSubject&lt;&gt;(PublishSubject.create());
+}
+</code></pre><p>为了保证多线程的调用中结果的确定性，我们按照官方推荐将 Subject 转换成了一个 SerializedSubject 。</p>
+<p><img width="100%" height="40%" align="center" src="RxBus\deep_subject_2017-3-2_1.png" alt="deep_subject_2017-3-2_1"></p>
+<p>该类同样是 Subject 的子类，这里贴出该类的构造方法。</p>
+<pre><code>private final SerializedObserver&lt;T&gt; observer;
+private final Subject&lt;T, R&gt; actual;
+public SerializedSubject(final Subject&lt;T, R&gt; actual) {
+super(new OnSubscribe&lt;R&gt;() {
+    @Override
+    public void call(Subscriber&lt;? super R&gt; child) {
+        actual.unsafeSubscribe(child);
+    }
+});
+this.actual = actual;
+this.observer = new SerializedObserver&lt;T&gt;(actual);
+}
+</code></pre><p>我们发现，Subject 最后转化成了 SerializedObserver.</p>
+<p>SerializedObserver</p>
+<p>When multiple threads are emitting and/or notifying they will be serialized by:<br>Allowing only one thread at a time to emit<br>Adding notifications to a queue if another thread is already emitting<br>Not holding any locks or blocking any threads while emitting<br>一次只会允许一个线程进行发送事物<br>如果其他线程已经准备就绪，会通知给队列<br>在发送事物中，不会持有任何锁和阻塞任何线程   </p>
+<p><img width="100%" height="40%" align="center" src="RxBus\deep_subject_2017-3-2_2.png" alt="deep_subject_2017-3-2_2"></p>
+<p>通过介绍可以知道是通过 notifications 来进行并发处理的。<br>SerializedObserver 类中<br>private final NotificationLite<t> nl = NotificationLite.instance();<br>重点看看 nl 在 onNext() 方法里的使用：</t></p>
+<pre><code>@Override
+   public void onNext(T t) {
+  // 省略一些代码
+   for (;;) {
+       for (int i = 0; i &lt; MAX_DRAIN_ITERATION; i++) {
+           FastList list;
+           synchronized (this) {
+               list = queue;
+               if (list == null) {
+                   emitting = false;
+                   return;
+               }
+               queue = null;
+           }
+           for (Object o : list.array) {
+               if (o == null) {
+                   break;
+               }
+               // 这里的 accept() 方法
+               try {
+                   if (nl.accept(actual, o)) {
+                       terminated = true;
+                       return;
+                   }
+               } catch (Throwable e) {
+                   terminated = true;
+                   Exceptions.throwIfFatal(e);
+                   actual.onError(OnErrorThrowable.addValueAsLastCause(e, t));
+                   return;
+               }
+           }
+       }
+   }
+   }
+</code></pre><p>NotificationLite</p>
+<p>知道哪里具体调用了之后，我们再仔细看看 NotificationLite<br>先来了解它到底是什么：</p>
+<blockquote>
+<p>For use in internal operators that need something like materialize and dematerialize wholly within the implementation of the operator but don’t want to incur the allocation cost of actually creating {@link rx.Notification} objects for every {@link Observer#onNext onNext} and {@link Observer#onCompleted onCompleted}.<br>It’s implemented as a singleton to maintain some semblance of type safety that is completely non-existent.<br>大致意思是：作为一个单例类保持这种完全不存在的安全类型的表象。</p>
+</blockquote>
+<p><img width="100%" height="40%" align="center" src="RxBus\deep_subject_2017-3-2_3.png" alt="deep_subject_2017-3-2_3"></p>
+<p>刚我们在 SerializedObserver 的 onNext() 方法中看到 nl.accept(actual, o)<br>所以我们再深入到 accept() 方法中：</p>
+<pre><code>public boolean accept(Observer&lt;? super T&gt; o, Object n) {
+ if (n == ON_COMPLETED_SENTINEL) {
+     o.onCompleted();
+     return true;
+ } else if (n == ON_NEXT_NULL_SENTINEL) {
+     o.onNext(null);
+     return false;
+ } else if (n != null) {
+     if (n.getClass() == OnErrorSentinel.class) {
+         o.onError(((OnErrorSentinel) n).e);
+         return true;
+     }
+     o.onNext((T) n);
+     return false;
+ } else {
+     throw new IllegalArgumentException(&quot;The lite notification can not be null&quot;);
+ }
+ }
+</code></pre><p>Unwraps the lite notification and calls the appropriate method on the {@link Observer}.<br>判断 lite 通知类别，通知 observer 执行适当方法。   </p>
+<p>通过 NotficationLite 类图可以看到有三个标识<br>ON_NEXT_NULL_SENTINEL （onNext 标识）<br>ON_COMPLETED_SENTINEL （onCompleted 标识)<br>OnErrorSentinel (onError 标识)<br>与 Observer 回调一致。通过分析得知 accept() 就是通过标识来判断，然后调用 Observer 相对应的方法。  </p>
+<p>CompositeSubscription</p>
+<p>RxBus 这辆”兰博基尼”与 CompositeSubscription 车间搭配更好。</p>
+<p><img width="100%" height="40%" align="center" src="RxBus\deep_subject_2017-3-2_4.png" alt="deep_subject_2017-3-2_4"></p>
+<p>构造函数:</p>
+<pre><code>private Set&lt;Subscription&gt; subscriptions;
+private volatile boolean unsubscribed;
+public CompositeSubscription() {
+}
+public CompositeSubscription(final Subscription... subscriptions) {
+this.subscriptions = new HashSet&lt;Subscription&gt;(Arrays.asList(subscriptions));
+}
+</code></pre><p>内部是初始化了一个 HashSet ，按照哈希算法来存取集合中的对象，存取速度比较快，并且没有重复对象。<br>所以我们推荐在基类里实例化一个 CompositeSubscription 对象，使用 CompositeSubscription 来持有所有的 Subscriptions ，然后在 onDestroy()或者 onDestroyView()里取消所有的订阅。</p>
+<h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p>笔者项目在用RxBus的时候,发现有时候发送事件时,有的事件发送的时候,一个事件对应着多个不同的数据状态.根据这里使用的Map集合的特点,<br>Map集合中存放的是Key-Value<br>    <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * 发送Sticky事件</div><div class="line"> *</div><div class="line"> * <span class="doctag">@param</span> o</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">postSticky</span><span class="params">(Object o)</span> </span>&#123;</div><div class="line">	<span class="keyword">synchronized</span> (mStickyEventMap) &#123;</div><div class="line">		mStickyLists.add(o);<span class="comment">//这里采用了list集合</span></div><div class="line">		<span class="comment">//mStickyEventMap.put(o.getClass(), mStickyLists);//将制定的事件绑定类并存放到map中;</span></div><div class="line">		mStickyEventMap.put(o.getClass(), o);</div><div class="line">		<span class="comment">//mStickIndentityMap.put(o.getClass(), o);</span></div><div class="line">	&#125;</div><div class="line">	post(o);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="完整代码-最新版"><a href="#完整代码-最新版" class="headerlink" title="完整代码-最新版"></a>完整代码-最新版</h2><pre><code><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div><div class="line">135</div><div class="line">136</div><div class="line">137</div><div class="line">138</div><div class="line">139</div><div class="line">140</div><div class="line">141</div><div class="line">142</div><div class="line">143</div><div class="line">144</div><div class="line">145</div><div class="line">146</div><div class="line">147</div><div class="line">148</div><div class="line">149</div><div class="line">150</div><div class="line">151</div><div class="line">152</div><div class="line">153</div><div class="line">154</div><div class="line">155</div><div class="line">156</div><div class="line">157</div><div class="line">158</div><div class="line">159</div><div class="line">160</div><div class="line">161</div><div class="line">162</div><div class="line">163</div><div class="line">164</div><div class="line">165</div><div class="line">166</div><div class="line">167</div><div class="line">168</div><div class="line">169</div><div class="line">170</div><div class="line">171</div><div class="line">172</div><div class="line">173</div><div class="line">174</div><div class="line">175</div><div class="line">176</div><div class="line">177</div><div class="line">178</div><div class="line">179</div><div class="line">180</div><div class="line">181</div><div class="line">182</div><div class="line">183</div><div class="line">184</div><div class="line">185</div><div class="line">186</div><div class="line">187</div><div class="line">188</div><div class="line">189</div><div class="line">190</div><div class="line">191</div><div class="line">192</div><div class="line">193</div><div class="line">194</div><div class="line">195</div><div class="line">196</div><div class="line">197</div><div class="line">198</div><div class="line">199</div><div class="line">200</div><div class="line">201</div><div class="line">202</div><div class="line">203</div><div class="line">204</div><div class="line">205</div><div class="line">206</div><div class="line">207</div><div class="line">208</div><div class="line">209</div><div class="line">210</div><div class="line">211</div><div class="line">212</div><div class="line">213</div><div class="line">214</div><div class="line">215</div><div class="line">216</div><div class="line">217</div><div class="line">218</div><div class="line">219</div><div class="line">220</div><div class="line">221</div><div class="line">222</div><div class="line">223</div><div class="line">224</div><div class="line">225</div><div class="line">226</div><div class="line">227</div><div class="line">228</div><div class="line">229</div><div class="line">230</div><div class="line">231</div><div class="line">232</div><div class="line">233</div><div class="line">234</div><div class="line">235</div><div class="line">236</div><div class="line">237</div><div class="line">238</div><div class="line">239</div><div class="line">240</div><div class="line">241</div><div class="line">242</div><div class="line">243</div><div class="line">244</div><div class="line">245</div><div class="line">246</div><div class="line">247</div><div class="line">248</div><div class="line">249</div><div class="line">250</div><div class="line">251</div><div class="line">252</div><div class="line">253</div><div class="line">254</div><div class="line">255</div><div class="line">256</div><div class="line">257</div><div class="line">258</div><div class="line">259</div><div class="line">260</div><div class="line">261</div><div class="line">262</div><div class="line">263</div><div class="line">264</div><div class="line">265</div><div class="line">266</div><div class="line">267</div><div class="line">268</div><div class="line">269</div><div class="line">270</div><div class="line">271</div><div class="line">272</div><div class="line">273</div><div class="line">274</div><div class="line">275</div><div class="line">276</div><div class="line">277</div><div class="line">278</div><div class="line">279</div><div class="line">280</div><div class="line">281</div><div class="line">282</div><div class="line">283</div><div class="line">284</div><div class="line">285</div><div class="line">286</div><div class="line">287</div><div class="line">288</div><div class="line">289</div><div class="line">290</div><div class="line">291</div><div class="line">292</div><div class="line">293</div><div class="line">294</div><div class="line">295</div><div class="line">296</div><div class="line">297</div><div class="line">298</div><div class="line">299</div><div class="line">300</div><div class="line">301</div><div class="line">302</div><div class="line">303</div><div class="line">304</div><div class="line">305</div><div class="line">306</div><div class="line">307</div><div class="line">308</div><div class="line">309</div><div class="line">310</div><div class="line">311</div><div class="line">312</div><div class="line">313</div><div class="line">314</div><div class="line">315</div><div class="line">316</div><div class="line">317</div><div class="line">318</div><div class="line">319</div><div class="line">320</div><div class="line">321</div><div class="line">322</div><div class="line">323</div><div class="line">324</div><div class="line">325</div><div class="line">326</div><div class="line">327</div><div class="line">328</div><div class="line">329</div><div class="line">330</div><div class="line">331</div><div class="line">332</div><div class="line">333</div><div class="line">334</div><div class="line">335</div><div class="line">336</div><div class="line">337</div><div class="line">338</div><div class="line">339</div><div class="line">340</div><div class="line">341</div><div class="line">342</div><div class="line">343</div><div class="line">344</div><div class="line">345</div><div class="line">346</div><div class="line">347</div><div class="line">348</div><div class="line">349</div><div class="line">350</div><div class="line">351</div><div class="line">352</div><div class="line">353</div><div class="line">354</div><div class="line">355</div><div class="line">356</div><div class="line">357</div><div class="line">358</div><div class="line">359</div><div class="line">360</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/** Created by 国荣 on 2016/12/5 10:27.</span></div><div class="line">Copyright (c) 2016. All rights reserved.</div><div class="line">PublishSubject: 只会把在订阅发生的时间点之后来自原始Observable的数据发射给观察者</div><div class="line">这个类是用Rxjava实现的Rxbus,用来代替EventBus;</div><div class="line">注意,Rxjava有事件的序列性,所以我们在有可能出错的地方需要try()catch(),以保证订阅的连续性;</div><div class="line">在订阅了的地方,一定要取消订阅,防止内存泄露;</div><div class="line">public class MyRxBus &#123;</div><div class="line"></div><div class="line">private static MyRxBus                            sRxBusInstance;</div><div class="line">private        Subject&lt;Object, Object&gt;            mSuperBus;//兰博基尼超级大跑车;</div><div class="line">private        Map&lt;Object, List&lt;Subject&gt;&gt;         mSubjectMap;//用来控制线程的concurrenthashmap(),存储事件总线;</div><div class="line">private        Map&lt;Class&lt;?&gt;, Object&gt;              mStickyEventMap;//粘性事件的存放事件的集合</div><div class="line">private        Map&lt;String, CompositeSubscription&gt; mSubscriptionHashMap;//存放观察者的集合;</div><div class="line">private        Map&lt;Class&lt;?&gt;, Object&gt;              mStickIndentityMap;//key 值可以重复的map集合</div><div class="line">private        List&lt;Object&gt;                       mStickyLists;//用来存放不同的事件</div><div class="line"></div><div class="line">//公有构造,方便有可能还需要Rxbus对象的时候;</div><div class="line">public MyRxBus() &#123;</div><div class="line">	//serializedSubject是线程安全的;</div><div class="line">	mSuperBus = new SerializedSubject&lt;&gt;(PublishSubject.create());</div><div class="line">	//ConcurrentHashMap是一个线程安全的HashMap,采用stripping lock（分离锁),比hashMap安全,比HashTable效率高。</div><div class="line">	mStickyEventMap = new ConcurrentHashMap&lt;&gt;();</div><div class="line">	mSubjectMap = new ConcurrentHashMap&lt;&gt;();</div><div class="line">	mStickIndentityMap = new IdentityHashMap&lt;&gt;();</div><div class="line">	mStickyLists = new ArrayList&lt;&gt;();</div><div class="line">&#125;</div><div class="line"></div><div class="line">public static MyRxBus getInstance() &#123;</div><div class="line">	if (null == sRxBusInstance) &#123;</div><div class="line">		synchronized (MyRxBus.class) &#123;</div><div class="line">			if (null == sRxBusInstance) &#123;</div><div class="line">				sRxBusInstance = new MyRxBus();</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	return sRxBusInstance;</div><div class="line">&#125;</div><div class="line"></div><div class="line">/**</div><div class="line"> * 简单的发送一个事件;</div><div class="line"> *</div><div class="line"> * <span class="doctag">@param</span> event</div><div class="line"> */</div><div class="line"><span class="comment">//	public void post(Object event) &#123;</span></div><div class="line"><span class="comment">//		mSuperBus.onNext(event);</span></div><div class="line"><span class="comment">//	&#125;</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">post</span><span class="params">(Object event)</span> </span>&#123;</div><div class="line">	mSuperBus.onNext(event);</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"> * 发送一个新事件;</div><div class="line"> */</div><div class="line"><span class="comment">//	public void post(@Nullable Object event) &#123;</span></div><div class="line"><span class="comment">//		List&lt;Subject&gt; subjectList = mSubjectMap.get(event.getClass());</span></div><div class="line"><span class="comment">//		if (null != subjectList &amp;&amp; !subjectList.isEmpty()) &#123;</span></div><div class="line"><span class="comment">//			for (Subject subject : subjectList) &#123;</span></div><div class="line"><span class="comment">//				subject.onNext(event);</span></div><div class="line"><span class="comment">//			&#125;</span></div><div class="line"><span class="comment">//		&#125;</span></div><div class="line"><span class="comment">//		//mSuperBus.onNext(o);</span></div><div class="line"><span class="comment">//	&#125;</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"> * 清除订阅</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">clear</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="keyword">if</span> (mSubjectMap.isEmpty()) &#123;</div><div class="line">		<span class="keyword">return</span>;</div><div class="line">	&#125;</div><div class="line">	mSubjectMap.clear();</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">ReceiveOnUiThread</span> </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">void</span> <span class="title">OnReceive</span><span class="params">(String tag, Object object)</span></span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">ReceiveOnIOThread</span> </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">void</span> <span class="title">OnReceive</span><span class="params">(String tag, Object object)</span></span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">registerOnUiThread</span><span class="params">(<span class="keyword">final</span> ReceiveOnUiThread receiveOnUiThread)</span> </span>&#123;</div><div class="line">	mSuperBus.observeOn(AndroidSchedulers.mainThread())</div><div class="line">			.subscribe(<span class="keyword">new</span> Action1&lt;Object&gt;() &#123;</div><div class="line">				<span class="meta">@Override</span></div><div class="line">				<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">call</span><span class="params">(Object o)</span> </span>&#123;</div><div class="line"></div><div class="line">				&#125;</div><div class="line">			&#125;);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">registerOnIOThread</span><span class="params">(<span class="keyword">final</span> ReceiveOnIOThread receiveOnIOThread)</span> </span>&#123;</div><div class="line">	mSuperBus.observeOn(Schedulers.io())</div><div class="line">			.subscribe(<span class="keyword">new</span> Action1&lt;Object&gt;() &#123;</div><div class="line">				<span class="meta">@Override</span></div><div class="line">				<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">call</span><span class="params">(Object o)</span> </span>&#123;</div><div class="line"></div><div class="line">				&#125;</div><div class="line">			&#125;);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"> * 保存订阅后的subscription</div><div class="line"> *</div><div class="line"> * <span class="doctag">@param</span> o</div><div class="line"> * <span class="doctag">@param</span> subscription</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addSubscription</span><span class="params">(Object o, Subscription subscription)</span> </span>&#123;</div><div class="line">	<span class="keyword">if</span> (<span class="keyword">null</span> == mSubscriptionHashMap) &#123;</div><div class="line">		mSubscriptionHashMap = <span class="keyword">new</span> ConcurrentHashMap&lt;&gt;();</div><div class="line">	&#125;</div><div class="line">	String key = o.getClass()</div><div class="line">			.getName();</div><div class="line">	<span class="keyword">if</span> (<span class="keyword">null</span> != mSubscriptionHashMap.get(key)) &#123;</div><div class="line">		mSubscriptionHashMap.get(key)</div><div class="line">				.add(subscription);</div><div class="line">	&#125; <span class="keyword">else</span> &#123;</div><div class="line">		CompositeSubscription compositeSubscription = <span class="keyword">new</span> CompositeSubscription();</div><div class="line">		compositeSubscription.add(subscription);</div><div class="line">		mSubscriptionHashMap.put(key, compositeSubscription);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"> * 解除注册;</div><div class="line"> *</div><div class="line"> * <span class="doctag">@param</span> o</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">unSubscribe</span><span class="params">(Object o)</span> </span>&#123;</div><div class="line">	<span class="keyword">if</span> (<span class="keyword">null</span> == mSubscriptionHashMap) &#123;</div><div class="line">		<span class="keyword">return</span>;</div><div class="line">	&#125;</div><div class="line">	String key = o.getClass()</div><div class="line">			.getName();</div><div class="line">	<span class="keyword">if</span> (!mSubscriptionHashMap.containsKey(key)) &#123;</div><div class="line">		<span class="keyword">return</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">if</span> (<span class="keyword">null</span> != mSubscriptionHashMap.get(key)) &#123;</div><div class="line">		mSubscriptionHashMap.get(key)</div><div class="line">				.unsubscribe();</div><div class="line">	&#125;</div><div class="line">	mSubscriptionHashMap.remove(key);</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"> * 根据传递的eventType类型返回特定类型(eventType)的观察者;</div><div class="line"> * 也就是接收消息;</div><div class="line"> *</div><div class="line"> * <span class="doctag">@param</span> eventType</div><div class="line"> * <span class="doctag">@param</span> &lt;T&gt;</div><div class="line"> * <span class="doctag">@return</span></div><div class="line"> */</div><div class="line"><span class="keyword">public</span> &lt;T&gt; <span class="function">Observable&lt;T&gt; <span class="title">toObservable</span><span class="params">(<span class="keyword">final</span> Class&lt;T&gt; eventType)</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="comment">//oftype();过滤操作符,用于过滤操作,只有指定类型的才能通过,其它的抛弃;</span></div><div class="line">	<span class="comment">//oftype 内部就是filter+cast;</span></div><div class="line">	<span class="keyword">return</span> mSuperBus.ofType(eventType);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"> * <span class="doctag">@param</span> tag</div><div class="line"> * <span class="doctag">@return</span></div><div class="line"> */</div><div class="line"><span class="keyword">public</span> &lt;T&gt; <span class="function">Observable&lt;T&gt; <span class="title">register</span><span class="params">(@NonNull Class&lt;T&gt; tag)</span> </span>&#123;</div><div class="line">	List&lt;Subject&gt; subjectList = mSubjectMap.get(tag);</div><div class="line">	<span class="keyword">if</span> (<span class="keyword">null</span> == subjectList) &#123;</div><div class="line">		subjectList = <span class="keyword">new</span> ArrayList&lt;&gt;();</div><div class="line">		mSubjectMap.put(tag, subjectList);<span class="comment">//一个tag对应多个事件;</span></div><div class="line">	&#125;</div><div class="line">	Subject&lt;T, T&gt; subject = PublishSubject.create();</div><div class="line">	subjectList.add(subject);</div><div class="line">	<span class="keyword">return</span> subject;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"> * 解除注册</div><div class="line"> *</div><div class="line"> * <span class="doctag">@param</span> tag</div><div class="line"> */</div><div class="line"><span class="keyword">public</span> &lt;T&gt; <span class="function"><span class="keyword">void</span> <span class="title">unregister</span><span class="params">(@NonNull Class&lt;T&gt; tag, @NonNull Observable observable)</span> </span>&#123;</div><div class="line">	List&lt;Subject&gt; subjects = mSubjectMap.get(tag);</div><div class="line">	<span class="keyword">if</span> (<span class="keyword">null</span> != subjects) &#123;</div><div class="line">		subjects.remove(observable);</div><div class="line">		<span class="keyword">if</span> (subjects.isEmpty()) &#123;</div><div class="line">			mSubjectMap.remove(tag);</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"> * 自定义了订阅的情况;</div><div class="line"> *</div><div class="line"> * <span class="doctag">@param</span> type</div><div class="line"> * <span class="doctag">@param</span> subscriber</div><div class="line"> * <span class="doctag">@param</span> &lt;T&gt;</div><div class="line"> * <span class="doctag">@return</span></div><div class="line"> */</div><div class="line"><span class="keyword">public</span> &lt;T&gt; <span class="function">Subscription <span class="title">toSubscription</span><span class="params">(<span class="keyword">final</span> Class&lt;T&gt; type, Subscriber&lt;T&gt; subscriber)</span> </span>&#123;</div><div class="line">	<span class="keyword">return</span> toObservable(type).subscribe(subscriber);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">public</span> &lt;T&gt; <span class="function">Subscription <span class="title">toSubscription</span><span class="params">(<span class="keyword">final</span> Class&lt;T&gt; type, Action1&lt;T&gt; action1)</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="keyword">return</span> toObservable(type).subscribe(action1);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"> * 一个包含线程控制的订阅的方法;</div><div class="line"> *</div><div class="line"> * <span class="doctag">@param</span> type</div><div class="line"> * <span class="doctag">@param</span> action1</div><div class="line"> * <span class="doctag">@param</span> errorAction1</div><div class="line"> * <span class="doctag">@param</span> &lt;T&gt;</div><div class="line"> * <span class="doctag">@return</span></div><div class="line"> */</div><div class="line"><span class="keyword">public</span> &lt;T&gt; <span class="function">Subscription <span class="title">toSubscription</span><span class="params">(<span class="keyword">final</span> Class&lt;T&gt; type, Action1&lt;T&gt; action1, Action1&lt;Throwable&gt; errorAction1)</span> </span>&#123;</div><div class="line">	<span class="keyword">return</span> toObservable(type).subscribeOn(Schedulers.io())</div><div class="line">			.subscribeOn(AndroidSchedulers.mainThread())</div><div class="line">			.subscribe(action1, errorAction1);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"> * 判断是否有观察者;</div><div class="line"> *</div><div class="line"> * <span class="doctag">@return</span></div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">hasObservers</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="keyword">return</span> mSuperBus.hasObservers();</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"> * 重置</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">reset</span><span class="params">()</span> </span>&#123;</div><div class="line">	sRxBusInstance = <span class="keyword">null</span>;</div><div class="line">	mStickyEventMap = <span class="keyword">null</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line"><span class="comment">//loren,Sticky的事件处理--------------------------------------以下↓</span></div><div class="line"><span class="comment">//Sticky事件就是当我们在订阅的之后,还可以收到订阅之前发送的数据</span></div><div class="line"><span class="comment">/**</span></div><div class="line"> * 发送Sticky事件</div><div class="line"> *</div><div class="line"> * <span class="doctag">@param</span> o</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">postSticky</span><span class="params">(Object o)</span> </span>&#123;</div><div class="line">	<span class="keyword">synchronized</span> (mStickyEventMap) &#123;</div><div class="line">		mStickyEventMap.put(o.getClass(), o);<span class="comment">//将制定的事件绑定类并存放到map中;</span></div><div class="line">	&#125;</div><div class="line">	post(o);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"> * 获取ObserableSticky;</div><div class="line"> *</div><div class="line"> * <span class="doctag">@param</span> eventType</div><div class="line"> * <span class="doctag">@param</span> &lt;T&gt;</div><div class="line"> * <span class="doctag">@return</span></div><div class="line"> */</div><div class="line"><span class="keyword">public</span> &lt;T&gt; <span class="function">Observable&lt;T&gt; <span class="title">toObservableSticky</span><span class="params">(<span class="keyword">final</span> Class&lt;T&gt; eventType)</span> </span>&#123;</div><div class="line">	<span class="keyword">synchronized</span> (mStickyEventMap) &#123;</div><div class="line">		Observable&lt;T&gt; observable = mSuperBus.ofType(eventType);</div><div class="line">		<span class="keyword">final</span> Object event = mStickyEventMap.get(eventType);</div><div class="line"></div><div class="line">		<span class="keyword">if</span> (<span class="keyword">null</span> != event) &#123;<span class="comment">//如果event不为空,证明map集合中有数据,等待发送,然后将观察者合并之后发送;</span></div><div class="line">			<span class="keyword">return</span> observable.mergeWith(Observable.create(<span class="keyword">new</span> Observable.OnSubscribe&lt;T&gt;() &#123;</div><div class="line">				<span class="meta">@Override</span></div><div class="line">				<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">call</span><span class="params">(Subscriber&lt;? <span class="keyword">super</span> T&gt; subscriber)</span> </span>&#123;</div><div class="line">					subscriber.onNext(eventType.cast(event));</div><div class="line">				&#125;</div><div class="line">			&#125;));</div><div class="line">		&#125; <span class="keyword">else</span> &#123;</div><div class="line">			<span class="keyword">return</span> observable;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">public</span> &lt;T&gt; <span class="function">Observable&lt;T&gt; <span class="title">toObservableStickyList</span><span class="params">(<span class="keyword">final</span> Class&lt;T&gt; eventType)</span> </span>&#123;</div><div class="line">	<span class="keyword">synchronized</span> (mStickyEventMap) &#123;</div><div class="line">		Observable&lt;T&gt; observable = mSuperBus.ofType(eventType);</div><div class="line"></div><div class="line">		Log.d(<span class="string">"291==lotovableSticky"</span>, mStickyEventMap.toString() + <span class="string">" &gt;&gt;mStickyEventMap.toString()---&lt;&lt; "</span>);</div><div class="line"></div><div class="line">		<span class="keyword">final</span> List event = (List) mStickyEventMap.get(eventType);</div><div class="line"></div><div class="line">		<span class="keyword">if</span> (<span class="keyword">null</span> != event) &#123;<span class="comment">//如果event不为空,证明map集合中有数据,等待发送,然后将观察者合并之后发送;</span></div><div class="line">			<span class="keyword">return</span> observable.mergeWith(Observable.create(<span class="keyword">new</span> Observable.OnSubscribe&lt;T&gt;() &#123;</div><div class="line">				<span class="meta">@Override</span></div><div class="line">				<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">call</span><span class="params">(Subscriber&lt;? <span class="keyword">super</span> T&gt; subscriber)</span> </span>&#123;</div><div class="line">					<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; event.size(); i++) &#123;</div><div class="line">						subscriber.onNext(eventType.cast(event.get(i)));</div><div class="line">					&#125;</div><div class="line">				&#125;</div><div class="line">			&#125;));</div><div class="line">		&#125; <span class="keyword">else</span> &#123;</div><div class="line">			<span class="keyword">return</span> observable;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">public</span> &lt;T&gt; <span class="function">Observable&lt;T&gt; <span class="title">toObservableStickyIndentity</span><span class="params">(<span class="keyword">final</span> Class&lt;T&gt; eventType)</span> </span>&#123;</div><div class="line">	<span class="keyword">synchronized</span> (mStickIndentityMap) &#123;</div><div class="line">		Observable&lt;T&gt; observable = mSuperBus.ofType(eventType);</div><div class="line"></div><div class="line">		Log.d(<span class="string">"291==lotovableSticky"</span>, mStickIndentityMap.toString() + <span class="string">" &gt;&gt;mStickIndentityMap.toString()---&lt;&lt; "</span>);</div><div class="line"></div><div class="line">		<span class="keyword">final</span> Object event = mStickIndentityMap.get(eventType);</div><div class="line">		<span class="keyword">if</span> (<span class="keyword">null</span> != event) &#123;<span class="comment">//如果event不为空,证明map集合中有数据,等待发送,然后将观察者合并之后发送;</span></div><div class="line">			<span class="keyword">return</span> observable.mergeWith(Observable.create(<span class="keyword">new</span> Observable.OnSubscribe&lt;T&gt;() &#123;</div><div class="line">				<span class="meta">@Override</span></div><div class="line">				<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">call</span><span class="params">(Subscriber&lt;? <span class="keyword">super</span> T&gt; subscriber)</span> </span>&#123;</div><div class="line">					subscriber.onNext(eventType.cast(event));</div><div class="line">				&#125;</div><div class="line">			&#125;));</div><div class="line">		&#125; <span class="keyword">else</span> &#123;</div><div class="line">			<span class="keyword">return</span> observable;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"> * 获取map集合中的sticky</div><div class="line"> *</div><div class="line"> * <span class="doctag">@param</span> eventType</div><div class="line"> * <span class="doctag">@return</span></div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">public</span> Object <span class="title">getStickyEvent</span><span class="params">(Class&lt;?&gt; eventType)</span> </span>&#123;</div><div class="line">	<span class="keyword">synchronized</span> (mStickyEventMap) &#123;</div><div class="line">		<span class="keyword">return</span> mStickyEventMap.get(eventType);</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"> * 移除事件</div><div class="line"> *</div><div class="line"> * <span class="doctag">@param</span> eventType</div><div class="line"> * <span class="doctag">@return</span></div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">removeStickyEvent</span><span class="params">(Class&lt;?&gt; eventType)</span> </span>&#123;</div><div class="line">	<span class="keyword">synchronized</span> (mStickyEventMap) &#123;</div><div class="line">		<span class="keyword">return</span> (<span class="keyword">boolean</span>) mStickyEventMap.remove(eventType);</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"> * 移除所有;</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">removeAllStickEvent</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="keyword">synchronized</span> (mStickyEventMap) &#123;</div><div class="line">		mStickyLists.clear();</div><div class="line">		mStickyEventMap.clear();</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</code></pre><hr>
+<h2 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h2><p><a href="http://www.jianshu.com/p/fd547ba6595e" target="_blank" rel="external">从RxBus这辆兰博基尼深入进去</a><br><a href="http://www.jianshu.com/p/ca090f6e2fe2" target="_blank" rel="external">用RxJava实现事件总线(Event Bus)</a><br><a href="http://www.jianshu.com/p/0493cc28a811" target="_blank" rel="external">深入RxBus异常处理</a><br><a href="http://www.jianshu.com/p/71ab00a2677b" target="_blank" rel="external">深入RxBus支持Sticky事件</a><br><a href="https://github.com/greenrobot/EventBus" target="_blank" rel="external">EventBus</a><br><a href="http://reactivex.io/RxJava/javadoc/rx/subjects/PublishSubject.html" target="_blank" rel="external">PushlishSubject</a><br><a href="http://www.jianshu.com/p/adfc72da6056" target="_blank" rel="external">打造属于自己的RxBus</a><br><a href="http://www.jianshu.com/p/f43903b28cc2" target="_blank" rel="external">RxBus学习之旅－－从入门到提高</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/RxJava/" rel="tag"># RxJava</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/02/28/RxJava/RxJava_Operators/" rel="next" title="RxJava_Operators">
+                <i class="fa fa-chevron-left"></i> RxJava_Operators
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/03/03/Android自定义View/自定义View入门_生成随机数/" rel="prev" title="自定义View入门_生成随机数">
+                自定义View入门_生成随机数 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="lorensong" />
+          <p class="site-author-name" itemprop="name">lorensong</p>
+           
+              <p class="site-description motion-element" itemprop="description">If you love life, life will love you back.</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">31</span>
+                <span class="site-state-item-name">posts</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">17</span>
+                <span class="site-state-item-name">categories</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-name">tags</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+
+        <div class="links-of-author motion-element">
+          
+
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#what"><span class="nav-number">1.</span> <span class="nav-text">what?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#why"><span class="nav-number">2.</span> <span class="nav-text">why?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#how"><span class="nav-number">3.</span> <span class="nav-text">how?</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#使用方法"><span class="nav-number">3.0.0.1.</span> <span class="nav-text">使用方法</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Sticky事件"><span class="nav-number">3.1.</span> <span class="nav-text">Sticky事件</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#简介"><span class="nav-number">3.1.1.</span> <span class="nav-text">简介</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#使用Map实现Sticky"><span class="nav-number">3.1.1.0.1.</span> <span class="nav-text">使用Map实现Sticky</span></a></li></ol></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#完整代码-1-后面更新"><span class="nav-number">4.</span> <span class="nav-text">完整代码(1)-后面更新</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#深入RxBus"><span class="nav-number">4.0.1.</span> <span class="nav-text">深入RxBus</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#PublishSubject-解释"><span class="nav-number">4.0.1.0.1.</span> <span class="nav-text">PublishSubject 解释</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#问题"><span class="nav-number">4.1.</span> <span class="nav-text">问题</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#完整代码-最新版"><span class="nav-number">5.</span> <span class="nav-text">完整代码-最新版</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文档"><span class="nav-number">6.</span> <span class="nav-text">参考文档</span></a></li></ol></div>
+            
+
+          </div>
+
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">lorensong</span>
+</div>
+
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="https://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+  
+  
+
+  
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("IgYqJPNpb10L1iNTSScMf1hh-gzGzoHsz", "u28SsFPTbxCDfhMYe2p9chlY");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+
+  
+
+</body>
+</html>

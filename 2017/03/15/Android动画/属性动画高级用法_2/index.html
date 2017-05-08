@@ -1,0 +1,908 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="PropertyAnimation," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="what?属性动画的高级用法主要涉及到Interpolator(插值器)的使用;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="属性动画高级用法_2">
+<meta property="og:url" content="https://lorensong.github.io/2017/03/15/Android动画/属性动画高级用法_2/index.html">
+<meta property="og:site_name" content="lorensong">
+<meta property="og:description" content="what?属性动画的高级用法主要涉及到Interpolator(插值器)的使用;">
+<meta property="og:updated_time" content="2017-05-08T02:04:49.020Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="属性动画高级用法_2">
+<meta name="twitter:description" content="what?属性动画的高级用法主要涉及到Interpolator(插值器)的使用;">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://lorensong.github.io/2017/03/15/Android动画/属性动画高级用法_2/"/>
+
+
+
+
+
+  <title> 属性动画高级用法_2 | lorensong </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">lorensong</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">If you love life, life will love you back.</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404.html" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            Commonweal 404
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://lorensong.github.io/2017/03/15/Android动画/属性动画高级用法_2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="lorensong">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="lorensong">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                属性动画高级用法_2
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-03-15T11:21:10+08:00">
+                2017-03-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Note/" itemprop="url" rel="index">
+                    <span itemprop="name">Note</span>
+                  </a>
+                </span>
+
+                
+                
+                  , 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Note/Animation/" itemprop="url" rel="index">
+                    <span itemprop="name">Animation</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2017/03/15/Android动画/属性动画高级用法_2/" class="leancloud_visitors" data-flag-title="属性动画高级用法_2">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">Visitors </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="what"><a href="#what" class="headerlink" title="what?"></a>what?</h2><p>属性动画的高级用法主要涉及到Interpolator(插值器)的使用;</p>
+<a id="more"></a>
+<h2 id="why"><a href="#why" class="headerlink" title="why?"></a>why?</h2><p>在我们一开始的时候看到了ValueAnimator的中动画监听器中打印出来的值,看到值并不是规律的,形象描述就是开始加速，最后阶段又开始减速，因此我们可以很明显地看出这一个先加速后减速的Interpolator。  </p>
+<p>Interpolator这个东西很难进行翻译，直译过来的话是补间器的意思，它的主要作用是可以控制动画的变化速率，比如去实现一种非线性运动的动画效果。那么什么叫做非线性运动的动画效果呢？就是说动画改变的速率不是一成不变的，像加速运动以及减速运动都属于非线性运动。</p>
+<p>不过Interpolator并不是属性动画中新增的技术，实际上从Android 1.0版本开始就一直存在Interpolator接口了，而之前的补间动画当然也是支持这个功能的。只不过在属性动画中新增了一个<code>TimeInterpolator</code>接口，这个接口是用于兼容之前的Interpolator的，这使得所有过去的Interpolator实现类都可以直接拿过来放到属性动画当中使用，那么我们来看一下现在<code>TimeInterpolator</code>接口的所有实现类，如下图所示：</p>
+<p>可以看到，<code>TimeInterpolator</code>接口已经有非常多的实现类了，这些都是Android系统内置好的并且我们可以直接使用的Interpolator。每个Interpolator都有它各自的实现效果，比如说<code>AccelerateInterpolator</code>就是一个加速运动的Interpolator，而<code>DecelerateInterpolator</code>就是一个减速运动的Interpolator。</p>
+<p>我们再看一下这个效果:<br>这个效果就是图片先加速,然后再减速而形成的,也就是在使用属性动画时,是系统默认的Interpolator其实就是一个先加速后减速的Interpolator，对应的实现类就是<code>AccelerateDecelerateInterpolator</code></p>
+<p>在此,我们将小球改为垂直下落效果:</p>
+<pre><code><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">startAnimation</span><span class="params">()</span> </span>&#123;  </div><div class="line">   Point startPoint = <span class="keyword">new</span> Point(getWidth() / <span class="number">2</span>, RADIUS);  </div><div class="line">   Point endPoint = <span class="keyword">new</span> Point(getWidth() / <span class="number">2</span>, getHeight() - RADIUS);  </div><div class="line">   ValueAnimator anim = ValueAnimator.ofObject(<span class="keyword">new</span> PointEvaluator(), startPoint, endPoint);  </div><div class="line">   anim.addUpdateListener(<span class="keyword">new</span> ValueAnimator.AnimatorUpdateListener() &#123;  </div><div class="line">       <span class="meta">@Override</span>  </div><div class="line">       <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onAnimationUpdate</span><span class="params">(ValueAnimator animation)</span> </span>&#123;  </div><div class="line">           currentPoint = (Point) animation.getAnimatedValue();  </div><div class="line">           invalidate();  </div><div class="line">       &#125;  </div><div class="line">   &#125;);  </div><div class="line">   anim.setDuration(<span class="number">2000</span>);  </div><div class="line">   anim.start();  </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</code></pre><p>这里主要是对Point构造函数中的坐标值进行了一下改动，那么现在小球运动的动画效果应该是从屏幕正中央的顶部掉落到底部。调用Animator的setInterpolator()方法就可以改变动画运动的效果，这个方法要求传入一个实现TimeInterpolator接口的实例，那么比如说我们想要实现小球下降越来越快的效果，就可以使用<code>AccelerateInterpolator</code>，代码如下所示：</p>
+<pre><code><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">startAnimation</span><span class="params">()</span> </span>&#123;  </div><div class="line">   Point startPoint = <span class="keyword">new</span> Point(getWidth() / <span class="number">2</span>, RADIUS);  </div><div class="line">   Point endPoint = <span class="keyword">new</span> Point(getWidth() / <span class="number">2</span>, getHeight() - RADIUS);  </div><div class="line">   ValueAnimator anim = ValueAnimator.ofObject(<span class="keyword">new</span> PointEvaluator(), startPoint, endPoint);  </div><div class="line">   anim.addUpdateListener(<span class="keyword">new</span> ValueAnimator.AnimatorUpdateListener() &#123;  </div><div class="line">       <span class="meta">@Override</span>  </div><div class="line">       <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onAnimationUpdate</span><span class="params">(ValueAnimator animation)</span> </span>&#123;  </div><div class="line">           currentPoint = (Point) animation.getAnimatedValue();  </div><div class="line">           invalidate();  </div><div class="line">       &#125;  </div><div class="line">   &#125;);  </div><div class="line">   anim.setInterpolator(<span class="keyword">new</span> AccelerateInterpolator(<span class="number">2f</span>));  </div><div class="line">   anim.setDuration(<span class="number">2500</span>);  </div><div class="line">   anim.start();  </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</code></pre><p>注意AccelerateInterpolator的构建函数可以接收一个float类型的参数，这个参数是用于控制加速度的。<br>我们希望的小球落下的效果已经实现了,现在希望小球撞击到地面会有回弹效果,那我们在setInterpolator();中更改对应的插值器就好了.当然,Google已经为我们提供了一种类似回弹效果的Interpolator;</p>
+<pre><code><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">startAnimation</span><span class="params">()</span> </span>&#123;  </div><div class="line">   Point startPoint = <span class="keyword">new</span> Point(getWidth() / <span class="number">2</span>, RADIUS);  </div><div class="line">   Point endPoint = <span class="keyword">new</span> Point(getWidth() / <span class="number">2</span>, getHeight() - RADIUS);  </div><div class="line">   ValueAnimator anim = ValueAnimator.ofObject(<span class="keyword">new</span> PointEvaluator(), startPoint, endPoint);  </div><div class="line">   anim.addUpdateListener(<span class="keyword">new</span> ValueAnimator.AnimatorUpdateListener() &#123;  </div><div class="line">       <span class="meta">@Override</span>  </div><div class="line">       <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onAnimationUpdate</span><span class="params">(ValueAnimator animation)</span> </span>&#123;  </div><div class="line">           currentPoint = (Point) animation.getAnimatedValue();  </div><div class="line">           invalidate();  </div><div class="line">       &#125;  </div><div class="line">   &#125;);  </div><div class="line">   anim.setInterpolator(<span class="keyword">new</span> BounceInterpolator());  </div><div class="line">   anim.setDuration(<span class="number">3000</span>);  </div><div class="line">   anim.start();  </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</code></pre><p>我们只是将设置的Interpolator换成了BounceInterpolator的实例，而BounceInterpolator就是一种可以模拟物理规律，实现反复弹起效果的Interpolator。另外还将整体的动画时间稍微延长了一点，因为小球反复弹起需要比之前更长的时间。</p>
+<h2 id="how"><a href="#how" class="headerlink" title="how?"></a>how?</h2><p>一行代码实现:</p>
+<pre><code><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 修改view的y属性, 从当前位置移动到300.0f</span></div><div class="line">      ObjectAnimator yBouncer = ObjectAnimator.ofFloat(view, <span class="string">"y"</span>,</div><div class="line">              view.getY(), <span class="number">300.0f</span>);</div><div class="line">      yBouncer.setDuration(<span class="number">1500</span>);</div><div class="line">      <span class="comment">// 设置插值器(用于调节动画执行过程的速度)</span></div><div class="line">      yBouncer.setInterpolator(<span class="keyword">new</span> BounceInterpolator());</div><div class="line">      <span class="comment">// 设置重复次数(缺省为0,表示不重复执行)</span></div><div class="line">      yBouncer.setRepeatCount(<span class="number">1</span>);</div><div class="line">      <span class="comment">// 设置重复模式(RESTART或REVERSE),重复次数大于0或INFINITE生效</span></div><div class="line">      yBouncer.setRepeatMode(ValueAnimator.REVERSE);</div><div class="line">      <span class="comment">// 设置动画开始的延时时间(200ms)</span></div><div class="line">      yBouncer.setStartDelay(<span class="number">200</span>);</div><div class="line">      <span class="comment">// 开始动画</span></div><div class="line">      yBouncer.start();</div></pre></td></tr></table></figure>
+</code></pre><p>动画效果如下:</p>
+<p>下面我们就来看一下Interpolator的内部实现机制是什么样的,并来尝试写一个自定义的Interpolator。  </p>
+<p>首先看一下TimeInterpolator的接口定义，代码如下所示：</p>
+<pre><code><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">A time interpolator defines the rate of change of an animation. This allows animations</div><div class="line">to have non-linear motion, such as acceleration and deceleration.</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">TimeInterpolator</span> </span>&#123;  </div><div class="line"></div><div class="line">Maps a value representing the elapsed fraction of an animation to a value that represents the interpolated fraction. This interpolated value is then multiplied by the change in value of an animation to derive the animated value at the current elapsed animation time.</div><div class="line">    <span class="meta">@param</span> input A value between <span class="number">0</span> and <span class="number">1.0</span> indicating our current point</div><div class="line">           in the animation where <span class="number">0</span> represents the start and <span class="number">1.0</span> represents</div><div class="line">           the end</div><div class="line">    <span class="meta">@return</span> The interpolation value. This value can be more than <span class="number">1.0</span> <span class="keyword">for</span></div><div class="line">            interpolators which overshoot their targets, or less than <span class="number">0</span> <span class="keyword">for</span></div><div class="line">            interpolators that undershoot their targets.  </div><div class="line"></div><div class="line">   <span class="function"><span class="keyword">float</span> <span class="title">getInterpolation</span><span class="params">(<span class="keyword">float</span> input)</span></span>;  </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</code></pre><p><code>getInterpolation()</code>方法中接收一个input参数，这个参数的值会随着动画的运行而不断变化，不过它的变化是非常有规律的，就是根据设定的动画时长匀速增加，变化范围是0到1。也就是说当动画一开始的时候input的值是0，到动画结束的时候input的值是1，而中间的值则是随着动画运行的时长在0到1之间变化的。</p>
+<p>说到这个input的值，那我们就有可能会联想到在<code>evaluate(类型估值器)</code>中使用过的<code>fraction</code>值。那么这里的<code>input</code>和<code>fraction</code>有什么关系或者区别呢？答案很简单，input的值决定了fraction的值。input的值是由系统经过计算后传入到<code>getInterpolation()</code>方法中的，然后我们可以自己实现<code>getInterpolation()</code>方法中的算法，根据input的值来计算出一个返回值，而这个返回值就是fraction了。<br>下面在看看最简单的<code>interpolator</code>的实现的;  </p>
+<pre><code><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LinearInterpolator</span> <span class="keyword">extends</span> <span class="title">BaseInterpolator</span> <span class="keyword">implements</span> <span class="title">NativeInterpolatorFactory</span> </span>&#123;  </div><div class="line"></div><div class="line">   <span class="function"><span class="keyword">public</span> <span class="title">LinearInterpolator</span><span class="params">()</span> </span>&#123;  </div><div class="line">   &#125;  </div><div class="line"></div><div class="line">   <span class="function"><span class="keyword">public</span> <span class="title">LinearInterpolator</span><span class="params">(Context context, AttributeSet attrs)</span> </span>&#123;  </div><div class="line">   &#125;  </div><div class="line"></div><div class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">float</span> <span class="title">getInterpolation</span><span class="params">(<span class="keyword">float</span> input)</span> </span>&#123;  </div><div class="line">       <span class="keyword">return</span> input;  </div><div class="line">   &#125;  </div><div class="line"></div><div class="line">   <span class="comment">/** <span class="doctag">@hide</span> */</span>  </div><div class="line">   <span class="meta">@Override</span>  </div><div class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">long</span> <span class="title">createNativeInterpolator</span><span class="params">()</span> </span>&#123;  </div><div class="line">       <span class="keyword">return</span> NativeInterpolatorFactoryHelper.createLinearInterpolator();  </div><div class="line">   &#125;  </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</code></pre><p>这里我们只看<code>getInterpolation()</code>方法，这个方法没有任何逻辑，就是把参数中传递的<code>input</code>值直接返回了，因此<code>fraction</code>的值就是等于<code>input</code>的值的，这就是匀速运动的<code>Interpolator</code>的实现方式。<br>既然现在大家都知道了系统在默认情况下使用的是<code>AccelerateDecelerateInterpolator</code>，那我们就来看一下它的源码吧，</p>
+<pre><code><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AccelerateDecelerateInterpolator</span> <span class="keyword">implements</span> <span class="title">Interpolator</span>, <span class="title">NativeInterpolatorFactory</span> </span>&#123;  </div><div class="line">   <span class="function"><span class="keyword">public</span> <span class="title">AccelerateDecelerateInterpolator</span><span class="params">()</span> </span>&#123;  </div><div class="line">   &#125;  </div><div class="line"></div><div class="line">   <span class="meta">@SuppressWarnings</span>(&#123;<span class="string">"UnusedDeclaration"</span>&#125;)  </div><div class="line">   <span class="function"><span class="keyword">public</span> <span class="title">AccelerateDecelerateInterpolator</span><span class="params">(Context context, AttributeSet attrs)</span> </span>&#123;  </div><div class="line">   &#125;  </div><div class="line"></div><div class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">float</span> <span class="title">getInterpolation</span><span class="params">(<span class="keyword">float</span> input)</span> </span>&#123;  </div><div class="line">       <span class="keyword">return</span> (<span class="keyword">float</span>)(Math.cos((input + <span class="number">1</span>) * Math.PI) / <span class="number">2.0f</span>) + <span class="number">0.5f</span>;  </div><div class="line">   &#125;  </div><div class="line"></div><div class="line">   <span class="comment">/** <span class="doctag">@hide</span> */</span>  </div><div class="line">   <span class="meta">@Override</span>  </div><div class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">long</span> <span class="title">createNativeInterpolator</span><span class="params">()</span> </span>&#123;  </div><div class="line">       <span class="keyword">return</span> NativeInterpolatorFactoryHelper.createAccelerateDecelerateInterpolator();  </div><div class="line">   &#125;  </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</code></pre><p>可以看到，算法中主要使用了余弦函数，由于input的取值范围是0到1，那么cos函数中的取值范围就是π到2π。而cos(π)的结果是-1，cos(2π)的结果是1，那么这个值再除以2加上0.5之后，getInterpolation()方法最终返回的结果值还是在0到1之间。只不过经过了余弦运算之后，最终的结果不再是匀速增加的了，而是经历了一个先加速后减速的过程。我们可以将这个算法的执行情况通过曲线图的方式绘制出来，结果如函数图像所示：</p>
+<p>可以看到，这是一个S型的曲线图，当横坐标从0变化到0.2的时候，纵坐标的变化幅度很小，但是之后就开始明显加速，最后横坐标从0.8变化到1的时候，纵坐标的变化幅度又变得很小。  </p>
+<p>那么接下来我们就开始尝试编写一个自定义的Interpolator,编写自定义Interpolator最主要的难度都是在于数学计算方面的，这里也就写一个简单点的Interpolator。既然属性动画默认的Interpolator是先加速后减速的一种方式，这里我们就对它进行一个简单的修改，让它变成先减速后加速的方式。新建DecelerateAccelerateInterpolator类，让它实现TimeInterpolator接口，代码如下所示：</p>
+<pre><code><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DecelerateAccelerateInterpolator</span> <span class="keyword">implements</span> <span class="title">TimeInterpolator</span></span>&#123;  </div><div class="line"></div><div class="line">   <span class="meta">@Override</span>  </div><div class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">float</span> <span class="title">getInterpolation</span><span class="params">(<span class="keyword">float</span> input)</span> </span>&#123;  </div><div class="line">       <span class="keyword">float</span> result;  </div><div class="line">       <span class="keyword">if</span> (input &lt;= <span class="number">0.5</span>) &#123;  </div><div class="line">           result = (<span class="keyword">float</span>) (Math.sin(Math.PI * input)) / <span class="number">2</span>;  </div><div class="line">       &#125; <span class="keyword">else</span> &#123;  </div><div class="line">           result = (<span class="keyword">float</span>) (<span class="number">2</span> - Math.sin(Math.PI * input)) / <span class="number">2</span>;  </div><div class="line">       &#125;  </div><div class="line">       <span class="keyword">return</span> result;  </div><div class="line">   &#125;  </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</code></pre><p>这段代码是使用正弦函数来实现先减速后加速的功能的，因为正弦函数初始弧度的变化值非常大，刚好和余弦函数是相反的，而随着弧度的增加，正弦函数的变化值也会逐渐变小，这样也就实现了减速的效果。当弧度大于π/2之后，整个过程相反了过来，现在正弦函数的弧度变化值非常小，渐渐随着弧度继续增加，变化值越来越大，弧度到π时结束，这样从0过度到π，也就实现了先减速后加速的效果。<br>函数图像如下:<br>可以看到，这也是一个S型的曲线图，只不过曲线的方向和刚才是相反的。从上图中我们可以很清楚地看出来，一开始纵坐标的变化幅度很大，然后逐渐变小，横坐标到0.5的时候纵坐标变化幅度趋近于零，之后随着横坐标继续增加纵坐标的变化幅度又开始变大，的确是先减速后加速的效果。<br>那么现在我们将<code>DecelerateAccelerateInterpolator</code>在代码中进行替换，如下所示：<br>将<code>DecelerateAccelerateInterpolator</code>的实例传入到<code>setInterpolator()</code>方法当中。重新运行一下代码，效果如下图所示：</p>
+<hr>
+<h2 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h2><p><a href="http://blog.csdn.net/guolin_blog/article/details/44171115" target="_blank" rel="external">Android属性动画完全解析(下)，Interpolator和ViewPropertyAnimator的用法</a>  </p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/PropertyAnimation/" rel="tag"># PropertyAnimation</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/03/14/Android动画/属性动画高级用法_1/" rel="next" title="属性动画高级用法_1">
+                <i class="fa fa-chevron-left"></i> 属性动画高级用法_1
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/03/20/http/Retrofit/" rel="prev" title="网络请求_Retrofit">
+                网络请求_Retrofit <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="lorensong" />
+          <p class="site-author-name" itemprop="name">lorensong</p>
+           
+              <p class="site-description motion-element" itemprop="description">If you love life, life will love you back.</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">31</span>
+                <span class="site-state-item-name">posts</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">17</span>
+                <span class="site-state-item-name">categories</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-name">tags</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+
+        <div class="links-of-author motion-element">
+          
+
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#what"><span class="nav-number">1.</span> <span class="nav-text">what?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#why"><span class="nav-number">2.</span> <span class="nav-text">why?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#how"><span class="nav-number">3.</span> <span class="nav-text">how?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文档"><span class="nav-number">4.</span> <span class="nav-text">参考文档</span></a></li></ol></div>
+            
+
+          </div>
+
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">lorensong</span>
+</div>
+
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="https://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+  
+  
+
+  
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("IgYqJPNpb10L1iNTSScMf1hh-gzGzoHsz", "u28SsFPTbxCDfhMYe2p9chlY");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+
+  
+
+</body>
+</html>

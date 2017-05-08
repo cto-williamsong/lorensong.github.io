@@ -87,17 +87,17 @@
 
 
 
-<meta name="description" content="what?">
+<meta name="description" content="what?这篇博文主要写了RxJava的各种实践,从浅入深的讲了每个功能的实现方式,同时涉及到的Operators也有不少,对RxJava的理解和运用有很大的促进作用;">
 <meta property="og:type" content="article">
 <meta property="og:title" content="RxJava最佳实践">
 <meta property="og:url" content="https://lorensong.github.io/2017/03/21/RxJava/RxJava最佳实践/index.html">
 <meta property="og:site_name" content="lorensong">
-<meta property="og:description" content="what?">
+<meta property="og:description" content="what?这篇博文主要写了RxJava的各种实践,从浅入深的讲了每个功能的实现方式,同时涉及到的Operators也有不少,对RxJava的理解和运用有很大的促进作用;">
 <meta property="og:image" content="https://lorensong.github.io/\images\rxjava_best_practice_interval_2.png">
-<meta property="og:updated_time" content="2017-03-31T06:18:27.856Z">
+<meta property="og:updated_time" content="2017-05-08T03:07:31.890Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="RxJava最佳实践">
-<meta name="twitter:description" content="what?">
+<meta name="twitter:description" content="what?这篇博文主要写了RxJava的各种实践,从浅入深的讲了每个功能的实现方式,同时涉及到的Operators也有不少,对RxJava的理解和运用有很大的促进作用;">
 <meta name="twitter:image" content="https://lorensong.github.io/\images\rxjava_best_practice_interval_2.png">
 
 
@@ -341,8 +341,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Android/" itemprop="url" rel="index">
-                    <span itemprop="name">Android</span>
+                  <a href="/categories/Original/" itemprop="url" rel="index">
+                    <span itemprop="name">Original</span>
                   </a>
                 </span>
 
@@ -352,8 +352,8 @@
                 
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Android/学习/" itemprop="url" rel="index">
-                    <span itemprop="name">学习</span>
+                  <a href="/categories/Original/RxJava/" itemprop="url" rel="index">
+                    <span itemprop="name">RxJava</span>
                   </a>
                 </span>
 
@@ -398,8 +398,9 @@
       
 
       
-        <h2 id="what"><a href="#what" class="headerlink" title="what?"></a>what?</h2><a id="more"></a> 
-<h2 id="why"><a href="#why" class="headerlink" title="why?"></a>why?</h2><h2 id="how"><a href="#how" class="headerlink" title="how?"></a>how?</h2><h2 id="1-用RxJava实现倒计时"><a href="#1-用RxJava实现倒计时" class="headerlink" title="1 用RxJava实现倒计时"></a>1 用RxJava实现倒计时</h2><h3 id="效果图"><a href="#效果图" class="headerlink" title="效果图"></a>效果图</h3><p><img width="30%" height="" align="center" src="\images\rxjava_best_practice_interval_2.png"></p>
+        <h2 id="what"><a href="#what" class="headerlink" title="what?"></a>what?</h2><p>这篇博文主要写了RxJava的各种实践,从浅入深的讲了每个功能的实现方式,同时涉及到的Operators也有不少,对RxJava的理解和运用有很大的促进作用;</p>
+<a id="more"></a>
+<h2 id="1-用RxJava实现倒计时"><a href="#1-用RxJava实现倒计时" class="headerlink" title="1 用RxJava实现倒计时"></a>1 用RxJava实现倒计时</h2><h3 id="效果图"><a href="#效果图" class="headerlink" title="效果图"></a>效果图</h3><p><img width="30%" height="" align="center" src="\images\rxjava_best_practice_interval_2.png"></p>
 <h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>这个实践是我认为比较简单的RxJava的实践,主要用到了<code>RxJava</code>的<code>Operator</code>有</p>
 <ul>
 <li><code>interval:</code> 用来实现<code>按一定的间隔发送数据</code>  </li>
@@ -414,41 +415,10 @@
 <li>Javadoc: interval(long,long,TimeUnit)//参数:(开始数,间隔数,时间单位);</li>
 <li><p>Javadoc: interval(long,long,TimeUnit,Scheduler);//参数:(,,,指定线程);默认在 <code>计算线程</code>中;</p>
 <h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><p>具体实现代码如下:  </p>
-<pre><code class="java">Observable.interval(<span class="number">0</span>,<span class="number">1</span>,TimeUnit.SECONDS)
-            .take(<span class="number">11</span>)<span class="comment">//这里我只需要取用11个数据</span>
-            .map(<span class="keyword">new</span> Func1&lt;Long, Long&gt;() {
-                <span class="meta">@Override</span>
-                <span class="function"><span class="keyword">public</span> Long <span class="title">call</span><span class="params">(Long aLong)</span> </span>{
-                    <span class="keyword">return</span> <span class="number">20</span> - aLong;<span class="comment">//模拟从20开始倒计时</span>
-                }
-            })
-            .doOnSubscribe(<span class="keyword">new</span> Action0() {<span class="comment">//subscribe之后，事件发送前执行。</span>
-                <span class="meta">@Override</span>
-                <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">call</span><span class="params">()</span> </span>{
-                    mBtnRxjavaCountdown.setEnabled(<span class="keyword">false</span>);
-                }
-            })
-            .observeOn(AndroidSchedulers.mainThread())<span class="comment">//一定要有,因为界面改变需要在UI线程中完成,而默认interval在计算线程中</span>
-            .subscribe(<span class="keyword">new</span> Observer&lt;Long&gt;() {
-                <span class="meta">@Override</span>
-                <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onCompleted</span><span class="params">()</span> </span>{
-                    Toast.makeText(RxJavaActivity.<span class="keyword">this</span>, <span class="string">"完成"</span>, Toast.LENGTH_SHORT)
-                            .show();
-                    mBtnRxjavaCountdown.setEnabled(<span class="keyword">true</span>);
-                }
-                <span class="meta">@Override</span>
-                <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onError</span><span class="params">(Throwable e)</span> </span>{
-                }
-
-                <span class="meta">@Override</span>
-                <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onNext</span><span class="params">(Long aLong)</span> </span>{
-                    mTvRxjavaCountDown.setText(<span class="string">""</span> + aLong);
-                }
-            });
-</code></pre>
-<p>对此一个倒计时的功能就完成了</p>
+  <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line">Observable.interval(<span class="number">0</span>,<span class="number">1</span>,TimeUnit.SECONDS)</div><div class="line">			.take(<span class="number">11</span>)<span class="comment">//这里我只需要取用11个数据</span></div><div class="line">			.map(<span class="keyword">new</span> Func1&lt;Long, Long&gt;() &#123;</div><div class="line">				<span class="meta">@Override</span></div><div class="line">				<span class="function"><span class="keyword">public</span> Long <span class="title">call</span><span class="params">(Long aLong)</span> </span>&#123;</div><div class="line">					<span class="keyword">return</span> <span class="number">20</span> - aLong;<span class="comment">//模拟从20开始倒计时</span></div><div class="line">				&#125;</div><div class="line">			&#125;)</div><div class="line">			.doOnSubscribe(<span class="keyword">new</span> Action0() &#123;<span class="comment">//subscribe之后，事件发送前执行。</span></div><div class="line">				<span class="meta">@Override</span></div><div class="line">				<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">call</span><span class="params">()</span> </span>&#123;</div><div class="line">					mBtnRxjavaCountdown.setEnabled(<span class="keyword">false</span>);</div><div class="line">				&#125;</div><div class="line">			&#125;)</div><div class="line">			.observeOn(AndroidSchedulers.mainThread())<span class="comment">//一定要有,因为界面改变需要在UI线程中完成,而默认interval在计算线程中</span></div><div class="line">			.subscribe(<span class="keyword">new</span> Observer&lt;Long&gt;() &#123;</div><div class="line">				<span class="meta">@Override</span></div><div class="line">				<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onCompleted</span><span class="params">()</span> </span>&#123;</div><div class="line">					Toast.makeText(RxJavaActivity.<span class="keyword">this</span>, <span class="string">"完成"</span>, Toast.LENGTH_SHORT)</div><div class="line">							.show();</div><div class="line">					mBtnRxjavaCountdown.setEnabled(<span class="keyword">true</span>);</div><div class="line">				&#125;</div><div class="line">				<span class="meta">@Override</span></div><div class="line">				<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onError</span><span class="params">(Throwable e)</span> </span>&#123;</div><div class="line">				&#125;</div><div class="line"></div><div class="line">				<span class="meta">@Override</span></div><div class="line">				<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onNext</span><span class="params">(Long aLong)</span> </span>&#123;</div><div class="line">					mTvRxjavaCountDown.setText(<span class="string">""</span> + aLong);</div><div class="line">				&#125;</div><div class="line">			&#125;);</div></pre></td></tr></table></figure>
 </li>
 </ul>
+<p>对此一个倒计时的功能就完成了</p>
 <hr>
 <p><a href="http://reactivex.io/documentation/operators/interval.html" target="_blank" rel="external">Interval</a><br><a href="http://reactivex.io/RxJava/javadoc/rx/Observable.html#interval(long,%20long,%20java.util.concurrent.TimeUnit" target="_blank" rel="external">Interval-API</a>)<br><a href="http://reactivex.io/RxJava/javadoc/rx/Observable.html#doOnSubscribe(rx.functions.Action0" target="_blank" rel="external">doOnSubscribe-API</a>)<br><a href="http://blog.csdn.net/new_abc/article/details/52932705" target="_blank" rel="external">Rxjava(其他)–doOnSubscribe原理</a></p>
 
@@ -487,8 +457,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/03/20/http/Retrofit/" rel="next" title="Retrofit">
-                <i class="fa fa-chevron-left"></i> Retrofit
+              <a href="/2017/03/20/http/Retrofit/" rel="next" title="网络请求_Retrofit">
+                <i class="fa fa-chevron-left"></i> 网络请求_Retrofit
               </a>
             
           </div>
@@ -497,8 +467,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/03/23/Android自定义View/自定义控件实现简单的聊天气泡框/" rel="prev" title="自定义View入门 聊天气泡框">
-                自定义View入门 聊天气泡框 <i class="fa fa-chevron-right"></i>
+              <a href="/2017/03/23/Android自定义View/自定义View入门_聊天气泡框/" rel="prev" title="自定义View入门_聊天气泡框">
+                自定义View入门_聊天气泡框 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -582,7 +552,7 @@
             
             <div class="site-state-item site-state-categories">
               <a href="/categories/index.html">
-                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-count">17</span>
                 <span class="site-state-item-name">categories</span>
               </a>
             </div>
@@ -593,7 +563,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-count">13</span>
                 <span class="site-state-item-name">tags</span>
               </a>
             </div>
@@ -629,7 +599,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#what"><span class="nav-number">1.</span> <span class="nav-text">what?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#why"><span class="nav-number">2.</span> <span class="nav-text">why?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#how"><span class="nav-number">3.</span> <span class="nav-text">how?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-用RxJava实现倒计时"><span class="nav-number">4.</span> <span class="nav-text">1 用RxJava实现倒计时</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#效果图"><span class="nav-number">4.1.</span> <span class="nav-text">效果图</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#简介"><span class="nav-number">4.2.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#思路分析"><span class="nav-number">4.3.</span> <span class="nav-text">思路分析</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#interval操作符介绍"><span class="nav-number">4.3.1.</span> <span class="nav-text">interval操作符介绍</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#代码"><span class="nav-number">4.4.</span> <span class="nav-text">代码</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#what"><span class="nav-number">1.</span> <span class="nav-text">what?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-用RxJava实现倒计时"><span class="nav-number">2.</span> <span class="nav-text">1 用RxJava实现倒计时</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#效果图"><span class="nav-number">2.1.</span> <span class="nav-text">效果图</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#简介"><span class="nav-number">2.2.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#思路分析"><span class="nav-number">2.3.</span> <span class="nav-text">思路分析</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#interval操作符介绍"><span class="nav-number">2.3.1.</span> <span class="nav-text">interval操作符介绍</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#代码"><span class="nav-number">2.4.</span> <span class="nav-text">代码</span></a></li></ol></li></ol></div>
             
 
           </div>

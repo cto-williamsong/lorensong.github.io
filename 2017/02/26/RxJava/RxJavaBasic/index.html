@@ -100,7 +100,7 @@
 <meta property="og:image" content="https://lorensong.github.io/RxJavaBasic/demo_schedulers_2017-3-1_3.jpg">
 <meta property="og:image" content="https://lorensong.github.io/RxJavaBasic/demo_schedulers_2017-3-1_4.jpg">
 <meta property="og:image" content="https://lorensong.github.io/RxJavaBasic/demo_schedulers_2017-3-1_5.jpg">
-<meta property="og:updated_time" content="2017-03-31T06:17:37.400Z">
+<meta property="og:updated_time" content="2017-05-08T03:07:46.010Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="RxJava入门与基础">
 <meta name="twitter:description" content="what?">
@@ -347,8 +347,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Android/" itemprop="url" rel="index">
-                    <span itemprop="name">Android</span>
+                  <a href="/categories/Note/" itemprop="url" rel="index">
+                    <span itemprop="name">Note</span>
                   </a>
                 </span>
 
@@ -358,8 +358,8 @@
                 
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Android/学习/" itemprop="url" rel="index">
-                    <span itemprop="name">学习</span>
+                  <a href="/categories/Note/RxJava/" itemprop="url" rel="index">
+                    <span itemprop="name">RxJava</span>
                   </a>
                 </span>
 
@@ -540,7 +540,7 @@ Subscriber&lt;List&lt;String&gt;&gt; listSubscriber = new Subscriber&lt;List&lt;
 listObservable.subscribe(listSubscriber);  
 </code></pre><p>输出结果:</p>
 <blockquote>
-<p>D/109==lo+onNext: the &gt;&gt;s–&lt;&lt;<br>D/109==lo+onNext: quick &gt;&gt;s–&lt;&lt;<br>D/109==lo+onNext: brown &gt;&gt;s–&lt;&lt;<br>D/109==lo+onNext: fox &gt;&gt;s–&lt;&lt;<br>D/109==lo+onNext: jumped &gt;&gt;s–&lt;&lt;<br>D/109==lo+onNext: over &gt;&gt;s–&lt;&lt;<br>D/109==lo+onNext: the &gt;&gt;s–&lt;&lt;<br>D/109==lo+onNext: lazy &gt;&gt;s–&lt;&lt;<br>D/109==lo+onNext: dog &gt;&gt;s–&lt;&lt; </p>
+<p>D/109==lo+onNext: the &gt;&gt;s–&lt;&lt;<br>D/109==lo+onNext: quick &gt;&gt;s–&lt;&lt;<br>D/109==lo+onNext: brown &gt;&gt;s–&lt;&lt;<br>D/109==lo+onNext: fox &gt;&gt;s–&lt;&lt;<br>D/109==lo+onNext: jumped &gt;&gt;s–&lt;&lt;<br>D/109==lo+onNext: over &gt;&gt;s–&lt;&lt;<br>D/109==lo+onNext: the &gt;&gt;s–&lt;&lt;<br>D/109==lo+onNext: lazy &gt;&gt;s–&lt;&lt;<br>D/109==lo+onNext: dog &gt;&gt;s–&lt;&lt;</p>
 </blockquote>
 <p>2.form例子    </p>
 <pre><code>//1.创建被订阅者
@@ -665,7 +665,7 @@ private Observable search(String str) {
                     }
                     return Observable.just(o);
                 }
-            .subscribe(stringSubscriber); 
+            .subscribe(stringSubscriber);
 </code></pre><p>输出结果:</p>
 <blockquote>
 <p>D/140==lo+onNext: www.baidu.com/&amp;java &gt;&gt;s–&lt;&lt;<br>D/140==lo+onNext: www.sina.com/&amp;java &gt;&gt;s–&lt;&lt;<br>D/140==lo+onNext: www.360.cn/&amp;java &gt;&gt;s–&lt;&lt;<br>D/129==loonCompleted:  &gt;&gt;完成—&lt;&lt;   </p>
@@ -945,7 +945,7 @@ Observable.just(1, 2, 3, 4) // IO 线程，由 subscribeOn() 指定
 .map(mapOperator) // 新线程，由 observeOn() 指定
 .observeOn(Schedulers.io())
 .map(mapOperator2) // IO 线程，由 observeOn() 指定
-.observeOn(AndroidSchedulers.mainThread) 
+.observeOn(AndroidSchedulers.mainThread)
 .subscribe(subscriber);  // Android 主线程，由 observeOn() 指定
 </code></pre><p>对比一下: <code>observeOn()</code>和<code>subscriberOn()</code>的区别:</p>
 <p>－　subscribeOn（）它指示Observable在一个指定的调度器上创建（只作用于被观察者创建阶段）。只能指定一次，如果指定多次则以第一次为准.　　　</p>
@@ -995,12 +995,12 @@ doOnSubscribe指定的代码在哪个线程执行？
 <p><img width="80%" height="50%" align="center" src="RxJavaBasic/demo_schedulers_2017-3-1_5.jpg" alt="demo_schedulers_2017-3-1_5">　</p>
 <p>上面这幅图表达了一个典型的RxJava调用链中控制流的传递过程。它可以分成两个阶段：  </p>
 <p><strong>驱动阶段:</strong>整个异步事件流的触发由subscribe开始。它发起了一个反向驱动过程（从下游到上游），跨过每一个中间的Observable和OnSubscribe，到达第一个Observable（产生事件的源头）。对应图中的(1)和(2)。这个阶段一般就是从下游到上游调用一次就结束了。<br><strong>事件发射阶段:</strong>第一个Observable开始产生事件，然后事件流就开始正向传递，经过每一个中间的Observable，最终到达Subscriber（事件的消费者）。对应图中的(3)。与前一阶段不同，事件从上游往下游传递，不是一次就完了，而是多个事件组成的事件流。<br>我们分析一下这整个流程，其中有几点需要特别说明一下（注：这里的分析过程涉及RxJava的一些实现细节，如不关心细节可以跳过这一段，直接看后面的结论）：</p>
-<p>图中的(1)对应的是调用前一级Observable的OnSubscribe.call，是个无返回值的方法，因此可以切换线程，从而变为异步的。所以用虚线表示。<br>图中的(2)对应的是lift操作指定的Operator.call，是个有返回值的方法（输入一个Subscriber，返回一个新的Subscriber）。因此，它只能同步调用，不能切换线程。所以用实线表示。<br>图中的(3)对应的是调用后一级Observable对应的Subscriber（onNext, onCompleted, onError），也都是无返回值的方法，因此可以切换线程，从而变为异步的。所以也用虚线表示。<br>observeOn是基于lift实现的，且切换线程的动作发生在Subscriber（onNext, onCompleted, onError），因此它影响(3)流程上在它下游的所有lift变换。 </p>
+<p>图中的(1)对应的是调用前一级Observable的OnSubscribe.call，是个无返回值的方法，因此可以切换线程，从而变为异步的。所以用虚线表示。<br>图中的(2)对应的是lift操作指定的Operator.call，是个有返回值的方法（输入一个Subscriber，返回一个新的Subscriber）。因此，它只能同步调用，不能切换线程。所以用实线表示。<br>图中的(3)对应的是调用后一级Observable对应的Subscriber（onNext, onCompleted, onError），也都是无返回值的方法，因此可以切换线程，从而变为异步的。所以也用虚线表示。<br>observeOn是基于lift实现的，且切换线程的动作发生在Subscriber（onNext, onCompleted, onError），因此它影响(3)流程上在它下游的所有lift变换。</p>
 <p>subscribeOn不是基于lift实现的，它直接在调用前一级Observable的OnSubscribe时切换线程。因此，它影响(1)流程上在它上游的所有OnSubscribe调用，直到产生事件的源头；然后，(3)流程上的所有lift操作也会在新切换到的线程上，直到碰到一个observeOn操作。<br>doOnSubscribe稍微特殊一点。它虽然是基于lift实现的，但它所指定的代码发生在Operator.call中，不像其它的lift操作，它们指定的代码发生在Subscriber。因此它的执行线程受它下游的subscribeOn的影响。  </p>
 <p>结合上面的分析，我们沿着前面流程图中箭头所指的方向一路走过去：</p>
 <p>首先从调用subscribe方法开始，沿着前面流程图中的(1)-&gt;(2)-&gt;(1)-&gt;(2)…-&gt;(1)路径（即驱动阶段），从下游向上游回溯，每经过一个subscribeOn，线程就切换一次；每次切换的线程环境影响这一路径上后面（即上游）的doOnSubscribe指定的代码和产生事件的代码（create指定的代码）。<br>经过事件的源头（create指定的代码），转而进入事件发射阶段。<br>然后，再沿着(3)路径（即事件发射阶段），从上游到下游，每经过一个observeOn，线程就切换一次；每次切换的线程环境影响这一路径上后面（即下游）的所有lift操作，直至消费事件的代码（subscribe指定的代码）。<br>现在，把前面的描述换一种说法，就很容易得到下面的结论了：</p>
 <p>doOnSubscribe指定的代码和产生事件的代码（create指定的代码），在它们下游最近的一个subscribeOn指定的Scheduler上执行；如果它们下游没有subscribeOn了，那么它们就在调用subscribe方法的那一个线程上执行（注意：是调用subscribe方法的那一个线程，不是subscribe指定的代码执行的那个线程，这是两回事）。<br>普通的lift操作（比如filter, map, reduce等）和消费事件的代码（subscribe指定的代码），在它们上游最近的一个observeOn指定的Scheduler上执行；如果它们上游没有observeOn了，那么它们就在位于整个调用链最上游的第一个subscribeOn指定的Scheduler上执行；如果没找到subscribeOn调用，那么它们就在调用subscribe方法的那一个线程上执行。<br>把这些结论应用在本文开始的那段代码上，我们很快能得到：</p>
-<p>产生事件的代码（create指定的代码）在scheduler1上执行；<br>lift1和lift2指定的代码在scheduler1上执行；<br>lift3和lift4指定的代码在scheduler2上执行；<br>doOnSubscribe指定的代码在scheduler5上执行；<br>消费事件的代码（subscribe指定的代码）在scheduler6上执行。 </p>
+<p>产生事件的代码（create指定的代码）在scheduler1上执行；<br>lift1和lift2指定的代码在scheduler1上执行；<br>lift3和lift4指定的代码在scheduler2上执行；<br>doOnSubscribe指定的代码在scheduler5上执行；<br>消费事件的代码（subscribe指定的代码）在scheduler6上执行。</p>
 <h4 id="结束"><a href="#结束" class="headerlink" title="结束"></a>结束</h4><hr>
 <h4 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h4><p><a href="http://reactivex.io/" target="_blank" rel="external">reactivex官网</a><br><a href="https://mcxiaoke.gitbooks.io/rxdocs/content/" target="_blank" rel="external">ReactiveX中文文档</a><br><a href="http://www.jianshu.com/p/5e93c9101dc5" target="_blank" rel="external">我所理解的RxJava——上手其实很简单</a><br><a href="http://gank.io/post/560e15be2dca930e00da1083" target="_blank" rel="external">给 Android 开发者的 RxJava 详解</a><br><a href="http://www.jcodecraeer.com/a/anzhuokaifa/androidkaifa/2016/0429/4196.html" target="_blank" rel="external">用工厂流水线的方式来理解 RxJava 的概念</a><br><a href="http://www.jcodecraeer.com/a/anzhuokaifa/androidkaifa/2015/0430/2815.html" target="_blank" rel="external">泡在网上的日子的Rxjava合集</a><br><a href="http://zhangtielei.com/posts/blog-rxandroid-schedulers.html" target="_blank" rel="external">用一张图解释RxJava中的线程控制</a><br><a href="http://www.jianshu.com/p/d7d2d1a664ca" target="_blank" rel="external">RxJava学习 - 初步了解</a></p>
 
@@ -1134,7 +1134,7 @@ doOnSubscribe指定的代码在哪个线程执行？
             
             <div class="site-state-item site-state-categories">
               <a href="/categories/index.html">
-                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-count">17</span>
                 <span class="site-state-item-name">categories</span>
               </a>
             </div>
@@ -1145,7 +1145,7 @@ doOnSubscribe指定的代码在哪个线程执行？
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-count">13</span>
                 <span class="site-state-item-name">tags</span>
               </a>
             </div>

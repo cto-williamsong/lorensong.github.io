@@ -1,0 +1,927 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="CustomView," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="what?1.View是什么？View是屏幕上的一块矩形区域，它负责用来显示一个区域，并且响应这个区域内的事件。可以说，手机屏幕上的任意一部分看的见得地方都是View，它很常见，比如 TextView 、ImageView 、Button以及LinearLayout、RelativeLayout都是继承子View的。对于Activity来说，我们通过setContentView(view)添加的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="自定义View入门_理论">
+<meta property="og:url" content="https://lorensong.github.io/2017/03/09/Android自定义View/自定义View入门_理论/index.html">
+<meta property="og:site_name" content="lorensong">
+<meta property="og:description" content="what?1.View是什么？View是屏幕上的一块矩形区域，它负责用来显示一个区域，并且响应这个区域内的事件。可以说，手机屏幕上的任意一部分看的见得地方都是View，它很常见，比如 TextView 、ImageView 、Button以及LinearLayout、RelativeLayout都是继承子View的。对于Activity来说，我们通过setContentView(view)添加的">
+<meta property="og:updated_time" content="2017-05-08T03:00:23.869Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="自定义View入门_理论">
+<meta name="twitter:description" content="what?1.View是什么？View是屏幕上的一块矩形区域，它负责用来显示一个区域，并且响应这个区域内的事件。可以说，手机屏幕上的任意一部分看的见得地方都是View，它很常见，比如 TextView 、ImageView 、Button以及LinearLayout、RelativeLayout都是继承子View的。对于Activity来说，我们通过setContentView(view)添加的">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://lorensong.github.io/2017/03/09/Android自定义View/自定义View入门_理论/"/>
+
+
+
+
+
+  <title> 自定义View入门_理论 | lorensong </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">lorensong</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">If you love life, life will love you back.</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404.html" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            Commonweal 404
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://lorensong.github.io/2017/03/09/Android自定义View/自定义View入门_理论/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="lorensong">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="lorensong">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                自定义View入门_理论
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-03-09T11:02:38+08:00">
+                2017-03-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Note/" itemprop="url" rel="index">
+                    <span itemprop="name">Note</span>
+                  </a>
+                </span>
+
+                
+                
+                  , 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Note/CustomView/" itemprop="url" rel="index">
+                    <span itemprop="name">CustomView</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2017/03/09/Android自定义View/自定义View入门_理论/" class="leancloud_visitors" data-flag-title="自定义View入门_理论">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">Visitors </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <a id="more"></a>
+<h2 id="what"><a href="#what" class="headerlink" title="what?"></a>what?</h2><p>1.View是什么？<br>View是屏幕上的一块矩形区域，它负责用来显示一个区域，并且响应这个区域内的事件。可以说，手机屏幕上的任意一部分看的见得地方都是View，它很常见，比如 TextView 、ImageView 、Button以及LinearLayout、RelativeLayout都是继承子View的。<br>对于Activity来说，我们通过setContentView(view)添加的布局到Activity上，实际上都是添加到了Activity 内部的DecorView上面，这个DecorView，其实就是一个FrameLayout,因此实际上，我们的布局实际上添加到了FrameLayout里面。<br>2.View 是怎么工作的？<br>View的工作流程分为两部分:<br>第一部分 显示在屏幕上的过程;<br>第二部分 响应屏幕上的触摸事件的过程。<br>对于显示在屏幕上的过程：是View 从无到有，经过测量大小(Measure)、确定在屏幕中的位置(Layout)、以及最终绘制在屏幕上(Draw) 这一系列的过程。<br>对于响应屏幕上的触摸事件的过程：则是Touch事件的分发过程(这一部分，在这里先不涉及)。<br>Measure() Layout()方法是final修饰的，无法重写 ，Draw()虽然不是final的，但是也不建议重写该方法。</p>
+<h3 id="why"><a href="#why" class="headerlink" title="why?"></a>why?</h3><p>回答<br>什么？你说你掌握了自定义View？来来来，回答老衲如下问题：</p>
+<p>Google提出View这个概念的目的是什么？<br>View这个概念与Activtiy、Fragment以及Drawable之间是一种什么样的关系？<br>View能够感知Activity的生命周期事件吗？为什么？<br>什么？你说这些问题太抽象？来来来，继续回答如下问题：<br>View的生命周期是什么？<br>当View所在的Activity进入stop状态后，View去哪了？如果我在一个后台线程中持有一个View的引用，我此时能够改变它的状态吗？为什么？<br>View能够与其他的View交叉重叠吗？重叠区域发生的点击事件交给谁去处理呢？可不可以重叠的两个View都处理？<br>View控制一个Drawable的方法途径有哪些？Drawable能不能与View通信？如果能如何通信？<br>假如View所在的ViewGroup中的子View减少了，View因此获得了更大的空间，View如何及时有效地利用这些空间，改变自己的绘制？<br>假如我要在View中动态地注册与解除广播接收器，应该在哪里完成呢？<br>假如我的手机带键盘（自带或者外接），你的自定义View应该如何响应键盘事件。<br>AnimationDrawable作为View的背景，会自动进行动画，View在其中扮演了怎样的角色？<br>假如以上问题你都能准确地回答出来，那么，恭喜你！我觉得你的自定义View已经学到家了，如果有那么几个问题你还搞不清楚，或者不是很确定，那么，请上终南山，闭关三个月，继续参悟自定义View的内在玄机。<br>为什么看了那么多文章，还是无法愉快地与自定义View玩耍？是那些文章不好吗？非也，是你没有掌握学习自定义View的正确姿势（即使你会很多姿势，也木有用，嘎嘎）。你看那些作者，轻轻松松整出一个漂亮的自定义View，你依葫芦画瓢也整出一个，就觉得自己好像也会了，年轻人，你太傲娇了！你想过没有,写这些文章的人是怎么掌握自定义View的？请把这个问题在心中默念三遍。以后读任何技术文章，都问自己这样的问题，相信不久的将来，你也会成为Android大牛的，至少也是小壮牛一头！因为，你已经从学习别人的知识，进入到学习别人的方法的境界了，功力怎能不大增！  </p>
+<p>好了，说了这么多，到底怎样才能学好自定义View？其实只需掌握三个问题，就可以轻松搞定它：</p>
+<p>问题一：从Android系统设计者的角度，View这个概念究竟是做什么的？<br>问题二：Android系统中那个View类，它有哪些默认功能和行为，能干什么，不能干什么？（知己知彼，才好自定义！）<br>问题三：我要改变这个View的行为，外观，肯定是覆写View类中的方法，但是怎么覆写，覆写哪些方法能够改变哪些行为？<br>以上三个问题，从抽象到具体，我觉得适用于学习任何技术知识，只是每个问题的问法可能因具体技术而有所调整，总体上就是从概念上，从默认实现上，从自己定制上去提问，比如你学习RecyclerView，也可以问以上三个问题，按照这三个问题的顺序一个一个搞懂了，也就完全掌握了这一知识点。</p>
+<p>下面，我们就一个问题一个问题地来解答。</p>
+<h4 id="从Android系统设计者的角度，View这个概念究竟是做什么的？"><a href="#从Android系统设计者的角度，View这个概念究竟是做什么的？" class="headerlink" title="从Android系统设计者的角度，View这个概念究竟是做什么的？"></a>从Android系统设计者的角度，View这个概念究竟是做什么的？</h4><p>官方文档是这样描述的:</p>
+<blockquote>
+<p>This class represents the basic building block for user interface components. A View occupies a rectangular area on the screen and is responsible for drawing and event handling.</p>
+</blockquote>
+<p>这句话包含三个含义:  </p>
+<ul>
+<li><p><code>View是用户接口组件的基本构建块</code>。通俗讲，在Android中，一个用户与一个应用的交互，其实就是与这个应用中的许许多多的View的交互，这些View既可以是简单的View，也可以是若干View组合而成的一个复合View。由此我们可以明白，<code>所谓View是基本构件块，原因就在于它是复合View(就是ViewGroup）的基本组成单元</code>。这层含义，就是告诉你，View就是用来与用户交互的，那么很自然地，我们要问，我们用户在哪里与View交互，以及怎样与View交互呢？</p>
+</li>
+<li><p><code>View在屏幕上占据一个矩形区域</code>。这是说，既然View是用户与应用交互的基本构建块，而用户使用Android设备时，主要是通过一个触摸屏来交互的，相应的，Andorid的设计者们，就让一个View就在屏幕上占据一个矩形区域，用户在这个区域中发生的交互动作（点击、滑动、拖动等），就是与这个View的交互。什么？为什么不让View占据一个圆形区域或者五角星区域呢？当然是为了简单。这就解决了在哪里与View交互的问题。很自然地，我们又想问，View在屏幕上占据一个矩形区域，这个区域的大小、位置怎么确定，它们会不会变化，谁来决定这个变化呢？如果这个变化不是由View自己来决定的，而是其他外界因素决定的，View又要怎样响应这种变化呢？不要急，后面都会有答案。</p>
+</li>
+<li><p><code>View通过绘制自己与事件处理两种方式与用户交互</code>。这是解决了如何交互的问题。简单讲，View与用户交互就两个办法，一个是改变自己的模样，也就是通过绘制自己与用户交互，比如，当用户点击自己时，就改变自己的背景颜色，以此来告诉用户：本View已经响应你的点击了！第二个方式就是事件处理，比如，当用户点击View时，就完成一定的任务，然后弹出一个Toast，告诉用户该View完成了什么任务，这样，用户也就知道这次交互结果如何。</p>
+</li>
+</ul>
+<p>看到没，这就是官方文档的魅力，短短一句话，胜君读千篇水文。现在我们明白了，设计View，主要是为了让应用能够与用户交互，要想完成交互，这个View就要在屏幕上占据一个矩形区域，然后利用这块屏幕区域与用户交互，交互的方式就两种，绘制自己与事件处理。</p>
+<h4 id="Android系统中那个View类，它有哪些默认功能和行为，能干什么，不能干什么？"><a href="#Android系统中那个View类，它有哪些默认功能和行为，能干什么，不能干什么？" class="headerlink" title="Android系统中那个View类，它有哪些默认功能和行为，能干什么，不能干什么？"></a>Android系统中那个View类，它有哪些默认功能和行为，能干什么，不能干什么？</h4><p>解决了第一个问题，我们很可能有更多的疑问，我们想知道：</p>
+<p>View是怎样被显示到屏幕上的？</p>
+<p>View在屏幕上的位置是怎样决定的？</p>
+<p>View所占据的矩形大小是怎样决定的？</p>
+<p>屏幕上肯定不止一个View，View之间互相知道对方吗？它们之间能协作吗？</p>
+<p>View完成与用户的交互后，能够自动隐藏，在需要交互的时候重新显示在屏幕上吗？</p>
+<p>……</p>
+<p>现在我们就一点点来讲，学习的同时，最好能够用心体会Google工程师设计时的思路。</p>
+<p>这样学习效果最好。</p>
+<p>首先，一个用户界面，上面有许多View，既有基本View，也有复合View，把它们组织起来还让它们很好地协作确实是一个难题，Google的解决方案是：首先，一套完整的用户界面用一个Window来表示，Window这个概念和我们在计算机上所说的Window很相似。<code>Window</code>负责管理所有的<code>View</code>们，怎么管理？很简单，借鉴复合View的思路，<code>Window首先加载一个超级复合View</code>，用它来包含住所有的其他View，这个超级复合View就叫做<code>DecorView</code>。但是这个DecorView除了包含我们的用户界面上那些View，还包含了作为一个<code>Window特有的View，叫做titlebar</code>，这个我们就不细说了。</p>
+<p>这样，在Window中的View们被组织起来了，一个巨大的ViewGroup（以后，我们不再用复合View这个说法，而代之以<code>ViewGroup</code>，二者是一回事），下面有若干ViewGroup和若干View，每个ViewGroup下面又有若干ViewGroup和若干View，很像数据结构中的树，叶子节点就是基本View。</p>
+<p>好了，这些View已经被组织起来了，DecorView已经能够完全控制它们了，同时，DecorView掌握着能够分配给这些View的屏幕区域，包括区域的大小和位置。我们知道，屏幕的大小是有限的，一个Window的DecorView能够控制的屏幕区域更加有限，AndroidN中引入多Window机制后，DecorView能掌控的屏幕区域更加小了，因为屏幕上有多个Window将成为常态。这些有限的区域还要被Window特有的View（titlebar）占去一小部分，剩下的才是留给用户界面上的View们分的，如果你是DecorView,你肯定为难了，如何将这些有限的屏幕区域分给这些View们？分给他们后还得为每个View排好在屏幕上的位置，难上加难。</p>
+<p>停一停，想一想，如果是你，你怎么解决这个问题？</p>
+<p>首先，不同的View是为了完成特定的交互任务的，比如，Button就是用来点击的，TextView就是用来显示字符的，等等。DecorView知道，不同的View为了完成自己的交互任务所需要的屏幕区域大小是不同的，所以DecorView在确定给每个View分配的屏幕区域大小时，是允许View参与进来，与它一起商量的。但是每个View在屏幕区域中的位置就不能让View自己来决定了，而是由DecorView一手操办，这个比较简单，我们就先来看看DecorView是怎样决定每个View的位置的吧。  </p>
+<p>1.确定每个View的位置<br>我们在Activity中，调用了setContentView（View），实际上就是将用户界面的所有的View交给了DecorView中的一个FrameLayout，这个FrameLayou代表着可以分配给用户界面使用的屏幕区域。而用户界面View既可以是一个简单的View，也可以是一个ViewGroup，如果是一个简单的View，比如就是一个TextView，那么这个TextView就会占据整个FrameLayout的屏幕区域，也就是说，此时用户在FrameLayout的屏幕区域内的所有交互都是与这个TextView交互。但是更常见的情况时，我们的用户界面是一个ViewGroup（想想常用的布局五大金刚），里面包含着其他的ViewGroup和View。这个时候，首先这个ViewGroup就会占据FrameLayout所代表的屏幕区域，剩下的任务，就是这个ViewGroup给它内部的小弟们（各种ViewGroup和各种View）分配区域了。至于怎么分，不同的ViewGroup有不同的分法，总体来看，可说是有总有分。所谓总，举例来讲，像vertical的LinearLayout，它按照<br>自己的小弟数量，把自己竖向裁成不同的区域，如下图所示：   </p>
+<p>虽然View无法决定自己在ViewGroup中的位置，但是开发者在使用View时，可以向ViewGroup表达自己所用的View要放在哪里，以vertical LinearLayout为例，开发者书写布局文件时，子View在LinearLayout中的出现顺序将决定它们在屏幕上的上下顺序，同时还可以借助layout_margin ,layout_gravity等配置进一步调整子View在分给自己的矩形区域中的位置。到这里，我们可以理解，layout_xxx 之类的配置虽然在书写上与View的属性在一起，<code>但它们并不是View的属性</code>，它们只是使用该View的使用者用来细化调整该View在ViewGroup中的位置的，同时，这些值在<code>Inflate</code>时，是由<code>ViewGroup</code>读取，然后生成一个ViewGroup特定的<code>LayoutParams</code>对象，再把这个对象存入子View中的，这样，ViewGroup在为该子View安排位置时，就可以参考这个<code>LayoutParams</code>中的信息了。进一步思考，我们发现，调用inflate时，除了输入布局文件的id外，一般要求传入<code>parent ViewGroup</code>，传入这个参数的目的，就是为了读取布局文件中的<code>layout</code>配置信息，如果没有传入，这些信息将会丢失，感兴趣的同学可以自己试验验证下，这里就不展开了。不同的<code>ViewGroup</code>拥有不同的<code>LayoutParams</code>内部类，这是因为，它们所允许的子View微微调整自己的位置的方式是不一样的，具体讲就是配置子View时，允许使用的layout_xxx 是不一样的，比如，RelativeLayout就允许layout_toRightOf等配置，其他的ViewGroup没有这些配置。<br>这些确定View的位置的过程，<code>被包装在View 的layout方法中</code>，这样我们也很容易理解，对于基本View而言，这个方法是没有用的，所以都是空的，你可以查看下ImageView、TextView等的源代码，验证下这一点。对于<code>ViewGroup</code>而言，它们会用该方法为自己的子View安排位置。</p>
+<p>2、确定View大小</p>
+<p>下面，是要确定View的大小了，这是一个开发者、View与ViewGroup三方相互商量的过程。（这里的讲解可能与一般的文章不同，是我个人的理解，一般的文章都不会说是三方商量，而是直接说View与ViewGroup两方商量）</p>
+<p><em>第一步</em>，开发者在书写布局文件时，会为一个View写上<br>android:layout_width=”xxx”<br>android:layout_height=”xxx”<br>两个配置，这是开发者向ViewGroup表达的，我这个View需要的大小是多少。”xxx”的取值有三种：<br>具体值，如50dp，很简单，不多讲<br>match_parent ，表示开发者向ViewGroup说，把你所有的屏幕区域都给这个View吧。<br>wrap_parent，表示开发者向ViewGroup说，只要给这个View够他展示自己的空间就行，至于到底给多少，你直接跟View沟通吧，看它怎么说。</p>
+<p><em>第二步</em>，ViewGroup收到了开发者对View大小的说明，然后ViewGroup会综合考虑自己的空间大小以及开发者的请求，然后生成两个<code>MeasureSpec对象</code>（width与height）传给View，这两个对象是ViewGroup向子View提出的要求，就相当于告诉子View：“我已经与你的使用者（开发者）商量过了，现在把我们商量确定的结果告诉你，你的宽度不能违反width MeasureSpec对象的要求，你的高度不能违反height MeasureSpec对象的要求，现在，你赶紧根据这个要求确定下自己要多大空间，只许少，不许多哦。”</p>
+<p>然后，这两个对象将会传到子View的protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec)方法中。子View能怎么办呢？它肯定是要先看看ViewGroup的要求是什么吧，于是，它从传入的两个对象中解译出如下信息：</p>
+<pre><code>`java
+int widthMode = MeasureSpec.getMode(widthMeasureSpec);
+int widthSize =  MeasureSpec.getSize(widthMeasureSpec);
+int heightMode = MeasureSpec.getMode(heightMeasureSpec);
+int heightSize =  MeasureSpec.getSize(heightMeasureSpec);
+`
+</code></pre><p>Mode与Size一起，准确表达出了ViewGroup的要求。下面我们举例说明，假设Size是100dp，<br>Mode的取值有三种，它们代表了ViewGroup的总体态度：<br>1- EXACTLY 表示，ViewGroup对View说，你只能用100dp，原因是多样的，可能是你的使用者说要你完全占据我的空间，而我只有100dp。也可能这是你的使用者的要求，他需要你占这么大的空间，而我恰好也有这么多的空间，你的使用者让你占这么大的空间，肯定有他自己的考虑，你不能不理不顾，不然你达不到他的要求，他可能就不用你了。<br>2- AT_MOST表示，你最多只能用100dp，这是因为你的使用者说让你占据wrap_content的大小，让我跟你商量，我又不知道你到底要占多大区域，但是我告诉你，我只有100dp，你最多也只能用这么多哈。(这里，可以看出，当使用者在布局文件中要求一个View是wrap_content时，此时，View的大小决定权就交给View自己了，默认的View类中的实现，比较粗暴，就是将此时ViewGroup提供的空间全占据，完全没有真正根据自己的内容来确定大小，为什么这么粗暴？因为View是一个基类，所有的组件都是它的子类，每个子类的content都各不相同，View怎么可能知道content的大小呢，所以，它把wrap_content情况下，自己尺寸大小的决定权下放给了不同的子组件，让它们自己根据自己的内容去决定自己的大小，同样，我们自定义View时，也要考虑这一点)<br>3- UNSPECIFIED表示，你自己看着办，把你最理想的大小告诉我，我考虑考虑。</p>
+<h2 id="how"><a href="#how" class="headerlink" title="how?"></a>how?</h2><hr>
+<h2 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h2><p><a href="http://www.jianshu.com/p/d507e3514b65?utm_campaign=haruki&amp;utm_content=note&amp;utm_medium=reader_share&amp;utm_source=qq" target="_blank" rel="external">教你步步为营掌握自定义View</a><br><a href="http://blog.csdn.net/wingichoy/article/details/50487009" target="_blank" rel="external">关于Android自定义view 你所需要知道的基本函数</a>  </p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/CustomView/" rel="tag"># CustomView</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/03/08/Android自定义View/自定义View入门_彩虹横向进度条/" rel="next" title="自定义View入门_彩虹横向进度条">
+                <i class="fa fa-chevron-left"></i> 自定义View入门_彩虹横向进度条
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/03/09/greendao/greendao/" rel="prev" title="数据库_Greendao">
+                数据库_Greendao <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="lorensong" />
+          <p class="site-author-name" itemprop="name">lorensong</p>
+           
+              <p class="site-description motion-element" itemprop="description">If you love life, life will love you back.</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">31</span>
+                <span class="site-state-item-name">posts</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">17</span>
+                <span class="site-state-item-name">categories</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-name">tags</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+
+        <div class="links-of-author motion-element">
+          
+
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#what"><span class="nav-number">1.</span> <span class="nav-text">what?</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#why"><span class="nav-number">1.1.</span> <span class="nav-text">why?</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#从Android系统设计者的角度，View这个概念究竟是做什么的？"><span class="nav-number">1.1.1.</span> <span class="nav-text">从Android系统设计者的角度，View这个概念究竟是做什么的？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Android系统中那个View类，它有哪些默认功能和行为，能干什么，不能干什么？"><span class="nav-number">1.1.2.</span> <span class="nav-text">Android系统中那个View类，它有哪些默认功能和行为，能干什么，不能干什么？</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#how"><span class="nav-number">2.</span> <span class="nav-text">how?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文档"><span class="nav-number">3.</span> <span class="nav-text">参考文档</span></a></li></ol></div>
+            
+
+          </div>
+
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">lorensong</span>
+</div>
+
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="https://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+  
+  
+
+  
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("IgYqJPNpb10L1iNTSScMf1hh-gzGzoHsz", "u28SsFPTbxCDfhMYe2p9chlY");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+
+  
+
+</body>
+</html>
