@@ -93,7 +93,7 @@
 <meta property="og:url" content="https://lorensong.github.io/2017/02/26/版本控制/Git从入门到放弃/index.html">
 <meta property="og:site_name" content="lorensong">
 <meta property="og:description" content="前言Git是一个非常牛叉的版本控制工具,不同于SVN.Git的每台主机都可以充当服务器.">
-<meta property="og:updated_time" content="2017-05-05T09:35:22.138Z">
+<meta property="og:updated_time" content="2017-05-09T02:59:13.439Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Git从入门到放弃">
 <meta name="twitter:description" content="前言Git是一个非常牛叉的版本控制工具,不同于SVN.Git的每台主机都可以充当服务器.">
@@ -398,13 +398,14 @@
       
         <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>Git是一个非常牛叉的版本控制工具,不同于SVN.Git的每台主机都可以充当服务器.</p>
 <a id="more"></a>
-<h2 id="安装Git"><a href="#安装Git" class="headerlink" title="安装Git"></a>安装Git</h2><h3 id="忽略文件"><a href="#忽略文件" class="headerlink" title="忽略文件"></a>忽略文件</h3><p>1.添加忽略文件<br>在使用Git时,我们通常会使用到.gitignore文件,用来忽略一些我们不想要提交的文件.我们可以根据不同的需求制定不同的.gitignore文件;<br>以笔者<code>Android</code>开发的忽略文件为例:<br>忽略文件在AndroidStudio如下:  </p>
+<h2 id="安装Git"><a href="#安装Git" class="headerlink" title="安装Git"></a>安装Git</h2><h3 id="忽略文件"><a href="#忽略文件" class="headerlink" title="忽略文件"></a>忽略文件</h3><h4 id="添加忽略文件"><a href="#添加忽略文件" class="headerlink" title="添加忽略文件"></a>添加忽略文件</h4><p>在使用Git时,我们通常会使用到.gitignore文件,用来忽略一些我们不想要提交的文件.我们可以根据不同的需求制定不同的.gitignore文件;<br>以笔者<code>Android</code>开发的忽略文件为例:<br>忽略文件在AndroidStudio如下:  </p>
 <blockquote>
 <p>/build<br>*.iml<br>/local.properties<br>app/build/<br>/.idea<br>/build<br>/captures<br>gradle/</p>
 </blockquote>
-<p>在添加完成后,将忽略文件也一同提交远程仓库就可以了;<br>2.修改忽略文件<br>在我们项目中添加了.gitignore后,但是却发现有些忽略规则忘记添加了,那我们就需要修改我们的忽略文件(.gitignore)了;<br>在原来的忽略文件(.gitignore)后,在当前仓库的根目录下,执行以下git命令:</p>
+<p>在添加完成后,将忽略文件也一同提交远程仓库就可以了;</p>
+<h4 id="修改添加后忽略文件"><a href="#修改添加后忽略文件" class="headerlink" title="修改添加后忽略文件"></a>修改添加后忽略文件</h4><p>在我们项目中添加了.gitignore后,但是却发现有些忽略规则忘记添加了,那我们就需要修改我们的忽略文件(.gitignore)了;<br>在原来的忽略文件(.gitignore)后,在当前仓库的根目录下,执行以下git命令:</p>
 <blockquote>
-<p><code>git rm -r --cached .</code> <code>//清除缓存</code><br><code>git add .``//重新添加文件索引</code><br><code>git commit -m &quot;更新.gitignore文件&quot;</code> <code>//写注释并提交</code><br><code>git push origin master</code> <code>//同步到远程分支是mater的仓库</code></p>
+<p><code>git rm -r --cached .</code> <code>//清除缓存</code><br><code>git add .</code> <code>//重新添加文件索引</code><br><code>git commit -m &quot;更新.gitignore文件&quot;</code> <code>//写提交Message并提交</code><br><code>git push origin master</code> <code>//同步到远程分支是master的仓库</code></p>
 </blockquote>
 <p>这样,我们的忽略文件(.gitignore)就更新成功了;</p>
 
@@ -585,7 +586,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装Git"><span class="nav-number">2.</span> <span class="nav-text">安装Git</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#忽略文件"><span class="nav-number">2.1.</span> <span class="nav-text">忽略文件</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装Git"><span class="nav-number">2.</span> <span class="nav-text">安装Git</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#忽略文件"><span class="nav-number">2.1.</span> <span class="nav-text">忽略文件</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#添加忽略文件"><span class="nav-number">2.1.1.</span> <span class="nav-text">添加忽略文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#修改添加后忽略文件"><span class="nav-number">2.1.2.</span> <span class="nav-text">修改添加后忽略文件</span></a></li></ol></li></ol></li></ol></div>
             
 
           </div>
