@@ -87,34 +87,34 @@
 
 
 
-<meta name="description" content="what?Android一开始提供了3种动画:    
+<meta name="description" content="前言对于Android中各种有特效的效果,很多都是由动画来实现的.Android提供了3种基础动画:    
 
 逐帧动画(frame-by-frame animation)  
 补间动画(tweened animation)  
 属性动画(property animation)[Android3.0才提出来的]
 
-属性动画完全可以替换掉帧动画和补间动画,所以也就是学习属性动画的目的">
+属性动画可以对”非View对象”进行操作,可以对View的背景色进行操作,同时也可以">
 <meta property="og:type" content="article">
 <meta property="og:title" content="属性动画基本用法">
 <meta property="og:url" content="https://lorensong.github.io/2017/03/13/Android动画/属性动画基本用法/index.html">
 <meta property="og:site_name" content="lorensong">
-<meta property="og:description" content="what?Android一开始提供了3种动画:    
+<meta property="og:description" content="前言对于Android中各种有特效的效果,很多都是由动画来实现的.Android提供了3种基础动画:    
 
 逐帧动画(frame-by-frame animation)  
 补间动画(tweened animation)  
 属性动画(property animation)[Android3.0才提出来的]
 
-属性动画完全可以替换掉帧动画和补间动画,所以也就是学习属性动画的目的">
-<meta property="og:updated_time" content="2017-05-08T02:05:49.064Z">
+属性动画可以对”非View对象”进行操作,可以对View的背景色进行操作,同时也可以">
+<meta property="og:updated_time" content="2017-05-26T06:47:18.274Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="属性动画基本用法">
-<meta name="twitter:description" content="what?Android一开始提供了3种动画:    
+<meta name="twitter:description" content="前言对于Android中各种有特效的效果,很多都是由动画来实现的.Android提供了3种基础动画:    
 
 逐帧动画(frame-by-frame animation)  
 补间动画(tweened animation)  
 属性动画(property animation)[Android3.0才提出来的]
 
-属性动画完全可以替换掉帧动画和补间动画,所以也就是学习属性动画的目的">
+属性动画可以对”非View对象”进行操作,可以对View的背景色进行操作,同时也可以">
 
 
 
@@ -414,16 +414,15 @@
       
 
       
-        <h2 id="what"><a href="#what" class="headerlink" title="what?"></a>what?</h2><p>Android一开始提供了3种动画:    </p>
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>对于Android中各种有特效的效果,很多都是由动画来实现的.Android提供了3种基础动画:    </p>
 <ul>
 <li>逐帧动画(frame-by-frame animation)  </li>
 <li>补间动画(tweened animation)  </li>
 <li>属性动画(property animation)[Android3.0才提出来的]</li>
 </ul>
-<p>属性动画完全可以替换掉帧动画和补间动画,所以也就是学习属性动画的目的  </p>
+<p>属性动画可以对”非View对象”进行操作,可以对View的背景色进行操作,同时也可以真实的改变View的属性(最重要).所有属性动画有了帧动画和补间动画所不具有的特点.可以替换前两种.所以也就是学习属性动画的目的.  </p>
 <a id="more"></a>  
-<h2 id="why"><a href="#why" class="headerlink" title="why?"></a>why?</h2><p>1.属性动画可以对”非View对象”进行操作<br>2.属性动画可以对View的背景色进行操作<br>3.属性动画可以真实的改变View的属性(最重要)  </p>
-<h2 id="how"><a href="#how" class="headerlink" title="how?"></a>how?</h2><h3 id="ValueAnimator"><a href="#ValueAnimator" class="headerlink" title="ValueAnimator"></a>ValueAnimator</h3><p>类关系:ValueAnimator -&gt; Animator<br>ValueAnimator是整个属性动画机制当中最核心的一个类，前面我们已经提到了，属性动画的运行机制是通过不断地对值进行操作来实现的，而初始值和结束值之间的动画过渡就是由ValueAnimator这个类来负责计算的。它的内部使用一种时间循环的机制来计算值与值之间的动画过渡，我们只需要将初始值和结束值提供给ValueAnimator，并且告诉它动画所需运行的时长，那么ValueAnimator就会自动帮我们完成从初始值平滑地过渡到结束值这样的效果。除此之外，ValueAnimator还负责管理动画的播放次数、播放模式、以及对动画设置监听器等，确实是一个非常重要的类。<br>示例代码:<br>将一个值从0平滑过渡到1，时长300毫秒:</p>
+<h3 id="ValueAnimator"><a href="#ValueAnimator" class="headerlink" title="ValueAnimator"></a>ValueAnimator</h3><p>类关系:ValueAnimator -&gt; Animator<br>ValueAnimator是整个属性动画机制当中最核心的一个类，前面我们已经提到了，属性动画的运行机制是通过不断地对值进行操作来实现的，而初始值和结束值之间的动画过渡就是由ValueAnimator这个类来负责计算的。它的内部使用一种时间循环的机制来计算值与值之间的动画过渡，我们只需要将初始值和结束值提供给ValueAnimator，并且告诉它动画所需运行的时长，那么ValueAnimator就会自动帮我们完成从初始值平滑地过渡到结束值这样的效果。除此之外，ValueAnimator还负责管理动画的播放次数、播放模式、以及对动画设置监听器等，确实是一个非常重要的类。<br>示例代码:<br>将一个值从0平滑过渡到1，时长300毫秒:</p>
 <pre><code><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">ValueAnimator anim = ValueAnimator.ofFloat(<span class="number">0f</span>, <span class="number">1f</span>);  </div><div class="line">anim.setDuration(<span class="number">300</span>);  </div><div class="line">anim.start();</div></pre></td></tr></table></figure>
 </code></pre><p>调用监听器,查看过渡值:</p>
 <pre><code><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">anim.addUpdateListener(<span class="keyword">new</span> ValueAnimator.AnimatorUpdateListener() &#123;  </div><div class="line">   <span class="meta">@Override</span>  </div><div class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onAnimationUpdate</span><span class="params">(ValueAnimator animation)</span> </span>&#123;  </div><div class="line">       <span class="keyword">float</span> currentValue = (<span class="keyword">float</span>) animation.getAnimatedValue();  </div><div class="line">       Log.d(<span class="string">"TAG"</span>, <span class="string">"cuurent value is "</span> + currentValue);  </div><div class="line">   &#125;  </div><div class="line">&#125;);</div></pre></td></tr></table></figure>
@@ -608,7 +607,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">31</span>
+                <span class="site-state-item-count">32</span>
                 <span class="site-state-item-name">posts</span>
               </a>
             </div>
@@ -619,7 +618,7 @@
             
             <div class="site-state-item site-state-categories">
               <a href="/categories/index.html">
-                <span class="site-state-item-count">17</span>
+                <span class="site-state-item-count">18</span>
                 <span class="site-state-item-name">categories</span>
               </a>
             </div>
@@ -630,7 +629,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-count">14</span>
                 <span class="site-state-item-name">tags</span>
               </a>
             </div>
@@ -666,7 +665,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#what"><span class="nav-number">1.</span> <span class="nav-text">what?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#why"><span class="nav-number">2.</span> <span class="nav-text">why?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#how"><span class="nav-number">3.</span> <span class="nav-text">how?</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ValueAnimator"><span class="nav-number">3.1.</span> <span class="nav-text">ValueAnimator</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#ObjectAnimator"><span class="nav-number">3.1.1.</span> <span class="nav-text">ObjectAnimator</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#组合动画"><span class="nav-number">3.2.</span> <span class="nav-text">组合动画</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Animator监听器"><span class="nav-number">3.3.</span> <span class="nav-text">Animator监听器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用XML编写动画"><span class="nav-number">3.4.</span> <span class="nav-text">使用XML编写动画</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#补充"><span class="nav-number">3.5.</span> <span class="nav-text">补充</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#属性动画的各种组成类"><span class="nav-number">3.5.1.</span> <span class="nav-text">属性动画的各种组成类</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#view-getX-和view-getTranslation-的区别："><span class="nav-number">3.5.2.</span> <span class="nav-text">view.getX()和view.getTranslation()的区别：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考文档"><span class="nav-number">3.6.</span> <span class="nav-text">参考文档</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ValueAnimator"><span class="nav-number">1.1.</span> <span class="nav-text">ValueAnimator</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#ObjectAnimator"><span class="nav-number">1.1.1.</span> <span class="nav-text">ObjectAnimator</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#组合动画"><span class="nav-number">1.2.</span> <span class="nav-text">组合动画</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Animator监听器"><span class="nav-number">1.3.</span> <span class="nav-text">Animator监听器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用XML编写动画"><span class="nav-number">1.4.</span> <span class="nav-text">使用XML编写动画</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#补充"><span class="nav-number">1.5.</span> <span class="nav-text">补充</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#属性动画的各种组成类"><span class="nav-number">1.5.1.</span> <span class="nav-text">属性动画的各种组成类</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#view-getX-和view-getTranslation-的区别："><span class="nav-number">1.5.2.</span> <span class="nav-text">view.getX()和view.getTranslation()的区别：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考文档"><span class="nav-number">1.6.</span> <span class="nav-text">参考文档</span></a></li></ol></li></ol></div>
             
 
           </div>

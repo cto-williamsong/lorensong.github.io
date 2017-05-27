@@ -1,0 +1,1004 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Realm," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="前言最近项目需要用到数据库,想到以前使用的GreenDao集成比较麻烦.不过Greendao从3.0以后支持注解操作,所以集成起来还是比较方便的.最近在网上看到有一个新的数据库框架,该框架不同于以前版本的数据库框架,她不是基于SQLite而封装了.而是底层采用了C++新写的一项嵌入式数据库,支持运行在手机、平板和可穿戴设备上.她不用于SQLite,她允许你在持久层直接和数据对象工作。在它之上是一个">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Realm数据库入门">
+<meta property="og:url" content="https://lorensong.github.io/2017/05/23/数据库/Realm数据库入门/index.html">
+<meta property="og:site_name" content="lorensong">
+<meta property="og:description" content="前言最近项目需要用到数据库,想到以前使用的GreenDao集成比较麻烦.不过Greendao从3.0以后支持注解操作,所以集成起来还是比较方便的.最近在网上看到有一个新的数据库框架,该框架不同于以前版本的数据库框架,她不是基于SQLite而封装了.而是底层采用了C++新写的一项嵌入式数据库,支持运行在手机、平板和可穿戴设备上.她不用于SQLite,她允许你在持久层直接和数据对象工作。在它之上是一个">
+<meta property="og:updated_time" content="2017-05-26T09:59:55.918Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Realm数据库入门">
+<meta name="twitter:description" content="前言最近项目需要用到数据库,想到以前使用的GreenDao集成比较麻烦.不过Greendao从3.0以后支持注解操作,所以集成起来还是比较方便的.最近在网上看到有一个新的数据库框架,该框架不同于以前版本的数据库框架,她不是基于SQLite而封装了.而是底层采用了C++新写的一项嵌入式数据库,支持运行在手机、平板和可穿戴设备上.她不用于SQLite,她允许你在持久层直接和数据对象工作。在它之上是一个">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://lorensong.github.io/2017/05/23/数据库/Realm数据库入门/"/>
+
+
+
+
+
+  <title> Realm数据库入门 | lorensong </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">lorensong</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">If you love life, life will love you back.</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404.html" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            Commonweal 404
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://lorensong.github.io/2017/05/23/数据库/Realm数据库入门/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="lorensong">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="lorensong">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Realm数据库入门
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-05-23T17:53:53+08:00">
+                2017-05-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Note/" itemprop="url" rel="index">
+                    <span itemprop="name">Note</span>
+                  </a>
+                </span>
+
+                
+                
+                  , 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Note/Realm/" itemprop="url" rel="index">
+                    <span itemprop="name">Realm</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2017/05/23/数据库/Realm数据库入门/" class="leancloud_visitors" data-flag-title="Realm数据库入门">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">Visitors </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近项目需要用到数据库,想到以前使用的GreenDao集成比较麻烦.不过Greendao从3.0以后支持注解操作,所以集成起来还是比较方便的.<br>最近在网上看到有一个新的数据库框架,该框架不同于以前版本的数据库框架,她不是基于SQLite而封装了.而是底层采用了C++新写的一项嵌入式数据库,支持运行在手机、平板和可穿戴设备上.她不用于SQLite,她允许你在持久层直接和数据对象工作。在它之上是一个函数式风格的查询api，众多的努力让它比传统的SQLite 操作更快 。<br>说了半天, 她就是<code>Realm</code>.由Y Combinator公司开发出来;<br><strong>敲黑板:</strong>目前Realm支持Java,OC,RN,Swift,JS等语言,是不是想起来都很牛叉.那下面让我们来一起学习吧;<br>…</p>
+<a id="more"></a>
+<p>各大数据库(Ormlite,GreenDao,Realm性能对比)<br><a href="http://blog.csdn.net/firesmog/article/details/55656007" target="_blank" rel="external">GreenDao、Ormlite、Realm性能对比</a><br><a href="http://blog.csdn.net/zhanggang740/article/details/52164715" target="_blank" rel="external">GreenDao和Realm对比</a>  </p>
+<h2 id="集成步骤"><a href="#集成步骤" class="headerlink" title="集成步骤"></a>集成步骤</h2><h3 id="依赖"><a href="#依赖" class="headerlink" title="依赖"></a>依赖</h3><p>打开<a href="https://github.com/realm/realm-java" target="_blank" rel="external">Realm_Github</a>,这样我们找到最新的Realm版本号,然后进行以下操作,<br>在project的<code>build.gradle</code>中的<code>dependencies</code>添加如下代码:<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">classpath "io.realm:realm-gradle-plugin:3.2.1"</div></pre></td></tr></table></figure></p>
+<p>在我们module的<code>build.gradle</code>中的顶部第二行添加<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">apply plugin: 'realm-android'</div></pre></td></tr></table></figure></p>
+<h3 id="创建实体model"><a href="#创建实体model" class="headerlink" title="创建实体model"></a>创建实体model</h3><h4 id="简单model"><a href="#简单model" class="headerlink" title="简单model"></a>简单model</h4><p>创建model类,这个类也是我们数据库中对应的字段名;<br>有两种方式:<br>方法1:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@RealmClass</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">User2</span> <span class="keyword">implements</span> <span class="title">RealmModel</span> </span>&#123;</div><div class="line">	<span class="meta">@PrimaryKey</span></div><div class="line">	<span class="keyword">public</span> Long id;</div><div class="line">	<span class="keyword">public</span> String name;</div><div class="line">	<span class="keyword">public</span> <span class="keyword">int</span> age;</div><div class="line">	<span class="comment">//setters and getters</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>方法2:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">User</span> <span class="keyword">extends</span> <span class="title">RealmObject</span> </span>&#123;</div><div class="line">......</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p><em>这里推荐采用 <code>implements</code> 的方法实现,因为我们的实体类可能会需要实现继承</em></p>
+<ul>
+<li>支持的属性<br><code>boolean</code>, <code>byte</code>, <code>short</code>,<code>int</code>,<code>long</code>,<code>float</code>, <code>double</code>,<code>String</code>, <code>Date</code> 和，<code>byte[]</code>, <code>RealmObject</code>, <code>RealmList&lt;? extends RealmObject&gt;</code>,以及基本数据类型的包装类;<br><em>Tip：</em>整数类型 short、int 和 long 都被映射到 Realm 内的相同类型的long;<br>字段修饰符：</li>
+<li><p><code>@primarykey</code>(表示该字段是主键)<br>PrimaryKey就是主键。使用<code>@PrimaryKey</code>来标注，字段类型必须是字符串（String）或整数（byte，short，int或long）以及它们的包装类型不可以存在多个主键，使用字符串字段作为主键意味着字段被索引（注释@PrimaryKey隐式地设置注释@Index）。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@PrimaryKey</span></div><div class="line"><span class="keyword">private</span> String id;</div></pre></td></tr></table></figure>
+</li>
+<li><p><code>@Required</code>(表示该字段非空)<br>在某些情况下，有一些属性是不能为null的。使用@Required可用于用于强行要求其属性不能为空，只能用于Boolean, Byte, Short, Integer, Long, Float, Double, String, byte[] 和 Date。在其它类型属性上使用 @Required修饰会导致编译失败。<br><em>Tip：</em>基本数据类型不需要使用注解 @Required，因为他们本身就不可为空。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Required</span></div><div class="line"><span class="keyword">private</span> String name;</div></pre></td></tr></table></figure>
+</li>
+<li><p><code>@Ignore</code>(表示忽略该字段)<br>被添加@Ignore标签后，存储数据时会忽略该字段。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Ignore</span></div><div class="line"><span class="keyword">private</span> String temp;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h4 id="含有其它对象的model"><a href="#含有其它对象的model" class="headerlink" title="含有其它对象的model"></a>含有其它对象的model</h4><ol>
+<li><p>比如定义了一个Dog类,Dog必须也要继承<code>RealmObjet</code>或实现<code>RealmModel</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">java <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Dog</span> <span class="keyword">extends</span> <span class="title">RealmObject</span> </span>&#123;</div><div class="line">	 <span class="keyword">private</span> String name; </div><div class="line">	 <span class="keyword">private</span> <span class="keyword">int</span> age; </div><div class="line">	<span class="comment">//getters and setters </span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>User养了Dog:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">java <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">User</span> <span class="keyword">extends</span> <span class="title">RealmObject</span> </span>&#123; </div><div class="line">	<span class="keyword">private</span> String name; </div><div class="line">	<span class="keyword">private</span> <span class="keyword">int</span> age; </div><div class="line">	<span class="keyword">private</span> Dog dog; </div><div class="line">	<span class="comment">//getters and setters </span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>如果一个用户养了多个Dog:<br>那么字段定义如下:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">java <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">User</span> <span class="keyword">extends</span> <span class="title">RealmObject</span> </span>&#123; </div><div class="line">	<span class="keyword">private</span> String name; </div><div class="line">	<span class="keyword">private</span> <span class="keyword">int</span> age; </div><div class="line">	<span class="keyword">private</span> RealmList&lt;Dog&gt; dogs;</div><div class="line">	<span class="comment">//getters and setters </span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<p><strong>注意:</strong>如果修改了数据库对应的model的.那么我们就需要升级数据库,否则会抛出异常.升级方法后面会有介绍;</p>
+<h3 id="初始化"><a href="#初始化" class="headerlink" title="初始化"></a>初始化</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">Realm.init(<span class="keyword">this</span>);</div><div class="line">Realm mRealm = Realm.getDefaultInstance();</div><div class="line"><span class="comment">//Realm是通过静态的方式获取的,所以,无论在什么地方进行这个操作,获取的Realm的对象时一致的;</span></div></pre></td></tr></table></figure>
+<p>这时候会创建一个叫做<code>default.realm</code>的Realm文件，一般来说，这个文件位于/data/data/包名/files/。通过<code>realm.getPath()</code>来获得该Realm的绝对路径。<br>当然我们还可以在创建数据库的时候,配置一下.代码如下:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">RealmConfiguration config = <span class="keyword">new</span> RealmConfiguration.Builder() </div><div class="line">            .name(<span class="string">"myrealm.realm"</span>) <span class="comment">//数据库文件名</span></div><div class="line">            .schemaVersion(<span class="number">0</span>) <span class="comment">//版本号</span></div><div class="line">            .build();</div><div class="line">Realm realm = Realm.getInstance(config);</div></pre></td></tr></table></figure></p>
+<p><code>RealmConfiguration</code>支持的方法定义：<br><code>.name</code> : 指定数据库的名称。如不指定默认名为default。<br><code>.schemaVersion</code> : 指定数据库的版本号。<br><code>.encryptionKey</code> : 指定数据库的密钥。<br><code>.migration</code> : 指定迁移操作的迁移类。(Realm数据升级时,只能做表迁移操作)<br><code>.deleteRealmIfMigrationNeeded</code> : 声明版本冲突时自动删除原数据库。<br><code>.inMemory</code> : 声明数据库只在内存中持久化。</p>
+<h3 id="关闭Realm"><a href="#关闭Realm" class="headerlink" title="关闭Realm"></a>关闭Realm</h3><p>使用完毕,记得关闭Realm数据库;<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Override</span></div><div class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onDestroy</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="keyword">super</span>.onDestroy();</div><div class="line">	<span class="keyword">if</span> (mRealm != <span class="keyword">null</span> &amp;&amp; !mRealm.isClosed()) &#123;</div><div class="line">		mRealm.close();</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="增删改查"><a href="#增删改查" class="headerlink" title="增删改查"></a>增删改查</h2><h3 id="同步状态下"><a href="#同步状态下" class="headerlink" title="同步状态下"></a>同步状态下</h3><p><strong>注意:</strong> 以下操作都是在UI线程中执行的,所以执行数据过多,就会导致线程阻塞,引起系统ANR错误;</p>
+<h4 id="增"><a href="#增" class="headerlink" title="增"></a>增</h4><ol>
+<li><p>写入操作需要在事务中进行，可以使用<code>executeTransaction</code>方法来开启事务。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">mRealm.executeTransaction(<span class="keyword">new</span> Realm.Transaction() &#123;</div><div class="line">         <span class="meta">@Override</span></div><div class="line">         <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">execute</span><span class="params">(Realm realm)</span> </span>&#123;</div><div class="line">             User user = realm.createObject(User.class);</div><div class="line">             user.setName(<span class="string">"张三"</span>);</div><div class="line">             user.setAge(<span class="number">23</span>);</div><div class="line">         &#125;</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+</li>
+<li><p>使用<code>copyToRealmOrUpdate</code>或<code>copyToRealm</code>方法插入数据<br>当<code>Model</code>中存在主键:<br>推荐使用<code>copyToRealmOrUpdate</code>方法插入数据。如果对象存在，就更新该对象；反之，它会创建一个新的对象。<br>若该<code>Model</code>没有主键:<br>使用<code>copyToRealm</code>方法，否则将抛出异常。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">Realm.getDefaultInstance()</div><div class="line">	.executeTransaction(<span class="keyword">new</span> Realm.Transaction() &#123;</div><div class="line">		<span class="meta">@Override</span></div><div class="line">		<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">execute</span><span class="params">(Realm realm)</span> </span>&#123;</div><div class="line">		realm.copyToRealmOrUpdate(Object);<span class="comment">// 主键冲突时更新，无主键报异常</span></div><div class="line">		<span class="comment">//realm.copyToRealm(Object); // 主键冲突时报异常</span></div><div class="line">	&#125;</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>如果你用的是这样的<code>modle</code>:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">User2</span> <span class="keyword">extends</span> <span class="title">RealmObject</span> </span>&#123;</div><div class="line">   <span class="keyword">public</span> String name;</div><div class="line">   <span class="keyword">public</span> <span class="keyword">int</span> age;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>那么也这样写:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">mRealm.executeTransaction(<span class="keyword">new</span> Realm.Transaction() &#123;  </div><div class="line">         <span class="meta">@Override</span></div><div class="line">         <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">execute</span><span class="params">(Realm realm)</span> </span>&#123;  </div><div class="line">             User2 user = realm.createObject(User2.class);  </div><div class="line">             user.name = <span class="string">"李四"</span>;  </div><div class="line">             user.age = <span class="number">24</span>;  </div><div class="line">         &#125;</div><div class="line">&#125;);</div></pre></td></tr></table></figure></p>
+<p>如果你的model还有其他的属性,比如狗,有可能有多个:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"> <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">User</span> <span class="keyword">extends</span> <span class="title">RealmObject</span> </span>&#123;</div><div class="line">   <span class="keyword">private</span> String name;</div><div class="line">   <span class="keyword">private</span> <span class="keyword">int</span> age;</div><div class="line">   <span class="keyword">private</span> RealmList&lt;Dog&gt; dogs;</div><div class="line">   <span class="comment">//getters and setters</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>那么存入数据的方式:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"> <span class="meta">@Override</span></div><div class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">execute</span><span class="params">(Realm realm)</span> </span>&#123;</div><div class="line">     User user = realm.createObject(User.class);</div><div class="line">     user.setName(<span class="string">"张三"</span>);</div><div class="line">     user.setAge(<span class="number">23</span>);</div><div class="line"></div><div class="line">     Dog dog1 = realm.createObject(Dog.class);</div><div class="line">     dog1.setAge(<span class="number">1</span>);</div><div class="line">     dog1.setName(<span class="string">"dog-1"</span>);</div><div class="line">     user.getDogs().add(dog1);</div><div class="line"></div><div class="line">     Dog dog2 = realm.createObject(Dog.class);</div><div class="line">     dog2.setAge(<span class="number">2</span>);</div><div class="line">     dog2.setName(<span class="string">"dog-2"</span>);</div><div class="line">     user.getDogs().add(dog2);</div><div class="line">   &#125;</div><div class="line">&#125;);</div></pre></td></tr></table></figure></p>
+<h4 id="查"><a href="#查" class="headerlink" title="查"></a>查</h4><p>查找操作就比插入方便多了，并不需在事务中操作，直接查询即可.</p>
+<ul>
+<li><code>findAll</code> (查询所有数据)<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//查询出所有的 User</span></div><div class="line">RealmResults&lt;User&gt; userList = mRealm.where(User.class).findAll();</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>这里使用<code>RealmResults</code>来接受查询到的结果，突然出现的<code>RealmResults</code>可能会让人懵逼。看看他的源码，发现:<br>这里的<code>RealmResults</code> -&gt;(继承)-&gt; <code>AbstractList</code> -&gt;(实现)-&gt; <code>List</code><br><strong>注意:</strong>RealmResults虽然实现了List接口，不过有很多方法是不能用的。比如<code>add</code>、<code>addAll</code>、<code>remove</code>、<code>clear</code>等，调用后会直接抛异常。不过也不用当心误用这些方法，因为它们都被标记为<code>@Deprecated</code>了。</p>
+<ul>
+<li><code>findAllAsync</code> (异步查询)<br>当数据量较大，可能会引起<strong>ANR</strong>的时候，就可以使用<code>findAllAsync</code><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">RealmResults&lt;User&gt; userList = mRealm.where(User.class)</div><div class="line">  .equalTo(<span class="string">"name"</span>, <span class="string">"Gavin"</span>)</div><div class="line">  .findAllAsync();</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>值得注意的是，这里并不会马上查到数据，是有一定延时的。也就是说，你马上使用<code>userList</code>的时候，里面是没有数据的。可以注册<code>RealmChangeListener</code>监听器，或者使用<code>isLoaded()</code>方法，判断是否查询完成:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> (result.isLoaded()) &#123;</div><div class="line">   <span class="comment">// 完成查询</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<ul>
+<li><p><code>findFirst</code> (查询第一条数据)<br>例：查询User表中的第一条数据</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">User user2 = mRealm.where(User.class).findFirst();</div></pre></td></tr></table></figure>
+</li>
+<li><p><code>equalTo</code> (根据条件查询)<br>例：得到name为张三的用户列表集合;</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">RealmResults&lt;User&gt; userList = mRealm.where(User.class)</div><div class="line">         .equalTo(<span class="string">"name"</span>, <span class="string">"张三"</span>).findAll();</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>如果User中还有Dog属性，希望根据Dog的条件来获取用户：<br>例：查询dogs.name为dog-1的User集合<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">RealmResults&lt;User&gt; userList = mRealm.where(User.class)</div><div class="line">          .equalTo(<span class="string">"dogs.name"</span>, <span class="string">"dog-1"</span>).findAll();</div></pre></td></tr></table></figure></p>
+<p>如果想要查找”name”为”张三”,并且养的那只狗为”dog-1”,那么可以这样做:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">RealmResults&lt;User&gt; userList = mRealm.where(User.class)</div><div class="line">         .equalTo(<span class="string">"name"</span>, <span class="string">"张三"</span>)</div><div class="line">         .equalTo(<span class="string">"dogs.name"</span>, <span class="string">"dog-1"</span>)</div><div class="line">         .findAll();</div></pre></td></tr></table></figure></p>
+<ul>
+<li>更多查询条件<br>上面就展示了<code>equalTo</code>的基本用法,另外还有很多,可以查看这里<a href="https://realm.io/cn/docs/java/latest/#section-13" target="_blank" rel="external">Realm查询字段</a></li>
+<li><code>RealmQuery</code>以及<code>or()</code>的使用<br>在使用<code>where()</code>方法时，能得到一个<code>RealmQuery</code>对象，使用方法如下：<br>例：查询name为“张三”和“李四”的用户<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">RealmQuery&lt;User&gt; query = Realm.getDefaultInstance().where(User.class);</div><div class="line">query.equalTo(<span class="string">"name"</span>, <span class="string">"张三"</span>);</div><div class="line">query.or().equalTo(<span class="string">"name"</span>, <span class="string">"李四"</span>);</div><div class="line">RealmResults&lt;User&gt; userList = query.findAll();</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>这种情况下就要用到<code>or()</code>方法<br>这么一大串，你又觉得麻烦了？没事，继续简化。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">RealmResults&lt;User&gt; userList = mRealm.where(User.class)</div><div class="line">          .equalTo(<span class="string">"name"</span>, <span class="string">"Gavin"</span>)</div><div class="line">          .or().equalTo(<span class="string">"name"</span>, <span class="string">"Eric"</span>)</div><div class="line">          .findAll();</div></pre></td></tr></table></figure></p>
+<p><em>Tip</em>：查询的时候你不用担心得到的<code>RealmResults</code>为<code>null</code>。如果查询的结果为空，那么<code>RealmResults</code>的<code>size</code>为0</p>
+<ul>
+<li><p><code>beginGroup()</code>和<code>endGroup()</code> (整合逻辑判断)<br>需要查询<code>name</code>为<code>Peter</code>或<code>Jo</code>如下:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">RealmResults&lt;User&gt; r = realm.where(User.class)</div><div class="line">  .greaterThan(<span class="string">"age"</span>, <span class="number">10</span>)  <span class="comment">//年龄值大于10岁的</span></div><div class="line">  .beginGroup()</div><div class="line">      .equalTo(<span class="string">"name"</span>, <span class="string">"Peter"</span>)</div><div class="line">      .or()</div><div class="line">      .contains(<span class="string">"name"</span>, <span class="string">"Jo"</span>)</div><div class="line">  .endGroup()</div><div class="line">  .findAll();</div></pre></td></tr></table></figure>
+</li>
+<li><p><code>not</code>(否定一个条件)<br>该 not() 运算符可以与 beginGroup()/endGroup() 一起使用来否定子条件。例如你想查找所有名字不为 “Peter” 或 “Jo” 的 User 对象：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">RealmResult&lt;User&gt; r = realm.where(User.class)</div><div class="line">    .not()</div><div class="line">    .beginGroup()</div><div class="line">         .equalTo(<span class="string">"name"</span>, <span class="string">"Peter"</span>)</div><div class="line">         .or()</div><div class="line">         .contains(<span class="string">"name"</span>, <span class="string">"Jo"</span>)</div><div class="line">     .endGroup()</div><div class="line">     .findAll();</div></pre></td></tr></table></figure>
+</li>
+<li><p><code>in()</code> (一个字段中,只要包含给定的数据)<br>当然，针对这个特定的查询，<code>in()</code> 会更加的方便：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">RealmResult&lt;User&gt; r = realm.where(User.class)</div><div class="line">     .not()</div><div class="line">     .in(<span class="string">"name"</span>, <span class="keyword">new</span> String[]&#123;<span class="string">"Peter"</span>, <span class="string">"Jo"</span>&#125;)</div><div class="line">     finalAll();</div></pre></td></tr></table></figure>
+</li>
+<li><p><code>排序</code><br>查询结束后，还可以进行排序，就像这样：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">RealmResults&lt;User&gt; userList = mRealm.where(User.class) .findAll();</div><div class="line">userList = result.sort(<span class="string">"age"</span>); <span class="comment">//根据age，默认正序排列</span></div><div class="line">userList = result.sort(<span class="string">"age"</span>, Sort.DESCENDING);<span class="comment">//逆序排列</span></div></pre></td></tr></table></figure>
+</li>
+<li><p><code>聚合</code><br>RealmResult自带一些聚合方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">RealmResults&lt;User&gt; results = realm.where(User.class).findAll();</div><div class="line"><span class="keyword">long</span>   sum     = results.sum(<span class="string">"age"</span>).longValue();</div><div class="line"><span class="keyword">long</span>   min     = results.min(<span class="string">"age"</span>).longValue();</div><div class="line"><span class="keyword">long</span>   max     = results.max(<span class="string">"age"</span>).longValue();</div><div class="line"><span class="keyword">double</span> average = results.average(<span class="string">"age"</span>);</div><div class="line"><span class="keyword">long</span>   matches = results.size();</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h4 id="改"><a href="#改" class="headerlink" title="改"></a>改</h4><p>修改也是需要在事务中操作。<br>使用查询语句得到数据，然后将内容改了即可。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">mRealm.executeTransaction(<span class="keyword">new</span> Realm.Transaction() &#123;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">execute</span><span class="params">(Realm realm)</span> </span>&#123;</div><div class="line">        <span class="comment">//先查找后得到User对象</span></div><div class="line">        User user = mRealm.where(User.class).findFirst();</div><div class="line">        user.setAge(<span class="number">26</span>);</div><div class="line">    &#125;</div><div class="line">&#125;);</div></pre></td></tr></table></figure></p>
+<h4 id="删"><a href="#删" class="headerlink" title="删"></a>删</h4><ul>
+<li><p>使用deleteFromRealm()</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//先查找到数据</span></div><div class="line"><span class="keyword">final</span> RealmResults&lt;User&gt; userList = mRealm.where(User.class).findAll();</div><div class="line">mRealm.executeTransaction(<span class="keyword">new</span> Realm.Transaction() &#123;</div><div class="line">  <span class="meta">@Override</span></div><div class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">execute</span><span class="params">(Realm realm)</span> </span>&#123;</div><div class="line">      userList.get(<span class="number">0</span>).deleteFromRealm();</div><div class="line">  &#125;</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+</li>
+<li><p>使用deleteFromRealm(int index)</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">mRealm.executeTransaction(<span class="keyword">new</span> Realm.Transaction() &#123;</div><div class="line">  <span class="meta">@Override</span></div><div class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">execute</span><span class="params">(Realm realm)</span> </span>&#123;</div><div class="line">      userList.deleteFromRealm(<span class="number">0</span>);</div><div class="line">	<span class="comment">//userList.deleteFirstFromRealm(); //删除user表的第一条数据</span></div><div class="line">	<span class="comment">//userList.deleteLastFromRealm();//删除user表的最后一条数据</span></div><div class="line">	<span class="comment">//results.deleteAllFromRealm();//删除user表的全部数据</span></div><div class="line">  &#125;</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>RealmResults 的自动更新会通过 looper 事件触发，但在事件到来之前，某些元素有可能不再满足查询条件或者其已被删除。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">final</span> RealmResults&lt;User&gt; users = getUsers();</div><div class="line">realm.executeTransaction(<span class="keyword">new</span> Realm.Transaction() &#123;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">execute</span><span class="params">(Realm realm)</span> </span>&#123;</div><div class="line">        users.get(<span class="number">0</span>).deleteFromRealm(); <span class="comment">// 这里删除一个数据</span></div><div class="line">    &#125;</div><div class="line">&#125;);</div><div class="line"></div><div class="line"><span class="keyword">for</span> (User user : users) &#123;</div><div class="line">    showUser(user); <span class="comment">// 如果这里做迭代的话,有可能会出现冲突</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>为避免该问题，可以使用 RealmResults 的 deleteFromRealm() 方法：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">final</span> RealmResults&lt;User&gt; users = getUsers();</div><div class="line">realm.executeTransaction(<span class="keyword">new</span> Realm.Transaction() &#123;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">execute</span><span class="params">(Realm realm)</span> </span>&#123;</div><div class="line">        users.deleteFromRealm(<span class="number">0</span>); <span class="comment">// 删除一个元素</span></div><div class="line">    &#125;</div><div class="line">&#125;);</div><div class="line"><span class="keyword">for</span> (User user : users) &#123;</div><div class="line">    showUser(user); <span class="comment">// 删除的内容将不会出现</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<ul>
+<li>上面采用的是用<code>executeTransaction</code>方法插入数据，同时也可以使用<code>beginTransaction</code>和<code>commitTransaction</code>来进行事务处理.<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">mRealm.beginTransaction();<span class="comment">//开启事务</span></div><div class="line">User user = mRealm.createObject(User.class);</div><div class="line">user.setName(<span class="string">"张三"</span>);</div><div class="line">user.setId(<span class="string">"3"</span>);</div><div class="line">mRealm.commitTransaction();<span class="comment">//提交事务</span></div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>当你在写入事务内处理 Realm 对象时，你可能会遇到想要放弃更改的情况。你可以简单地取消写入事务：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">realm.beginTransaction();</div><div class="line">User user = realm.createObject(User.class);</div><div class="line"><span class="comment">//  ...</span></div><div class="line">realm.cancelTransaction();</div></pre></td></tr></table></figure></p>
+<h3 id="异步操作"><a href="#异步操作" class="headerlink" title="异步操作"></a>异步操作</h3><p>大多数情况下，Realm的增删改查操作足够快，可以在UI线程中执行操作。但是如果遇到较复杂的增删改查，或增删改查操作的数据较多时，为了防止系统报出ANR错误就可以子线程进行操作。</p>
+<ol>
+<li>对于异步操作只需要将<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Realm.getDefaultInstance().executeTransaction()</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>替换为:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Realm.getDefaultInstance()executeTransactionAsync()</div></pre></td></tr></table></figure></p>
+<p>其余的增删改查都是一致的.<br>以增为例:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">addCat</span><span class="params">(<span class="keyword">final</span> Cat cat)</span> </span>&#123;</div><div class="line">    RealmAsyncTask  addTask=  mRealm.executeTransactionAsync(<span class="keyword">new</span> Realm.Transaction() &#123;</div><div class="line">          <span class="meta">@Override</span></div><div class="line">          <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">execute</span><span class="params">(Realm realm)</span> </span>&#123;</div><div class="line">              realm.copyToRealm(cat);</div><div class="line">          &#125;</div><div class="line">      &#125;, <span class="keyword">new</span> Realm.Transaction.OnSuccess() &#123;</div><div class="line">          <span class="meta">@Override</span></div><div class="line">          <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onSuccess</span><span class="params">()</span> </span>&#123;</div><div class="line">              ToastUtil.showShortToast(mContext,<span class="string">"收藏成功"</span>);</div><div class="line">          &#125;</div><div class="line">      &#125;, <span class="keyword">new</span> Realm.Transaction.OnError() &#123;</div><div class="line">          <span class="meta">@Override</span></div><div class="line">          <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onError</span><span class="params">(Throwable error)</span> </span>&#123;</div><div class="line">              ToastUtil.showShortToast(mContext,<span class="string">"收藏失败"</span>);</div><div class="line">          &#125;</div><div class="line">      &#125;);</div><div class="line">  &#125;</div></pre></td></tr></table></figure></p>
+<p>最后在销毁Activity或Fragment时，要取消掉异步任务<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Override</span></div><div class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onDestroy</span><span class="params">()</span> </span>&#123;</div><div class="line">  <span class="keyword">super</span>.onDestroy();</div><div class="line">  <span class="keyword">if</span> (addTask!=<span class="keyword">null</span>&amp;&amp;!addTask.isCancelled())&#123;</div><div class="line">        addTask.cancel();</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="版本升级"><a href="#版本升级" class="headerlink" title="版本升级"></a>版本升级</h3><p>当数据结构发生变化是，需要升级数据库。对于Realm来说，数据库升级就是迁移操作，把原来的数据库迁移到新结构的数据库。（体验：略麻烦）</p>
+<ol>
+<li><p>如果没有旧 Realm 数据文件存在，那么代码的改变即会反应到相应的 Realm 数据文件改变。但如果已经有旧版本的 Realm 数据文件存在，Realm 会抛出异常提示数据库文件需要迁移。我们需要在进行如下设置</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">RealmConfiguration config = <span class="keyword">new</span> RealmConfiguration.Builder()</div><div class="line">    .schemaVersion(<span class="number">2</span>) <span class="comment">// 数据库改变,需要升级版本</span></div><div class="line">    .migration(<span class="keyword">new</span> MyMigration()) <span class="comment">// 迁移操作类</span></div><div class="line">    .build()</div></pre></td></tr></table></figure>
+</li>
+<li><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Migration</span> <span class="keyword">implements</span> <span class="title">RealmMigration</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">migrate</span><span class="params">(<span class="keyword">final</span> DynamicRealm realm, <span class="keyword">long</span> oldVersion, <span class="keyword">long</span> newVersion)</span> </span>&#123;</div><div class="line">        <span class="comment">/************************************************</span></div><div class="line">            // Version 0</div><div class="line">            class Person</div><div class="line">                <span class="doctag">@Required</span></div><div class="line">                String firstName;</div><div class="line">                <span class="doctag">@Required</span></div><div class="line">                String lastName;</div><div class="line">                int    age;</div><div class="line">            // Version 1</div><div class="line">            class Person</div><div class="line">                <span class="doctag">@Required</span></div><div class="line">                String fullName;            // firstName和lastName需要合并成fullName</div><div class="line">                int age;</div><div class="line">        ************************************************/</div><div class="line">        <span class="comment">// Migrate from version 0 to version 1</span></div><div class="line">        <span class="keyword">if</span> (oldVersion == <span class="number">0</span>) &#123;</div><div class="line">            RealmObjectSchema personSchema = schema.get(<span class="string">"Person"</span>);</div><div class="line"></div><div class="line">            <span class="comment">// Combine 'firstName' and 'lastName' in a new field called 'fullName'</span></div><div class="line">            personSchema</div><div class="line">                    .addField(<span class="string">"fullName"</span>, String.class, FieldAttribute.REQUIRED)</div><div class="line">                    .transform(<span class="keyword">new</span> RealmObjectSchema.Function() &#123;</div><div class="line">                        <span class="meta">@Override</span></div><div class="line">                        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">apply</span><span class="params">(DynamicRealmObject obj)</span> </span>&#123;</div><div class="line">                            obj.set(<span class="string">"fullName"</span>, obj.getString(<span class="string">"firstName"</span>) + <span class="string">" "</span> + obj.getString(<span class="string">"lastName"</span>));</div><div class="line">                        &#125;</div><div class="line">                    &#125;)</div><div class="line">                    .removeField(<span class="string">"firstName"</span>)</div><div class="line">                    .removeField(<span class="string">"lastName"</span>);</div><div class="line">            oldVersion++;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="comment">/************************************************</span></div><div class="line">            // Version 2</div><div class="line">                class Pet                   // add a new model class</div><div class="line">                    <span class="doctag">@Required</span></div><div class="line">                    String name;</div><div class="line">                    <span class="doctag">@Required</span></div><div class="line">                    String type;</div><div class="line">                class Person</div><div class="line">                    <span class="doctag">@Required</span></div><div class="line">                    String fullName;</div><div class="line">                    int age;</div><div class="line">                    RealmList&lt;Pet&gt; pets;    // add an array property</div><div class="line">         ************************************************/</div><div class="line">        <span class="comment">// Migrate from version 1 to version 2</span></div><div class="line">        <span class="keyword">if</span> (oldVersion == <span class="number">1</span>) &#123;</div><div class="line"></div><div class="line">            <span class="comment">// Create a new class</span></div><div class="line">            RealmObjectSchema petSchema = schema.create(<span class="string">"Pet"</span>)</div><div class="line">                    .addField(<span class="string">"name"</span>, String.class, FieldAttribute.REQUIRED)</div><div class="line">                    .addField(<span class="string">"type"</span>, String.class, FieldAttribute.REQUIRED);</div><div class="line"></div><div class="line">            <span class="comment">// Add a new field to an old class and populate it with initial data</span></div><div class="line">            schema.get(<span class="string">"Person"</span>)</div><div class="line">                .addRealmListField(<span class="string">"pets"</span>, petSchema)</div><div class="line">                .transform(<span class="keyword">new</span> RealmObjectSchema.Function() &#123;</div><div class="line">                    <span class="meta">@Override</span></div><div class="line">                    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">apply</span><span class="params">(DynamicRealmObject obj)</span> </span>&#123;</div><div class="line">                        <span class="keyword">if</span> (obj.getString(<span class="string">"fullName"</span>).equals(<span class="string">"JP McDonald"</span>)) &#123;</div><div class="line">                            DynamicRealmObject pet = realm.createObject(<span class="string">"Pet"</span>);</div><div class="line">                            pet.setString(<span class="string">"name"</span>, <span class="string">"Jimbo"</span>);</div><div class="line">                            pet.setString(<span class="string">"type"</span>, <span class="string">"dog"</span>);</div><div class="line">                            obj.getList(<span class="string">"pets"</span>).add(pet);</div><div class="line">                        &#125;</div><div class="line">                    &#125;</div><div class="line">                &#125;);</div><div class="line">            oldVersion++;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="comment">/************************************************</span></div><div class="line">            // Version 3</div><div class="line">                class Pet</div><div class="line">                    <span class="doctag">@Required</span></div><div class="line">                    String name;</div><div class="line">                    int type;               // type becomes int</div><div class="line">                class Person</div><div class="line">                    String fullName;        // fullName is nullable now</div><div class="line">                    RealmList&lt;Pet&gt; pets;    // age and pets re-ordered (no action needed)</div><div class="line">                    int age;</div><div class="line">         ************************************************/</div><div class="line">        <span class="comment">// Migrate from version 2 to version 3</span></div><div class="line">        <span class="keyword">if</span> (oldVersion == <span class="number">2</span>) &#123;</div><div class="line">            RealmObjectSchema personSchema = schema.get(<span class="string">"Person"</span>);</div><div class="line">            personSchema.setNullable(<span class="string">"fullName"</span>, <span class="keyword">true</span>); <span class="comment">// fullName is nullable now.</span></div><div class="line"></div><div class="line">            <span class="comment">// Change type from String to int</span></div><div class="line">            schema.get(<span class="string">"Pet"</span>)</div><div class="line">                .addField(<span class="string">"type_tmp"</span>, <span class="keyword">int</span>.class)</div><div class="line">                .transform(<span class="keyword">new</span> RealmObjectSchema.Function() &#123;</div><div class="line">                    <span class="meta">@Override</span></div><div class="line">                    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">apply</span><span class="params">(DynamicRealmObject obj)</span> </span>&#123;</div><div class="line">                        String oldType = obj.getString(<span class="string">"type"</span>);</div><div class="line">                        <span class="keyword">if</span> (oldType.equals(<span class="string">"dog"</span>)) &#123;</div><div class="line">                            obj.setLong(<span class="string">"type_tmp"</span>, <span class="number">1</span>);</div><div class="line">                        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (oldType.equals(<span class="string">"cat"</span>)) &#123;</div><div class="line">                            obj.setInt(<span class="string">"type_tmp"</span>, <span class="number">2</span>);</div><div class="line">                        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (oldType.equals(<span class="string">"hamster"</span>)) &#123;</div><div class="line">                            obj.setInt(<span class="string">"type_tmp"</span>, <span class="number">3</span>);</div><div class="line">                        &#125;</div><div class="line">                    &#125;</div><div class="line">                &#125;)</div><div class="line">                .removeField(<span class="string">"type"</span>)</div><div class="line">                .renameField(<span class="string">"type_tmp"</span>, <span class="string">"type"</span>);</div><div class="line">            oldVersion++;</div><div class="line">        &#125;</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="遇到的坑"><a href="#遇到的坑" class="headerlink" title="遇到的坑"></a>遇到的坑</h3><ol>
+<li>主键重复异常<br><code>Primary key constraint broken. Value already exists: 0</code><br>这是因为 Realm.createObject(Class clazz) 实际上隐式调用了原始对象的默认无参数构造器，然后通过 Realm.copyToRealm() 方法将其存入 Realm 中。隐式构造器会给其主键属性赋一个默认值，而当第二次调用时，主键仍会是这个默认值。这就导致了 Realm 存储的对象出现了重复主键，从而异常被抛出。解决方法有很多种，譬如调用<code>Realm.createObject(Class clazz, Object primaryKeyValue)</code> 方法在对象创建时指定一个<strong>不重复的主键</strong>。</li>
+<li>字段修饰符已存在<br><code>Invalid type &#39;Long&#39; for field &#39;id&#39; in existing Realm file.</code><br>这个是我们在写过的过程中,由原本的<code>String id</code> 改成了 <code>Long id</code>,那么就会报出这样的BUG,这里我的解决方法,就是删除原本手机中的数据库,即可.</li>
+</ol>
+<hr>
+<h2 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h2><p><a href="http://blog.csdn.net/firesmog/article/details/55656007" target="_blank" rel="external">GreenDao、Ormlite、Realm性能对比</a><br><a href="http://blog.csdn.net/zhanggang740/article/details/52164715" target="_blank" rel="external">GreenDao和Realm对比</a><br><a href="https://github.com/realm/realm-java" target="_blank" rel="external">Realm-Github</a><br><a href="https://realm.io/" target="_blank" rel="external">Realm官网</a><br><a href="https://realm.io/cn/docs/java/latest/#section-13" target="_blank" rel="external">Realm手册</a><br><a href="http://blog.csdn.net/fancy_xty/article/details/52277161" target="_blank" rel="external">Realm使用小计</a><br><a href="https://realm.io/cn/docs/java/latest/" target="_blank" rel="external">Realm非常详细的官方文档</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Realm/" rel="tag"># Realm</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/05/05/工具/使用markdown来写笔记/" rel="next" title="使用markdown来写笔记">
+                <i class="fa fa-chevron-left"></i> 使用markdown来写笔记
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="lorensong" />
+          <p class="site-author-name" itemprop="name">lorensong</p>
+           
+              <p class="site-description motion-element" itemprop="description">If you love life, life will love you back.</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">32</span>
+                <span class="site-state-item-name">posts</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">18</span>
+                <span class="site-state-item-name">categories</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">14</span>
+                <span class="site-state-item-name">tags</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+
+        <div class="links-of-author motion-element">
+          
+
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#集成步骤"><span class="nav-number">2.</span> <span class="nav-text">集成步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#依赖"><span class="nav-number">2.1.</span> <span class="nav-text">依赖</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#创建实体model"><span class="nav-number">2.2.</span> <span class="nav-text">创建实体model</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#简单model"><span class="nav-number">2.2.1.</span> <span class="nav-text">简单model</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#含有其它对象的model"><span class="nav-number">2.2.2.</span> <span class="nav-text">含有其它对象的model</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#初始化"><span class="nav-number">2.3.</span> <span class="nav-text">初始化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#关闭Realm"><span class="nav-number">2.4.</span> <span class="nav-text">关闭Realm</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#增删改查"><span class="nav-number">3.</span> <span class="nav-text">增删改查</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#同步状态下"><span class="nav-number">3.1.</span> <span class="nav-text">同步状态下</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#增"><span class="nav-number">3.1.1.</span> <span class="nav-text">增</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#查"><span class="nav-number">3.1.2.</span> <span class="nav-text">查</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#改"><span class="nav-number">3.1.3.</span> <span class="nav-text">改</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#删"><span class="nav-number">3.1.4.</span> <span class="nav-text">删</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#异步操作"><span class="nav-number">3.2.</span> <span class="nav-text">异步操作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#版本升级"><span class="nav-number">3.3.</span> <span class="nav-text">版本升级</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#遇到的坑"><span class="nav-number">3.4.</span> <span class="nav-text">遇到的坑</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文档"><span class="nav-number">4.</span> <span class="nav-text">参考文档</span></a></li></ol></div>
+            
+
+          </div>
+
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">lorensong</span>
+</div>
+
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="https://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+  
+  
+
+  
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("IgYqJPNpb10L1iNTSScMf1hh-gzGzoHsz", "u28SsFPTbxCDfhMYe2p9chlY");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+
+  
+
+</body>
+</html>

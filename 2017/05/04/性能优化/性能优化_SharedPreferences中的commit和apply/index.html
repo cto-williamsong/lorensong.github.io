@@ -93,7 +93,7 @@
 <meta property="og:url" content="https://lorensong.github.io/2017/05/04/性能优化/性能优化_SharedPreferences中的commit和apply/index.html">
 <meta property="og:site_name" content="lorensong">
 <meta property="og:description" content="前言最近在使用Android Lint做代码分析时,发现我们的SharedPreferences(以下简称SP)中,需要使用SP来保存文件时,出现了性能需要优化的地方.">
-<meta property="og:updated_time" content="2017-05-17T09:53:35.848Z">
+<meta property="og:updated_time" content="2017-05-19T01:54:05.643Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="性能优化_SharedPreferences中的commit和apply">
 <meta name="twitter:description" content="前言最近在使用Android Lint做代码分析时,发现我们的SharedPreferences(以下简称SP)中,需要使用SP来保存文件时,出现了性能需要优化的地方.">
@@ -432,6 +432,7 @@ about missing <code>apply()</code>, you can simply call<br>{@link #commit} from 
 <li><code>commit</code>提交是有返回值的,而<code>apply</code>提交是没有返回值的.所有在针对有返回值的场合建议使用<code>commit</code>,而不需要返回值时,建议使用<code>apply</code>;</li>
 </ol>
 <hr>
+<h2 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h2><p><a href="http://www.infoq.com/cn/articles/atomic-operation/" target="_blank" rel="external">原子操作</a></p>
 
       
     </div>
@@ -552,7 +553,7 @@ about missing <code>apply()</code>, you can simply call<br>{@link #commit} from 
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">31</span>
+                <span class="site-state-item-count">32</span>
                 <span class="site-state-item-name">posts</span>
               </a>
             </div>
@@ -563,7 +564,7 @@ about missing <code>apply()</code>, you can simply call<br>{@link #commit} from 
             
             <div class="site-state-item site-state-categories">
               <a href="/categories/index.html">
-                <span class="site-state-item-count">17</span>
+                <span class="site-state-item-count">18</span>
                 <span class="site-state-item-name">categories</span>
               </a>
             </div>
@@ -574,7 +575,7 @@ about missing <code>apply()</code>, you can simply call<br>{@link #commit} from 
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-count">14</span>
                 <span class="site-state-item-name">tags</span>
               </a>
             </div>
@@ -610,7 +611,7 @@ about missing <code>apply()</code>, you can simply call<br>{@link #commit} from 
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Commit方法"><span class="nav-number">2.</span> <span class="nav-text">Commit方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#apply方法"><span class="nav-number">3.</span> <span class="nav-text">apply方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#commit和apply的异同点"><span class="nav-number">4.</span> <span class="nav-text">commit和apply的异同点</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Commit方法"><span class="nav-number">2.</span> <span class="nav-text">Commit方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#apply方法"><span class="nav-number">3.</span> <span class="nav-text">apply方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#commit和apply的异同点"><span class="nav-number">4.</span> <span class="nav-text">commit和apply的异同点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文档"><span class="nav-number">5.</span> <span class="nav-text">参考文档</span></a></li></ol></div>
             
 
           </div>
