@@ -93,10 +93,12 @@
 <meta property="og:url" content="https://lorensong.github.io/2017/05/23/数据库/Realm数据库入门/index.html">
 <meta property="og:site_name" content="lorensong">
 <meta property="og:description" content="前言最近项目需要用到数据库,想到以前使用的GreenDao集成比较麻烦.不过Greendao从3.0以后支持注解操作,所以集成起来还是比较方便的.最近在网上看到有一个新的数据库框架,该框架不同于以前版本的数据库框架,她不是基于SQLite而封装了.而是底层采用了C++新写的一项嵌入式数据库,支持运行在手机、平板和可穿戴设备上.她不用于SQLite,她允许你在持久层直接和数据对象工作。在它之上是一个">
-<meta property="og:updated_time" content="2017-05-26T09:59:55.918Z">
+<meta property="og:image" content="http://on7k3le2k.bkt.clouddn.com/relam_basic_2017-5-26%20180227.png">
+<meta property="og:updated_time" content="2017-05-27T06:31:48.482Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Realm数据库入门">
 <meta name="twitter:description" content="前言最近项目需要用到数据库,想到以前使用的GreenDao集成比较麻烦.不过Greendao从3.0以后支持注解操作,所以集成起来还是比较方便的.最近在网上看到有一个新的数据库框架,该框架不同于以前版本的数据库框架,她不是基于SQLite而封装了.而是底层采用了C++新写的一项嵌入式数据库,支持运行在手机、平板和可穿戴设备上.她不用于SQLite,她允许你在持久层直接和数据对象工作。在它之上是一个">
+<meta name="twitter:image" content="http://on7k3le2k.bkt.clouddn.com/relam_basic_2017-5-26%20180227.png">
 
 
 
@@ -396,7 +398,7 @@
       
 
       
-        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近项目需要用到数据库,想到以前使用的GreenDao集成比较麻烦.不过Greendao从3.0以后支持注解操作,所以集成起来还是比较方便的.<br>最近在网上看到有一个新的数据库框架,该框架不同于以前版本的数据库框架,她不是基于SQLite而封装了.而是底层采用了C++新写的一项嵌入式数据库,支持运行在手机、平板和可穿戴设备上.她不用于SQLite,她允许你在持久层直接和数据对象工作。在它之上是一个函数式风格的查询api，众多的努力让它比传统的SQLite 操作更快 。<br>说了半天, 她就是<code>Realm</code>.由Y Combinator公司开发出来;<br><strong>敲黑板:</strong>目前Realm支持Java,OC,RN,Swift,JS等语言,是不是想起来都很牛叉.那下面让我们来一起学习吧;<br>…</p>
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近项目需要用到数据库,想到以前使用的GreenDao集成比较麻烦.不过Greendao从3.0以后支持注解操作,所以集成起来还是比较方便的.<br>最近在网上看到有一个新的数据库框架,该框架不同于以前版本的数据库框架,她不是基于SQLite而封装了.而是底层采用了C++新写的一项嵌入式数据库,支持运行在手机、平板和可穿戴设备上.她不用于SQLite,她允许你在持久层直接和数据对象工作。在它之上是一个函数式风格的查询api，众多的努力让它比传统的SQLite 操作更快 。<br>说了半天, 她就是<code>Realm</code>.由Y Combinator公司开发出来;<br><strong>敲黑板:</strong>目前Realm支持Java,OC,RN,Swift,JS等语言,是不是想起来都很牛叉.那下面让我们来一起学习吧;<br><img src="http://on7k3le2k.bkt.clouddn.com/relam_basic_2017-5-26%20180227.png" alt=""></p>
 <a id="more"></a>
 <p>各大数据库(Ormlite,GreenDao,Realm性能对比)<br><a href="http://blog.csdn.net/firesmog/article/details/55656007" target="_blank" rel="external">GreenDao、Ormlite、Realm性能对比</a><br><a href="http://blog.csdn.net/zhanggang740/article/details/52164715" target="_blank" rel="external">GreenDao和Realm对比</a>  </p>
 <h2 id="集成步骤"><a href="#集成步骤" class="headerlink" title="集成步骤"></a>集成步骤</h2><h3 id="依赖"><a href="#依赖" class="headerlink" title="依赖"></a>依赖</h3><p>打开<a href="https://github.com/realm/realm-java" target="_blank" rel="external">Realm_Github</a>,这样我们找到最新的Realm版本号,然后进行以下操作,<br>在project的<code>build.gradle</code>中的<code>dependencies</code>添加如下代码:<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">classpath "io.realm:realm-gradle-plugin:3.2.1"</div></pre></td></tr></table></figure></p>
