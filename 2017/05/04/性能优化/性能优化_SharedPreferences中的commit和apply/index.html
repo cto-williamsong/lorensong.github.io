@@ -87,16 +87,16 @@
 
 
 
-<meta name="description" content="前言最近在使用Android Lint做代码分析时,发现我们的SharedPreferences(以下简称SP)中,需要使用SP来保存文件时,出现了性能需要优化的地方.">
+<meta name="description" content="前言最近在使用Android Lint做代码分析时,发现我们的SharedPreferences(简称SP)中,需要使用SP来保存文件时,出现了性能需要优化的地方.">
 <meta property="og:type" content="article">
 <meta property="og:title" content="性能优化_SharedPreferences中的commit和apply">
 <meta property="og:url" content="https://lorensong.github.io/2017/05/04/性能优化/性能优化_SharedPreferences中的commit和apply/index.html">
 <meta property="og:site_name" content="lorensong">
-<meta property="og:description" content="前言最近在使用Android Lint做代码分析时,发现我们的SharedPreferences(以下简称SP)中,需要使用SP来保存文件时,出现了性能需要优化的地方.">
-<meta property="og:updated_time" content="2017-05-19T01:54:05.643Z">
+<meta property="og:description" content="前言最近在使用Android Lint做代码分析时,发现我们的SharedPreferences(简称SP)中,需要使用SP来保存文件时,出现了性能需要优化的地方.">
+<meta property="og:updated_time" content="2017-08-11T03:44:29.234Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="性能优化_SharedPreferences中的commit和apply">
-<meta name="twitter:description" content="前言最近在使用Android Lint做代码分析时,发现我们的SharedPreferences(以下简称SP)中,需要使用SP来保存文件时,出现了性能需要优化的地方.">
+<meta name="twitter:description" content="前言最近在使用Android Lint做代码分析时,发现我们的SharedPreferences(简称SP)中,需要使用SP来保存文件时,出现了性能需要优化的地方.">
 
 
 
@@ -339,8 +339,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Original/" itemprop="url" rel="index">
-                    <span itemprop="name">Original</span>
+                  <a href="/categories/Android/" itemprop="url" rel="index">
+                    <span itemprop="name">Android</span>
                   </a>
                 </span>
 
@@ -350,7 +350,7 @@
                 
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Original/Performance/" itemprop="url" rel="index">
+                  <a href="/categories/Android/Performance/" itemprop="url" rel="index">
                     <span itemprop="name">Performance</span>
                   </a>
                 </span>
@@ -396,16 +396,16 @@
       
 
       
-        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近在使用Android Lint做代码分析时,发现我们的<code>SharedPreferences</code>(以下简称<code>SP</code>)中,需要使用<code>SP</code>来保存文件时,出现了性能需要优化的地方.</p>
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近在使用Android Lint做代码分析时,发现我们的<code>SharedPreferences</code>(简称<code>SP</code>)中,需要使用<code>SP</code>来保存文件时,出现了性能需要优化的地方.</p>
 <a id="more"></a>
 <h2 id="Commit方法"><a href="#Commit方法" class="headerlink" title="Commit方法"></a>Commit方法</h2><p>如下代码:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">setShareLong</span><span class="params">(String key, <span class="keyword">long</span> value)</span> </span>&#123;</div><div class="line">		SharedPreferences preferences = LorenApplication.getInstance()</div><div class="line">				.getSharedPreferences(Constants.SPFields.SP_NAME, Context.MODE_PRIVATE);</div><div class="line">		SharedPreferences.Editor editor = preferences.edit();</div><div class="line">		editor.putLong(key, value);</div><div class="line">		editor.commit();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>其中我们有一个<code>editor.commit()</code>方法,用于提交我们<code>SP</code>,其源码注释如下:</p>
+<p>其中我们有一个<code>editor.commit()</code>方法,用于提交我们<code>SP</code>其源码注释如下:</p>
 <blockquote>
 <p>Commit your preferences changes back from this Editor to the<br>{@link SharedPreferences} object it is editing.  This atomically<br>performs the requested modifications, replacing whatever is currently<br>in the SharedPreferences.<br>Note that when two editors are modifying preferences at the same<br>time, the last one to call commit wins.<br>If you don’t care about the return value and you’re<br>using this from your application’s main thread, consider<br>using {@link #apply} instead.<br>@return Returns true if the new values were successfully written<br>ersistent storage.</p>
 <p>boolean commit();</p>
 </blockquote>
 <ul>
-<li><code>commit</code>方法会有一个<code>boolean</code>值得返回</li>
+<li><code>commit</code>方法会有一个<code>boolean</code>值得返回,说明我们是否提交成功</li>
 <li>当数据变化时,进行存储是一个原子性的操作</li>
 <li>当两个<code>editor</code>同时去修改<code>SP</code>文件时,永远都是最后一个调用<code>commit</code>方法的<code>editor</code>的变更了最后的数值;</li>
 </ul>
@@ -423,16 +423,18 @@ about missing <code>apply()</code>, you can simply call<br>{@link #commit} from 
 </blockquote>
 <ul>
 <li><code>apply</code>方法是没有返回值的</li>
-<li>当数据变化时,进行存储是一个原子性的操作</li>
+<li>当数据变化时,进行存储也是一个原子性的操作</li>
 <li>当两个<code>editor</code>同时去修改<code>SP</code>文件时,永远都是最后一个调用<code>commit</code>方法的<code>editor</code>的变更了最后的数值;</li>
 </ul>
 <h2 id="commit和apply的异同点"><a href="#commit和apply的异同点" class="headerlink" title="commit和apply的异同点"></a>commit和apply的异同点</h2><ol>
-<li><code>commit</code>和<code>apply</code>虽然都是原子性的操作,但是原子的操作不同.<code>commit</code>是提交到数据库,所以从提交数据到存储到磁盘中都是同步过程,不可打断;<code>apply</code>虽然也是原子的操作,但是<code>apply</code>是原子提交的内存中,而非数据库,所以在提交到内存中时,过程不可打断,但是之后是内存给到数据库是异步的过程,是在后台进行的.</li>
+<li><code>commit</code>和<code>apply</code>虽然都是原子性的操作,但是原子的操作不同.<code>commit</code>是提交到数据库,所以从提交数据到存储到磁盘中都是同步过程,不可打断;<code>apply</code>虽然也是原子的操作,但是<code>apply</code>是原子提交的内存中,而非数据库,所以在提交到内存中时,过程不可打断,但是之后是内存给到数据库是异步的过程,是在<strong>后台</strong>进行的.</li>
 <li><code>commit</code>所有操作都是同步提交,所以相对于<code>apply</code>来说较慢.</li>
-<li><code>commit</code>提交是有返回值的,而<code>apply</code>提交是没有返回值的.所有在针对有返回值的场合建议使用<code>commit</code>,而不需要返回值时,建议使用<code>apply</code>;</li>
+<li><code>commit</code>提交是有返回值的,而<code>apply</code>提交是没有返回值的.所有在针对有返回值的场合建议使用<code>commit</code>而不需要返回值时,建议使用<code>apply</code>;</li>
 </ol>
 <hr>
-<h2 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h2><p><a href="http://www.infoq.com/cn/articles/atomic-operation/" target="_blank" rel="external">原子操作</a></p>
+<h2 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h2><ul>
+<li><a href="http://www.infoq.com/cn/articles/atomic-operation/" target="_blank" rel="external">原子操作</a></li>
+</ul>
 
       
     </div>
@@ -469,8 +471,8 @@ about missing <code>apply()</code>, you can simply call<br>{@link #commit} from 
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/04/27/Android自定义View/自定义View入门_圆形渐变加载/" rel="next" title="自定义View入门_圆形渐变加载">
-                <i class="fa fa-chevron-left"></i> 自定义View入门_圆形渐变加载
+              <a href="/2017/04/27/Android自定义View/圆形渐变加载进度框/" rel="next" title="圆形渐变加载进度框">
+                <i class="fa fa-chevron-left"></i> 圆形渐变加载进度框
               </a>
             
           </div>
@@ -479,7 +481,7 @@ about missing <code>apply()</code>, you can simply call<br>{@link #commit} from 
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/05/04/工具/Hexo主题之Next配置/" rel="prev" title="Hexo主题之Next配置">
+              <a href="/2017/05/04/Tools/Hexo主题之Next配置/" rel="prev" title="Hexo主题之Next配置">
                 Hexo主题之Next配置 <i class="fa fa-chevron-right"></i>
               </a>
             
@@ -553,7 +555,7 @@ about missing <code>apply()</code>, you can simply call<br>{@link #commit} from 
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">32</span>
+                <span class="site-state-item-count">28</span>
                 <span class="site-state-item-name">posts</span>
               </a>
             </div>
@@ -564,7 +566,7 @@ about missing <code>apply()</code>, you can simply call<br>{@link #commit} from 
             
             <div class="site-state-item site-state-categories">
               <a href="/categories/index.html">
-                <span class="site-state-item-count">18</span>
+                <span class="site-state-item-count">16</span>
                 <span class="site-state-item-name">categories</span>
               </a>
             </div>
@@ -575,7 +577,7 @@ about missing <code>apply()</code>, you can simply call<br>{@link #commit} from 
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">14</span>
+                <span class="site-state-item-count">16</span>
                 <span class="site-state-item-name">tags</span>
               </a>
             </div>

@@ -281,1195 +281,6 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://lorensong.github.io/2017/03/07/Android自定义View/自定义View入门_圆形音量键/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="lorensong">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="lorensong">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/03/07/Android自定义View/自定义View入门_圆形音量键/" itemprop="url">
-                  自定义View入门_圆形音量键
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-03-07T17:16:59+08:00">
-                2017-03-07
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Note/" itemprop="url" rel="index">
-                    <span itemprop="name">Note</span>
-                  </a>
-                </span>
-
-                
-                
-                  , 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Note/CustomView/" itemprop="url" rel="index">
-                    <span itemprop="name">CustomView</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-             <span id="/2017/03/07/Android自定义View/自定义View入门_圆形音量键/" class="leancloud_visitors" data-flag-title="自定义View入门_圆形音量键">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">Visitors </span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <a id="more"></a>
-<h3 id="why"><a href="#why" class="headerlink" title="why?"></a>why?</h3><h3 id="how"><a href="#how" class="headerlink" title="how?"></a>how?</h3><p>1.自定义类继承View<br>2.在包名/values文件夹中创建attrs.xml文件<br>3.在自定义类中获取相应的属性值<br>4.重写onMeasure();[不需要]<br>5.重写ondraw();<br>6.在相应的布局文件中使用.<br>7.根据手势设置音量大小</p>
-<h3 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h3><p>1.自定义类(省略);<br>2.创建attrs.xml文件<br><em>分析:</em>需要中间图片一张,音量有和无的颜色,音量的宽度,音量的点的个数,音量的间隙大小  </p>
-<pre><code>&lt;attr name=&quot;ValumefirstColor&quot; format=&quot;color&quot;/&gt;
-&lt;attr name=&quot;ValumeSecondColor&quot; format=&quot;color&quot;/&gt;
-&lt;attr name=&quot;ValumeCircleWidth&quot; format=&quot;dimension&quot;/&gt;
-&lt;attr name=&quot;ValumeDotCount&quot; format=&quot;integer&quot;/&gt;
-&lt;attr name=&quot;ValumeSplitSize&quot; format=&quot;integer&quot;/&gt;
-&lt;attr name=&quot;Valumebg&quot; format=&quot;reference&quot;/&gt;
-
-&lt;declare-styleable name=&quot;CustomValumeView&quot;&gt;
-    &lt;attr name=&quot;ValumefirstColor&quot;/&gt;
-    &lt;attr name=&quot;ValumeSecondColor&quot;/&gt;
-    &lt;attr name=&quot;ValumeCircleWidth&quot;/&gt;
-    &lt;attr name=&quot;ValumeDotCount&quot;/&gt;
-    &lt;attr name=&quot;ValumeSplitSize&quot;/&gt;
-    &lt;attr name=&quot;Valumebg&quot;/&gt;
-&lt;/declare-styleable&gt;
-</code></pre><p>3.自定义类获取属性值</p>
-<pre><code>private void initView(Context context, AttributeSet attrs, int defStyleAttr) {
-    TypedArray typedArray = context.getTheme()
-            .obtainStyledAttributes(attrs, R.styleable.CustomValumeView, defStyleAttr, 0);
-    int indexCount = typedArray.getIndexCount();
-    for (int i = 0; i &lt; indexCount; i++) {
-        int attr = typedArray.getIndex(i);
-        switch (attr) {
-
-            case R.styleable.CustomValumeView_ValumefirstColor:
-                mFirstColor = typedArray.getColor(attr, Color.BLACK);
-                break;
-            case R.styleable.CustomValumeView_ValumeSecondColor:
-                mSecondColor = typedArray.getColor(attr, Color.BLUE);
-                break;
-            case R.styleable.CustomValumeView_Valumebg:
-                mImage = BitmapFactory.decodeResource(getResources(), typedArray.getResourceId(attr, 0));
-                break;
-            case R.styleable.CustomValumeView_ValumeCircleWidth:
-                mCircleWidth = typedArray.getDimensionPixelSize(attr, (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX, 16, getResources().getDisplayMetrics()));
-                break;
-            case R.styleable.CustomValumeView_ValumeDotCount:
-                mDotCount = typedArray.getInt(attr, 20);//默认值
-                break;
-            case R.styleable.CustomValumeView_ValumeSplitSize:
-                mSplitSize = typedArray.getInt(attr, 20);
-                break;
-            default:
-                break;
-        }
-
-    }
-    typedArray.recycle();
-    mPaint = new Paint();
-    mRectF = new RectF();
-}
-</code></pre><p>5.重写onDraw();</p>
-<pre><code>@Override
-protected void onDraw(Canvas canvas) {
-    mPaint.setAntiAlias(true);//消除锯齿
-    mPaint.setStrokeWidth(mCircleWidth);//设置音量宽度
-    mPaint.setStrokeCap(Paint.Cap.ROUND);//设置线段断开的地方是圆头
-    mPaint.setStyle(Paint.Style.STROKE);//空心
-    int center = getWidth() / 2;//获取圆心坐标
-    int radius = center - mCircleWidth / 2;//半径
-    drawValumePiece(canvas, center, radius);
-    drawImage(canvas, radius);
-}
-//画出内部的音量图片
-private void drawImage(Canvas canvas, int radius) {
-    //计算内切正方形的位置
-    int relRadius = radius - mCircleWidth / 2;//获取内圆半径
-    //内切正方形的距离顶部 = mCircleWidth + relRadius - √2 / 2
-    mRectF.left = (int) ((relRadius - Math.sqrt(2) * 1.0f / 2 * relRadius) + mCircleWidth);
-    //内切正方形的距离左边 = mCircleWidth + relRadius - √2 / 2
-    mRectF.top = (int) ((relRadius - Math.sqrt(2) * 1.0f / 2 * relRadius) + mCircleWidth);
-
-    mRectF.bottom = (int) (mRectF.left + Math.sqrt(2) * relRadius);
-    mRectF.right = (int) (mRectF.left + Math.sqrt(2) * relRadius);
-
-    //设置图片到中心,如果图片宽度太小,就设置到中间
-    if (mImage.getWidth() &lt; Math.sqrt(2) * relRadius) {
-        mRectF.left = (int) (mRectF.left + Math.sqrt(2) * relRadius * 1.0f / 2 - mImage.getWidth() * 1.0f / 2);
-        mRectF.top = (int) (mRectF.top + Math.sqrt(2) * relRadius * 1.0f / 2 - mImage.getHeight() * 1.0f / 2);
-        mRectF.right = (mRectF.left + mImage.getWidth());
-        mRectF.bottom = (mRectF.top + mImage.getHeight());
-    }
-    canvas.drawBitmap(mImage, null, mRectF, mPaint);
-}
-//主要用来画旁边小块
-private void drawValumePiece(Canvas canvas, int center, int radius) {
-    //根据需要画出小快递的个数和间隙算出每个小块所应当占用的比例*360;
-    float itemSize = (360 * 1.0f - mDotCount * mSplitSize) / mDotCount;
-    //定义圆环的界限的矩形,外接矩形
-    RectF oval = new RectF(center - radius, center - radius, center + radius, center + radius);
-    mPaint.setColor(mFirstColor);//设置圆环颜色
-    for (int i = 0; i &lt; mDotCount; i++) {
-        canvas.drawArc(oval, i * (itemSize + mSplitSize), itemSize, false, mPaint);
-    }
-    mPaint.setColor(mSecondColor);
-    for (int i = 0; i &lt; mCurrentCount; i++) {
-        canvas.drawArc(oval, i * (itemSize + mSplitSize), itemSize, false, mPaint);
-    }
-}
-</code></pre><p>6.在布局文件中使用</p>
-<pre><code>&lt;LinearLayout
-xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
-xmlns:custom=&quot;http://schemas.android.com/apk/res-auto&quot;
-android:id=&quot;@+id/activity_main&quot;
-android:layout_width=&quot;match_parent&quot;
-android:layout_height=&quot;match_parent&quot;
-android:orientation=&quot;vertical&quot;&gt;
-&lt;com.loren.customview.view.CustomValumeView
-    android:layout_width=&quot;100dp&quot;
-    android:layout_height=&quot;100dp&quot;
-    custom:ValumefirstColor=&quot;#4400ff&quot;
-    custom:ValumeSecondColor=&quot;#992255&quot;
-    custom:ValumeCircleWidth=&quot;3dp&quot;
-    custom:ValumeDotCount=&quot;50&quot;
-    custom:ValumeSplitSize=&quot;5&quot;
-    custom:Valumebg=&quot;@mipmap/ic_launcher&quot;/&gt;
-&lt;com.loren.customview.view.CustomValumeView
-    android:layout_width=&quot;200dp&quot;
-    android:layout_height=&quot;200dp&quot;
-    custom:ValumefirstColor=&quot;#4400ff&quot;
-    custom:ValumeSecondColor=&quot;#992255&quot;
-    custom:ValumeCircleWidth=&quot;3dp&quot;
-    android:layout_gravity=&quot;center&quot;
-    custom:ValumeDotCount=&quot;30&quot;
-    custom:ValumeSplitSize=&quot;5&quot;
-    custom:Valumebg=&quot;@mipmap/p1&quot;/&gt;
-&lt;/LinearLayout&gt;
-</code></pre><p>7.添加手势监听<br>当我们手机上下移动的时候,会指定增加或减少</p>
-<pre><code>//点击添加
-public void up() {
-    if (mCurrentCount &lt; mDotCount) {
-        mCurrentCount++;
-    }
-
-    postInvalidate();
-}
-
-public void down() {
-    if (mCurrentCount &gt; 0) {
-        mCurrentCount--;
-    }
-    postInvalidate();
-}
-
-private int mDownY;
-
-@Override
-public boolean onTouchEvent(MotionEvent event) {
-    switch (event.getAction()) {
-
-        case MotionEvent.ACTION_DOWN:
-            mDownY = (int) event.getY();
-            mLastMoveY = mDownY;
-            break;
-        case MotionEvent.ACTION_MOVE:
-            mCurrentMoveY = (int) event.getY();
-            mDifY = mCurrentMoveY - mLastMoveY;
-            //用5做判断是为了减小方块着色的速度
-            if(mDifY &gt; 5) {
-                up();
-            }else if(mDifY &lt; -5) {
-                down();
-            }
-            mLastMoveY = mCurrentMoveY;
-            break;
-
-        default:
-            break;
-    }
-
-    return true;
-}
-</code></pre><h3 id="备注"><a href="#备注" class="headerlink" title="备注"></a>备注</h3><h3 id="所有代码"><a href="#所有代码" class="headerlink" title="所有代码"></a>所有代码</h3><pre><code>public class CustomValumeView extends View {
-
-private Paint  mPaint;
-private int    mFirstColor;
-private int    mSecondColor;
-private Bitmap mImage;
-private int    mCircleWidth;
-private int    mDotCount;
-private int    mSplitSize;//每个方块之间的间隙
-private RectF  mRectF;
-private int    mCurrentCount;//当前的数量;
-private int    mCurrentMoveY;
-private int    mDifY;
-private int mLastMoveY;
-
-public CustomValumeView(Context context) {
-    this(context, null);
-}
-
-public CustomValumeView(Context context, AttributeSet attrs) {
-    this(context, attrs, 0);
-}
-
-public CustomValumeView(Context context, AttributeSet attrs, int defStyleAttr) {
-    super(context, attrs, defStyleAttr);
-    initView(context, attrs, defStyleAttr);
-}
-
-private void initView(Context context, AttributeSet attrs, int defStyleAttr) {
-    TypedArray typedArray = context.getTheme()
-            .obtainStyledAttributes(attrs, R.styleable.CustomValumeView, defStyleAttr, 0);
-    int indexCount = typedArray.getIndexCount();
-    for (int i = 0; i &lt; indexCount; i++) {
-        int attr = typedArray.getIndex(i);
-        switch (attr) {
-
-            case R.styleable.CustomValumeView_ValumefirstColor:
-                mFirstColor = typedArray.getColor(attr, Color.BLACK);
-                break;
-            case R.styleable.CustomValumeView_ValumeSecondColor:
-                mSecondColor = typedArray.getColor(attr, Color.BLUE);
-                break;
-            case R.styleable.CustomValumeView_Valumebg:
-                mImage = BitmapFactory.decodeResource(getResources(), typedArray.getResourceId(attr, 0));
-                break;
-            case R.styleable.CustomValumeView_ValumeCircleWidth:
-                mCircleWidth = typedArray.getDimensionPixelSize(attr, (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX, 16, getResources().getDisplayMetrics()));
-                break;
-            case R.styleable.CustomValumeView_ValumeDotCount:
-                mDotCount = typedArray.getInt(attr, 20);//默认值
-                break;
-            case R.styleable.CustomValumeView_ValumeSplitSize:
-                mSplitSize = typedArray.getInt(attr, 20);
-                break;
-            default:
-                break;
-        }
-
-    }
-    typedArray.recycle();
-    mPaint = new Paint();
-    mRectF = new RectF();
-}
-
-@Override
-protected void onDraw(Canvas canvas) {
-    mPaint.setAntiAlias(true);//消除锯齿
-    mPaint.setStrokeWidth(mCircleWidth);//设置音量宽度
-    mPaint.setStrokeCap(Paint.Cap.ROUND);//设置线段断开的地方是圆头
-    mPaint.setStyle(Paint.Style.STROKE);//空心
-    int center = getWidth() / 2;//获取圆心坐标
-    int radius = center - mCircleWidth / 2;//半径
-    drawValumePiece(canvas, center, radius);
-    drawImage(canvas, radius);
-}
-//画出内部的音量图片
-private void drawImage(Canvas canvas, int radius) {
-    //计算内切正方形的位置
-    int relRadius = radius - mCircleWidth / 2;//获取内圆半径
-    //内切正方形的距离顶部 = mCircleWidth + relRadius - √2 / 2
-    mRectF.left = (int) ((relRadius - Math.sqrt(2) * 1.0f / 2 * relRadius) + mCircleWidth);
-    //内切正方形的距离左边 = mCircleWidth + relRadius - √2 / 2
-    mRectF.top = (int) ((relRadius - Math.sqrt(2) * 1.0f / 2 * relRadius) + mCircleWidth);
-
-    mRectF.bottom = (int) (mRectF.left + Math.sqrt(2) * relRadius);
-    mRectF.right = (int) (mRectF.left + Math.sqrt(2) * relRadius);
-
-    //设置图片到中心,如果图片宽度太小,就设置到中间
-    if (mImage.getWidth() &lt; Math.sqrt(2) * relRadius) {
-        mRectF.left = (int) (mRectF.left + Math.sqrt(2) * relRadius * 1.0f / 2 - mImage.getWidth() * 1.0f / 2);
-        mRectF.top = (int) (mRectF.top + Math.sqrt(2) * relRadius * 1.0f / 2 - mImage.getHeight() * 1.0f / 2);
-        mRectF.right = (mRectF.left + mImage.getWidth());
-        mRectF.bottom = (mRectF.top + mImage.getHeight());
-    }
-    canvas.drawBitmap(mImage, null, mRectF, mPaint);
-}
-//主要用来画旁边小块
-private void drawValumePiece(Canvas canvas, int center, int radius) {
-    //根据需要画出小快递的个数和间隙算出每个小块所应当占用的比例*360;
-    float itemSize = (360 * 1.0f - mDotCount * mSplitSize) / mDotCount;
-    //定义圆环的界限的矩形,外接矩形
-    RectF oval = new RectF(center - radius, center - radius, center + radius, center + radius);
-    mPaint.setColor(mFirstColor);//设置圆环颜色
-    for (int i = 0; i &lt; mDotCount; i++) {
-        canvas.drawArc(oval, i * (itemSize + mSplitSize), itemSize, false, mPaint);
-    }
-    mPaint.setColor(mSecondColor);
-    for (int i = 0; i &lt; mCurrentCount; i++) {
-        canvas.drawArc(oval, i * (itemSize + mSplitSize), itemSize, false, mPaint);
-    }
-}
-
-//点击添加
-public void up() {
-    if (mCurrentCount &lt; mDotCount) {
-        mCurrentCount++;
-    }
-
-    postInvalidate();
-}
-
-public void down() {
-    if (mCurrentCount &gt; 0) {
-        mCurrentCount--;
-    }
-    postInvalidate();
-}
-
-private int mDownY;
-
-@Override
-public boolean onTouchEvent(MotionEvent event) {
-    switch (event.getAction()) {
-
-        case MotionEvent.ACTION_DOWN:
-            mDownY = (int) event.getY();
-            mLastMoveY = mDownY;
-            break;
-        case MotionEvent.ACTION_MOVE:
-            mCurrentMoveY = (int) event.getY();
-            mDifY = mCurrentMoveY - mLastMoveY;
-            //用5做判断是为了减小方块着色的速度
-            if(mDifY &gt; 5) {
-                up();
-            }else if(mDifY &lt; -5) {
-                down();
-            }
-            mLastMoveY = mCurrentMoveY;
-            break;
-
-        default:
-            break;
-    }
-
-    return true;
-}
-}
-</code></pre><hr>
-<h3 id="参看文档"><a href="#参看文档" class="headerlink" title="参看文档"></a>参看文档</h3><p><a href="http://blog.csdn.net/lmj623565791/article/details/24529807" target="_blank" rel="external">Android 自定义View (四) 视频音量调控</a></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://lorensong.github.io/2017/03/07/Android自定义View/自定义View入门_圆环进度条/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="lorensong">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="lorensong">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/03/07/Android自定义View/自定义View入门_圆环进度条/" itemprop="url">
-                  自定义View入门_圆环进度条
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-03-07T12:08:39+08:00">
-                2017-03-07
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Note/" itemprop="url" rel="index">
-                    <span itemprop="name">Note</span>
-                  </a>
-                </span>
-
-                
-                
-                  , 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Note/CustomView/" itemprop="url" rel="index">
-                    <span itemprop="name">CustomView</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-             <span id="/2017/03/07/Android自定义View/自定义View入门_圆环进度条/" class="leancloud_visitors" data-flag-title="自定义View入门_圆环进度条">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">Visitors </span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="what"><a href="#what" class="headerlink" title="what?"></a>what?</h2><p>下面通过一个圆环进度条来学习一下<code>圆环的画法</code>以及通过<code>线程</code>不断的画图形</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/03/07/Android自定义View/自定义View入门_圆环进度条/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://lorensong.github.io/2017/03/06/Android自定义View/自定义View入门_测量模式/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="lorensong">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="lorensong">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/03/06/Android自定义View/自定义View入门_测量模式/" itemprop="url">
-                  自定义View入门_测量模式
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-03-06T17:54:44+08:00">
-                2017-03-06
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Note/" itemprop="url" rel="index">
-                    <span itemprop="name">Note</span>
-                  </a>
-                </span>
-
-                
-                
-                  , 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Note/CustomView/" itemprop="url" rel="index">
-                    <span itemprop="name">CustomView</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-             <span id="/2017/03/06/Android自定义View/自定义View入门_测量模式/" class="leancloud_visitors" data-flag-title="自定义View入门_测量模式">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">Visitors </span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <a id="more"></a>
-<h2 id="what"><a href="#what" class="headerlink" title="what?"></a>what?</h2><h3 id="why"><a href="#why" class="headerlink" title="why?"></a>why?</h3><p>效果图:<br><img width="" height="50%" align="center" src="customView-2\customView_result_2017-3-6.png" alt="customView_result_2017-3-6"></p>
-<h3 id="how"><a href="#how" class="headerlink" title="how?"></a>how?</h3><p>1.写一个自定义类继承View;<br>2.在values文件夹中创建attrs.xml文件(这是自定义的属性)<br>3.在自定义类的构造中获取到attrs的属性值;<br>4.重写onMeasure();<br>5.重写onDraw();<br>6.在相应的布局文件中使用自定义view;</p>
-<h3 id="具体实现"><a href="#具体实现" class="headerlink" title="具体实现"></a>具体实现</h3><ol>
-<li>自定义CustomImageView类,并重写构造方法;</li>
-<li><p>创建attrs.xml文件</p>
-<p>其中<code>CustomTitleView</code>是自定义<code>TextView</code>的代码,可以见笔者 自定义View-1,笔者只是将两种自定义写在一起了.<br>而<code>CustomImageView</code>是本次需要的内容</p>
-  <resources><br>  <attr name="titleText" format="string"><br>  <attr name="titleColor" format="color"><br>  <attr name="titleSize" format="dimension"><br><br>  <attr name="titleImageText" format="string"><br>  <attr name="titleImageTextSize" format="dimension"><br>  <attr name="titleImageTextColor" format="color"><br>  <attr name="image" format="reference"><br>  <attr name="imageScaleType"><br>  <enum name="fillXY" value="0"><br>  <enum name="center" value="1"><br>  </enum></enum></attr><br>  <declare-styleable name="CustomTitleView"><br>  <attr name="titleText"><br>  <attr name="titleColor"><br>  <attr name="titleSize"><br>  </attr></attr></attr></declare-styleable><br><br>  <declare-styleable name="CustomImageView"><br>  <attr name="titleImageText"><br>  <attr name="titleImageTextSize"><br>  <attr name="titleImageTextColor"><br>  <attr name="image"><br>  <attr name="imageScaleType"><br>  </attr></attr></attr></attr></attr></declare-styleable><br>  </attr></attr></attr></attr></attr></attr></attr></resources></li>
-<li><p>在自定义类中获取属性值</p>
-<p>private void initView(AttributeSet attrs, int defStyleAttr) {<br>  TypedArray typedArray = mContext.getTheme()</p>
-<pre><code>.obtainStyledAttributes(attrs, R.styleable.CustomImageView, defStyleAttr, 0);
-</code></pre><p>  int indexCount = typedArray.getIndexCount();</p>
-<p>  for (int i = 0; i &lt; indexCount; i++) {</p>
-<pre><code>int attr = typedArray.getIndex(i);
-switch (attr) {
-
-    case R.styleable.CustomImageView_image:
-        mBitmap = BitmapFactory.decodeResource(getResources(), typedArray.getResourceId(attr, 0));
-        break;
-    case R.styleable.CustomImageView_imageScaleType:
-        mScaleType = typedArray.getInt(attr, 0);
-        break;
-
-    case R.styleable.CustomImageView_titleImageText:
-        mTitleImageText = typedArray.getString(attr);
-
-        break;
-    case R.styleable.CustomImageView_titleImageTextColor:
-        mTextColor = typedArray.getColor(attr, Color.BLACK);
-
-        break;
-    case R.styleable.CustomImageView_titleImageTextSize:
-        mTitleSize = typedArray.getDimensionPixelSize(attr, (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 16, getResources().getDisplayMetrics()));
-
-        break;
-}
-</code></pre><p>  }<br>  typedArray.recycle();<br>  mPaint = new Paint();<br>  mRect = new Rect();<br>  mTextBound = new Rect();<br>  mPaint.setTextSize(mTitleSize);<br>  //计算文字所在矩形,获取宽高值<br>  mPaint.getTextBounds(mTitleImageText, 0, mTitleImageText.length(), mTextBound);<br>  }   </p>
-</li>
-</ol>
-<p>4.重写onMeasure()方法</p>
-<pre><code>@Override
-protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-    //宽度
-    int widthMode = MeasureSpec.getMode(widthMeasureSpec);
-    int widthSize = MeasureSpec.getSize(widthMeasureSpec);
-
-    if (widthMode == MeasureSpec.EXACTLY) {
-        mWidth = widthSize;
-    } else {
-        //测量出图片和文字的宽度,看整个view的宽度由谁决定
-
-        //图片宽度
-        int desiredByImg = getPaddingLeft() + getPaddingRight() + mBitmap.getWidth();
-        //字体宽度
-        int desirdeByText = getPaddingLeft() + getPaddingRight() + mTextBound.width();
-        //判断宽度模式是否warp_content
-        if (widthMode == MeasureSpec.AT_MOST) {
-            int desiredWidth = Math.max(desiredByImg, desirdeByText);
-            //因为是wrap_content,默认值是宽度整个父类的view的宽度,所以这里需要取最小值,整个布局仅仅包裹我们需要的内容
-            mWidth = Math.min(desiredWidth, widthSize);
-        }
-    }
-    //高度
-    int heightMode = MeasureSpec.getMode(heightMeasureSpec);
-    int heightSize = MeasureSpec.getSize(heightMeasureSpec);
-    if (heightMode == MeasureSpec.EXACTLY) {
-        mHeight = heightSize;
-    } else {
-        int desire = getPaddingTop() + getPaddingBottom() + mBitmap.getHeight() + mTextBound.height();
-        if (heightMode == MeasureSpec.AT_MOST) {
-            mHeight = Math.min(desire, heightSize);
-        }
-    }
-    setMeasuredDimension(mWidth, mHeight);
-
-}
-</code></pre><p>5.重写ondraw()方法</p>
-<pre><code>@Override
-protected void onDraw(Canvas canvas) {
-    //设置边框
-    mPaint.setStrokeWidth(4);
-    mPaint.setStyle(Paint.Style.STROKE);
-    mPaint.setColor(Color.CYAN);
-    canvas.drawRect(0, 0, getMeasuredWidth(), getMeasuredHeight(), mPaint);
-
-    mRect.left = getPaddingLeft();
-    mRect.right = mWidth - getPaddingRight();
-    mRect.top = getPaddingTop();
-    mRect.bottom = mHeight - getPaddingBottom();
-
-    mPaint.setColor(mTextColor);
-    mPaint.setStyle(Paint.Style.FILL);
-
-    //当前设置的宽度小于字体需要的宽度,将字体大小设置为指定的省略号...;
-    if (mTextBound.width() &gt; mWidth) {
-        TextPaint textPaint = new TextPaint(mPaint);
-
-        //TextUtils.ellipsize()截取指定长度字符串
-        String s = TextUtils.ellipsize(mTitleImageText, textPaint, mWidth - getPaddingLeft() - getPaddingRight(), TextUtils.TruncateAt.END)
-                .toString();
-        canvas.drawText(s, getPaddingLeft(), mHeight - getPaddingRight(), mPaint);
-    } else {
-        //正常情况,将字体居中
-        canvas.drawText(mTitleImageText, mWidth / 2 - mTextBound.width() * 1.0f / 2, mHeight - getPaddingBottom() / 2, mPaint);
-    }
-    //取消文字使用的块,用于设置图片
-    //如果不减掉的话使用fillXY模式时，会把下面的文字覆盖
-    mRect.bottom = mRect.bottom -  mTextBound.height();
-
-    if (mScaleType == IMAGE_SCALE_FITXY) {
-        canvas.drawBitmap(mBitmap, null, mRect, mPaint);
-    } else {
-        //如果图片的缩放是居中类型的,需要将图片设置为居中
-        //计算居中的矩形范围;
-        mRect.left = mWidth / 2 - mBitmap.getWidth() / 2;
-        mRect.right = mWidth / 2 + mBitmap.getWidth() / 2;
-        mRect.top = (mHeight - mTextBound.height()) / 2 - mBitmap.getHeight() / 2;
-        mRect.bottom = (mHeight - mTextBound.height()) / 2 + mBitmap.getHeight() / 2;
-        canvas.drawBitmap(mBitmap, null, mRect, mPaint);
-    }
-}
-</code></pre><p>6.使用</p>
-<pre><code>&lt;com.loren.customview.view.CustomImageView
-    android:layout_width=&quot;wrap_content&quot;
-    android:layout_height=&quot;150dp&quot;
-    custom:image=&quot;@mipmap/ic_launcher&quot;
-    custom:imageScaleType=&quot;center&quot;
-    custom:titleImageText=&quot;p1图片p1图片p1图片p1图片p1图片p1图片&quot;
-    custom:titleImageTextSize=&quot;16sp&quot;
-    custom:titleImageTextColor=&quot;#ff0000&quot;
-    android:id=&quot;@+id/customImageView&quot;/&gt;
-
-&lt;com.loren.customview.view.CustomImageView
-    android:layout_width=&quot;100dp&quot;
-    android:layout_height=&quot;50dp&quot;
-    custom:image=&quot;@mipmap/ic_launcher&quot;
-    custom:imageScaleType=&quot;center&quot;
-    custom:titleImageText=&quot;p2图片p2图片p2图片p2图片p2图片p2图片&quot;
-    custom:titleImageTextSize=&quot;18sp&quot;
-    custom:titleImageTextColor=&quot;#ff00ff&quot;
-    /&gt;
-&lt;com.loren.customview.view.CustomImageView
-    android:layout_width=&quot;wrap_content&quot;
-    android:layout_height=&quot;wrap_content&quot;
-    custom:image=&quot;@mipmap/p3&quot;
-    custom:imageScaleType=&quot;fillXY&quot;
-    custom:titleImageText=&quot;p3图片&quot;
-    custom:titleImageTextSize=&quot;12sp&quot;
-    custom:titleImageTextColor=&quot;#ff2299&quot;
-    /&gt;
-</code></pre><p><em>效果图见开始处</em></p>
-<h4 id="备注"><a href="#备注" class="headerlink" title="备注:"></a>备注:</h4><p>计算文字在控件中间的两种方式：  </p>
-<ul>
-<li><p>方法2是绝对准确，推荐使用。</p>
-</li>
-<li><p>方法1有时候会测量不准确，高度不能居中显示<br>1.宽 = （控件宽 - 文字宽）/2<br>  高 = (控件高 + 文字稿) /2<br>2.宽 = （控件宽 - 文字宽）/2<br>  高 = （控件高 - （文字上边界 + 文字下边界）/2   </p>
-</li>
-</ul>
-<hr>
-<h3 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h3><p><a href="http://blog.csdn.net/lmj623565791/article/details/24300125" target="_blank" rel="external">Android 自定义View(二)进阶</a><br><a href="http://blog.csdn.net/qin9r3y/article/details/8607014" target="_blank" rel="external">Android drawText获取text宽度的三种方式</a></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://lorensong.github.io/2017/03/03/Android自定义View/自定义View入门_生成随机数/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="lorensong">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="lorensong">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/03/03/Android自定义View/自定义View入门_生成随机数/" itemprop="url">
-                  自定义View入门_生成随机数
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-03-03T18:11:53+08:00">
-                2017-03-03
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Note/" itemprop="url" rel="index">
-                    <span itemprop="name">Note</span>
-                  </a>
-                </span>
-
-                
-                
-                  , 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Note/CustomView/" itemprop="url" rel="index">
-                    <span itemprop="name">CustomView</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-             <span id="/2017/03/03/Android自定义View/自定义View入门_生成随机数/" class="leancloud_visitors" data-flag-title="自定义View入门_生成随机数">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">Visitors </span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <a id="more"></a>
-<h2 id="what"><a href="#what" class="headerlink" title="what?"></a>what?</h2><p>学习自定义View初步,自定义View的步骤;<br>实现点击出现随机数的自定义View;<br>效果图:</p>
-<h3 id="how"><a href="#how" class="headerlink" title="how?"></a>how?</h3><ol>
-<li>自定义类继承View;</li>
-<li>在包名/values文件夹中创建attrs.xml文件   </li>
-<li>在自定义的类中获取attrs中的属性</li>
-<li>重写onMeasure();</li>
-<li>重写ondraw();</li>
-<li>在相应的布局文件是使用View;<h3 id="具体实现"><a href="#具体实现" class="headerlink" title="具体实现"></a>具体实现</h3><h4 id="自定义类继承View"><a href="#自定义类继承View" class="headerlink" title="自定义类继承View"></a>自定义类继承View</h4>写一个类继承View,并重写构造方法.  <h4 id="自定义View的属性"><a href="#自定义View的属性" class="headerlink" title="自定义View的属性"></a>自定义View的属性</h4></li>
-</ol>
-<p>1、自定义View的属性，首先在应用包中/res/values/  下建立一个attrs.xml ， 在里面定义我们的属性和声明我们的整个样式。<br>    <figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version="1.0" encoding="utf-8"?&gt;  </div><div class="line"><span class="tag">&lt;<span class="name">resources</span>&gt;</span>    </div><div class="line">   <span class="tag">&lt;<span class="name">attr</span> <span class="attr">name</span>=<span class="string">"titleText"</span> <span class="attr">format</span>=<span class="string">"string"</span> /&gt;</span>  </div><div class="line">   <span class="tag">&lt;<span class="name">attr</span> <span class="attr">name</span>=<span class="string">"titleTextColor"</span> <span class="attr">format</span>=<span class="string">"color"</span> /&gt;</span>  </div><div class="line">   <span class="tag">&lt;<span class="name">attr</span> <span class="attr">name</span>=<span class="string">"titleTextSize"</span> <span class="attr">format</span>=<span class="string">"dimension"</span> /&gt;</span>  </div><div class="line">   <span class="tag">&lt;<span class="name">declare-styleable</span> <span class="attr">name</span>=<span class="string">"CustomTitleView"</span>&gt;</span>  </div><div class="line">       <span class="tag">&lt;<span class="name">attr</span> <span class="attr">name</span>=<span class="string">"titleText"</span> /&gt;</span>  </div><div class="line">       <span class="tag">&lt;<span class="name">attr</span> <span class="attr">name</span>=<span class="string">"titleTextColor"</span> /&gt;</span>  </div><div class="line">       <span class="tag">&lt;<span class="name">attr</span> <span class="attr">name</span>=<span class="string">"titleTextSize"</span> /&gt;</span>  </div><div class="line">   <span class="tag">&lt;/<span class="name">declare-styleable</span>&gt;</span>  </div><div class="line"><span class="tag">&lt;/<span class="name">resources</span>&gt;</span></div></pre></td></tr></table></figure></p>
-<p>我们定义了文字,颜色和尺寸三种属性.format就是该属性的取值类型;<br>具体属性可百度查找</p>
-<p>2.在布局文件中声明我们的自定义View<br>    <figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">RelativeLayout</span></span></div><div class="line">   <span class="attr">xmlns:android</span>=<span class="string">"http://schemas.android.com/apk/res/android"</span></div><div class="line">   <span class="attr">xmlns:custom</span>=<span class="string">"http://schemas.android.com/apk/res-auto"</span></div><div class="line">   <span class="attr">xmlns:tools</span>=<span class="string">"http://schemas.android.com/tools"</span></div><div class="line">   <span class="attr">android:id</span>=<span class="string">"@+id/activity_main"</span></div><div class="line">   <span class="attr">android:layout_width</span>=<span class="string">"match_parent"</span></div><div class="line">   <span class="attr">android:layout_height</span>=<span class="string">"match_parent"</span></div><div class="line">   &gt;</div><div class="line">   <span class="tag">&lt;<span class="name">com.loren.customview.view.CustomTitleView</span></span></div><div class="line">       <span class="attr">android:layout_width</span>=<span class="string">"100dp"</span></div><div class="line">       <span class="attr">android:layout_height</span>=<span class="string">"50dp"</span></div><div class="line">       <span class="attr">android:layout_centerInParent</span>=<span class="string">"true"</span></div><div class="line">       <span class="attr">android:padding</span>=<span class="string">"10dp"</span></div><div class="line">       <span class="attr">custom:titleColor</span>=<span class="string">"#ff0000"</span></div><div class="line">       <span class="attr">custom:titleSize</span>=<span class="string">"40sp"</span></div><div class="line">       <span class="attr">custom:titleText</span>=<span class="string">"3712"</span></div><div class="line">       /&gt;</div><div class="line"><span class="tag">&lt;/<span class="name">RelativeLayout</span>&gt;</span></div></pre></td></tr></table></figure></p>
-<p>3.在View的构造方法获取我们的自定义属性<br>    <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="title">CustomTitleView</span><span class="params">(Context context, AttributeSet attrs, <span class="keyword">int</span> defStyleAttr)</span> </span>&#123;</div><div class="line">	<span class="keyword">super</span>(context, attrs, defStyleAttr);</div><div class="line">	<span class="keyword">this</span>.mContext = context;</div><div class="line">	initView(attrs,defStyleAttr);</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">initView</span><span class="params">(AttributeSet attrs,<span class="keyword">int</span> defStyleAttr)</span> </span>&#123;</div><div class="line">	<span class="comment">//获取我们自定义的attrs样式</span></div><div class="line">	TypedArray typedArray = mContext.getTheme()</div><div class="line">			.obtainStyledAttributes(attrs, R.styleable.CustomTitleView, defStyleAttr, <span class="number">0</span>);</div><div class="line">	<span class="comment">//定义自定义的控件参数的数目,是在布局文件中使用的;</span></div><div class="line">	<span class="keyword">int</span> n = typedArray.getIndexCount();</div><div class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; i++) &#123;</div><div class="line">		<span class="keyword">int</span> attr = typedArray.getIndex(i);</div><div class="line">		<span class="keyword">switch</span> (attr) &#123;</div><div class="line">		    <span class="keyword">case</span> R.styleable.CustomTitleView_titleText:</div><div class="line">			    mTitleText = typedArray.getString(i);</div><div class="line">			    <span class="keyword">break</span>;</div><div class="line">			<span class="keyword">case</span> R.styleable.CustomTitleView_titleColor:</div><div class="line">				<span class="comment">//后一个值为默认颜色</span></div><div class="line">				mTitleColor = typedArray.getColor(i, Color.BLACK);</div><div class="line">				<span class="keyword">break</span>;</div><div class="line">			<span class="keyword">case</span> R.styleable.CustomTitleView_titleSize:</div><div class="line">				<span class="comment">//获取我们设置的字体大小值,设置默认值为16sp,TypeValue可以将sp转换为px</span></div><div class="line">				mTitleSize = typedArray.getDimensionPixelSize(attr, (<span class="keyword">int</span>) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, <span class="number">16</span>, getResources().getDisplayMetrics()));</div><div class="line">				<span class="keyword">break</span>;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"><span class="comment">//Recycles the TypedArray, to be re-used by a later caller</span></div><div class="line">	<span class="comment">//官方解释：回收TypedArray 以便后面的使用者重用</span></div><div class="line">	<span class="comment">//使用了TypeArray,所以必须要调用recyele();</span></div><div class="line">	typedArray.recycle();</div><div class="line">	mPaint = <span class="keyword">new</span> Paint();</div><div class="line">	mPaint.setTextSize(mTitleSize);</div><div class="line">	mBound = <span class="keyword">new</span> Rect();</div><div class="line">	mPaint.getTextBounds(mTitleText, <span class="number">0</span>, mTitleText.length(), mBound);</div><div class="line">	<span class="keyword">this</span>.setOnClickListener(<span class="keyword">new</span> OnClickListener() &#123;</div><div class="line">		<span class="meta">@Override</span></div><div class="line">		<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onClick</span><span class="params">(View v)</span> </span>&#123;</div><div class="line">			mTitleText = createRandomNum();</div><div class="line">			postInvalidate();</div><div class="line">		&#125;</div><div class="line">	&#125;);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h5 id="重写onMeasure"><a href="#重写onMeasure" class="headerlink" title="重写onMeasure();"></a>重写onMeasure();</h5><p>暂时这个类不做任何操作;  </p>
-<h5 id="重写onDraw-方法"><a href="#重写onDraw-方法" class="headerlink" title="重写onDraw()方法"></a>重写onDraw()方法</h5><p>主要作用就是画<code>背景</code>和<code>文字</code><br>    <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Override</span></div><div class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onDraw</span><span class="params">(Canvas canvas)</span> </span>&#123;</div><div class="line">	<span class="comment">//画出黄色背景框</span></div><div class="line">	mPaint.setColor(Color.YELLOW);</div><div class="line">	canvas.drawRect(<span class="number">0</span>, <span class="number">0</span>, getMeasuredWidth(), getMeasuredHeight(), mPaint);</div><div class="line">	<span class="comment">//设置文字的颜色</span></div><div class="line">	mPaint.setColor(mTitleColor);</div><div class="line">	canvas.drawText(mTitleText,getWidth()/<span class="number">2</span> - mBound.width() /<span class="number">2</span> ,getHeight()/<span class="number">2</span> + mBound.height()/<span class="number">2</span>,</div><div class="line">			mPaint);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>现在实现的效果如下:</p>
-<p><img width="80%" height="80%" align="center" src="\customView-1\realize_result_2017-3-6.jpg" alt="realize_result_2017-3-6"></p>
-<p>这样就基本实现了View的自定义,但是当我们在布局文件中定义了宽度和高度为wrap_content,那么久成这样了:</p>
-<p><img width="80%" height="80%" align="center" src="\customView-1\realize_result_2017-3-6_1.png" alt="realize_result_2017-3-6_1"></p>
-<p>系统帮我们测量的高度和宽度都是<code>MATCH_PARNET</code>，当我们设置明确的宽度和高度时，系统帮我们测量的结果就是我们设置的结果，当我们设置为<code>WRAP_CONTENT</code>,或者<code>MATCH_PARENT</code>系统帮我们测量的结果就是<code>MATCH_PARENT</code>的长度。<br>所以，当设置了<code>WRAP_CONTENT</code>时，我们需要自己进行测量，即重写<code>onMesure</code>方法”：</p>
-<h5 id="重写onMeasure方法"><a href="#重写onMeasure方法" class="headerlink" title="重写onMeasure方法:"></a>重写onMeasure方法:</h5><pre><code><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Override</span></div><div class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onMeasure</span><span class="params">(<span class="keyword">int</span> widthMeasureSpec, <span class="keyword">int</span> heightMeasureSpec)</span> </span>&#123;</div><div class="line">	<span class="keyword">int</span> widthMode = MeasureSpec.getMode(widthMeasureSpec);</div><div class="line">	<span class="keyword">int</span> widtHSize = MeasureSpec.getSize(widthMeasureSpec);</div><div class="line">	<span class="keyword">int</span> heightMode = MeasureSpec.getMode(heightMeasureSpec);</div><div class="line">	<span class="keyword">int</span> heightSize = MeasureSpec.getSize(heightMeasureSpec);</div><div class="line"></div><div class="line">	<span class="keyword">int</span> width;</div><div class="line">	<span class="keyword">int</span> height;</div><div class="line"></div><div class="line">	<span class="keyword">if</span>(widthMode == MeasureSpec.EXACTLY) &#123;</div><div class="line">		width = widtHSize;</div><div class="line">	&#125;<span class="keyword">else</span> &#123;</div><div class="line">		mPaint.setTextSize(mDimensionPixelSize);</div><div class="line">		mPaint.getTextBounds(mTitleText, <span class="number">0</span>, mTitleText.length(), mBound);</div><div class="line">		<span class="keyword">float</span> textWidth = mBound.width();</div><div class="line">		<span class="comment">//如果设置了padding值,就要加上</span></div><div class="line">		<span class="keyword">int</span> desiredWidth = (<span class="keyword">int</span>) (getPaddingLeft() + textWidth + getPaddingRight());</div><div class="line">		width = desiredWidth;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="keyword">if</span>(heightMode == MeasureSpec.EXACTLY) &#123;</div><div class="line">		height = heightSize;</div><div class="line">	&#125;<span class="keyword">else</span> &#123;</div><div class="line">		mPaint.setTextSize(mDimensionPixelSize);</div><div class="line">		mPaint.getTextBounds(mTitleText, <span class="number">0</span>, mTitleText.length(), mBound);</div><div class="line">		<span class="keyword">int</span> textHeight = mBound.height();</div><div class="line">		<span class="keyword">int</span> desiredHeight = getPaddingTop() + textHeight + getPaddingBottom();</div><div class="line">		height = desiredHeight;</div><div class="line">	&#125;</div><div class="line">	setMeasuredDimension(width,height);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-</code></pre><p>了解下<code>MeasureSpec的specMode</code>,一共三种类型：<br><strong><code>EXACTLY</code></strong>：一般是设置了明确的值或者是MATCH_PARENT<br><strong><code>AT_MOST</code></strong>：表示子布局限制在一个最大值内，一般为WARP_CONTENT<br><strong><code>UNSPECIFIED</code></strong>：表示子布局想要多大就多大，很少使用<br>    <figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">com.loren.customview.view.CustomTitleView</span></span></div><div class="line">    <span class="attr">android:layout_width</span>=<span class="string">"wrap_content"</span></div><div class="line">    <span class="attr">android:layout_height</span>=<span class="string">"wrap_content"</span></div><div class="line">    <span class="attr">android:layout_centerInParent</span>=<span class="string">"true"</span></div><div class="line">    <span class="attr">android:padding</span>=<span class="string">"10dp"</span></div><div class="line">    <span class="attr">custom:titleColor</span>=<span class="string">"#ff0000"</span></div><div class="line">    <span class="attr">custom:titleSize</span>=<span class="string">"40sp"</span></div><div class="line">    <span class="attr">custom:titleText</span>=<span class="string">"3712"</span></div><div class="line">    /&gt;</div></pre></td></tr></table></figure></p>
-<p>完全复合我们的预期，现在我们可以对高度、宽度进行随便的设置了，基本可以满足我们的需求。</p>
-<p>最后,我们对我们自定义的TextView添加一个点击控制,没点击一次,改变文字</p>
-<p>//添加点击事件<br>    <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">this</span>.setOnClickListener(<span class="keyword">new</span> OnClickListener() &#123;</div><div class="line">		<span class="meta">@Override</span></div><div class="line">		<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onClick</span><span class="params">(View v)</span> </span>&#123;</div><div class="line">			mTitleText = createRandomNum();</div><div class="line">			<span class="comment">//需要调用,让View在工作线程重画</span></div><div class="line">			postInvalidate();</div><div class="line">		&#125;</div><div class="line">	&#125;);</div></pre></td></tr></table></figure></p>
-<p>//生成随机数<br>    <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">private</span> String <span class="title">createRandomNum</span><span class="params">()</span> </span>&#123;</div><div class="line">	Random random = <span class="keyword">new</span> Random();</div><div class="line">	HashSet&lt;Integer&gt; integers = <span class="keyword">new</span> HashSet&lt;&gt;();</div><div class="line">	<span class="keyword">while</span> (integers.size() &lt; <span class="number">4</span>) &#123;</div><div class="line">		<span class="keyword">int</span> i = random.nextInt(<span class="number">10</span>);</div><div class="line">		integers.add(i);</div><div class="line">	&#125;</div><div class="line">	StringBuffer stringBuffer = <span class="keyword">new</span> StringBuffer();</div><div class="line">	<span class="keyword">for</span> (Integer i : integers) &#123;</div><div class="line">		stringBuffer.append(<span class="string">""</span> + i);</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> stringBuffer.toString();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p><em>效果就是本文开头的效果了</em></p>
-<h3 id="invalidate-和-postInvalidate的区别"><a href="#invalidate-和-postInvalidate的区别" class="headerlink" title="invalidate 和 postInvalidate的区别"></a><code>invalidate</code> 和 <code>postInvalidate</code>的区别</h3><p>Android中实现view的更新有两组方法，一组是<code>invalidate</code>，另一组是<code>postInvalidate</code>，其中前者是在UI线程自身中使用，而后者在非UI线程中使用。<br>在UI主线程中，用<code>invalidate()</code>；本质是调用View的onDraw（）绘制。主线程之外，用<code>postInvalidate()</code>。</p>
-<p>区别:<br><code>invalidate()</code>是用来刷新View的，必须是在UI线程中进行工作。比如在修改某个view的显示时，调用<code>invalidate()</code>才能看到重新绘制的界面。<br><code>invalidate()</code>的调用是把之前的旧的view从主UI线程队列中pop掉。 一个Android程序默认情况下也只有一个进程，但一个进程下却可以有许多个线程。<br>在这么多线程当中，把主要是负责控制UI界面的显示、更新和控件交互的线程称为<code>UI线程</code>，由于<code>onCreate()</code>方法是由UI线程执行的，所以也可以把UI线程理解为主线程。其余的线程可以理解为工作者线程。<br><code>invalidate()</code>得在UI线程中被调动，在工作者线程中可以通过Handler来通知UI线程进行界面更新。而<code>postInvalidate()</code>在工作者线程中被调用</p>
-<ol>
-<li>invalidate():实例化一个Handler对象，并重写handleMessage方法调用invalidate()实现界面刷新;而在线程中通过sendMessage发送界面更新消息。 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 在onCreate()中开启线程</span></div><div class="line"><span class="keyword">new</span> Thread(<span class="keyword">new</span> GameThread()).start();</div><div class="line"><span class="comment">// 实例化一个handler</span></div><div class="line">Handler myHandler = <span class="keyword">new</span> Handler() &#123;</div><div class="line"><span class="comment">// 接收到消息后处理				　　</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">handleMessage</span><span class="params">(Message msg)</span> </span>&#123;</div><div class="line">	<span class="keyword">switch</span> (msg.what) &#123;</div><div class="line">		<span class="keyword">case</span> Activity01.REFRESH:</div><div class="line">		mGameView.invalidate(); <span class="comment">// 刷新界面</span></div><div class="line">		<span class="keyword">break</span>;</div><div class="line">	&#125;</div><div class="line">		<span class="keyword">super</span>.handleMessage(msg);</div><div class="line">	&#125;</div><div class="line">	&#125;;</div><div class="line">	<span class="class"><span class="keyword">class</span> <span class="title">GameThread</span> <span class="keyword">implements</span> <span class="title">Runnable</span> </span>&#123;　</div><div class="line">		<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">while</span> (!Thread.currentThread()					.isInterrupted()) &#123;</div><div class="line">			Message message = <span class="keyword">new</span> Message();</div><div class="line">			message.what = Activity01.REFRESH;</div><div class="line">		<span class="comment">// 发送消息	　　　　　　Activity01.this.myHandler.sendMessage(message);</span></div><div class="line">	<span class="keyword">try</span> &#123;</div><div class="line">		Thread.sleep(<span class="number">100</span>);</div><div class="line">	&#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</div><div class="line">		Thread.currentThread().interrupt();</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line">&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-</li>
-</ol>
-<p>2.使用postInvalidate则比较简单，不需要handler，直接在线程中调用postInvalidate即可<br>    <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">GameThread</span> <span class="keyword">implements</span> <span class="title">Runnable</span> </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">		　<span class="keyword">while</span> (!Thread.currentThread()</div><div class="line">				.isInterrupted()) &#123;</div><div class="line">				　　<span class="keyword">try</span> &#123;</div><div class="line">		Thread.sleep(<span class="number">100</span>);</div><div class="line">	&#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</div><div class="line">		Thread.currentThread().interrupt();</div><div class="line">	&#125;</div><div class="line">	<span class="comment">// 使用postInvalidate可以直接在线程中更新界面</span></div><div class="line">	　　　mGameView.postInvalidate();</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>下面我们看一下postInvalidate()的源码:<br>    <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">postInvalidate</span><span class="params">()</span> </span>&#123;</div><div class="line">       postInvalidateDelayed(<span class="number">0</span>);</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">postInvalidateDelayed</span><span class="params">(<span class="keyword">long</span> delayMilliseconds)</span> </span>&#123;</div><div class="line">       <span class="comment">// We try only with the AttachInfo because there's no point in invalidating</span></div><div class="line">       <span class="comment">// if we are not attached to our window</span></div><div class="line">       <span class="keyword">if</span> (mAttachInfo != <span class="keyword">null</span>) &#123;</div><div class="line">           Message msg = Message.obtain();</div><div class="line">           msg.what = AttachInfo.INVALIDATE_MSG;</div><div class="line">           msg.obj = <span class="keyword">this</span>;</div><div class="line">           mAttachInfo.mHandler.sendMessageDelayed(msg, delayMilliseconds);</div><div class="line">       &#125;</div><div class="line">   &#125;</div></pre></td></tr></table></figure></p>
-<p>可以看到,postInvalidate()也是调用了系统的Handler方法;</p>
-<h3 id="整个CustomTextView类代码"><a href="#整个CustomTextView类代码" class="headerlink" title="整个CustomTextView类代码:"></a>整个CustomTextView类代码:</h3><pre><code><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CustomTitleView</span> <span class="keyword">extends</span> <span class="title">View</span> </span>&#123;</div><div class="line"><span class="keyword">private</span> Context mContext;</div><div class="line"><span class="keyword">private</span> String  mTitleText;</div><div class="line"><span class="keyword">private</span> <span class="keyword">int</span>     mTitleColor;</div><div class="line"><span class="keyword">private</span> <span class="keyword">int</span>     mTitleSize;</div><div class="line"><span class="keyword">private</span> Paint   mPaint;</div><div class="line"><span class="keyword">private</span> Rect    mBound;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="title">CustomTitleView</span><span class="params">(Context context)</span> </span>&#123;</div><div class="line">	<span class="keyword">this</span>(context,<span class="keyword">null</span>);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="title">CustomTitleView</span><span class="params">(Context context, AttributeSet attrs)</span> </span>&#123;</div><div class="line">	<span class="keyword">this</span>(context, attrs,<span class="number">0</span>);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="title">CustomTitleView</span><span class="params">(Context context, AttributeSet attrs, <span class="keyword">int</span> defStyleAttr)</span> </span>&#123;</div><div class="line">	<span class="keyword">super</span>(context, attrs, defStyleAttr);</div><div class="line">	<span class="keyword">this</span>.mContext = context;</div><div class="line">	initView(attrs,defStyleAttr);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">initView</span><span class="params">(AttributeSet attrs,<span class="keyword">int</span> defStyleAttr)</span> </span>&#123;</div><div class="line">	TypedArray typedArray = mContext.getTheme()</div><div class="line">			.obtainStyledAttributes(attrs, R.styleable.CustomTitleView, defStyleAttr, <span class="number">0</span>);</div><div class="line">	<span class="keyword">int</span> n = typedArray.getIndexCount();</div><div class="line">	<span class="comment">//TODO 需要删除日志</span></div><div class="line">	Log.d(<span class="string">"50==lo+initView"</span>, n + <span class="string">" &gt;&gt;n--&lt;&lt; "</span>);</div><div class="line"></div><div class="line"></div><div class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; i++) &#123;</div><div class="line">		<span class="keyword">int</span> attr = typedArray.getIndex(i);</div><div class="line">		<span class="keyword">switch</span> (attr) &#123;</div><div class="line">		    <span class="keyword">case</span> R.styleable.CustomTitleView_titleText:</div><div class="line">			    mTitleText = typedArray.getString(i);</div><div class="line">			    <span class="keyword">break</span>;</div><div class="line">			<span class="keyword">case</span> R.styleable.CustomTitleView_titleColor:</div><div class="line">				mTitleColor = typedArray.getColor(i, Color.BLACK);</div><div class="line">				<span class="keyword">break</span>;</div><div class="line">			<span class="keyword">case</span> R.styleable.CustomTitleView_titleSize:</div><div class="line">				mTitleSize = typedArray.getDimensionPixelSize(attr, (<span class="keyword">int</span>) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, <span class="number">16</span>, getResources().getDisplayMetrics()));</div><div class="line">				<span class="keyword">break</span>;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	typedArray.recycle();</div><div class="line">	mPaint = <span class="keyword">new</span> Paint();</div><div class="line">	mPaint.setTextSize(mTitleSize);</div><div class="line">	mBound = <span class="keyword">new</span> Rect();</div><div class="line">	mPaint.getTextBounds(mTitleText, <span class="number">0</span>, mTitleText.length(), mBound);</div><div class="line">	<span class="keyword">this</span>.setOnClickListener(<span class="keyword">new</span> OnClickListener() &#123;</div><div class="line">		<span class="meta">@Override</span></div><div class="line">		<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onClick</span><span class="params">(View v)</span> </span>&#123;</div><div class="line">			mTitleText = createRandomNum();</div><div class="line">			postInvalidate();</div><div class="line">		&#125;</div><div class="line">	&#125;);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">private</span> String <span class="title">createRandomNum</span><span class="params">()</span> </span>&#123;</div><div class="line">	Random random = <span class="keyword">new</span> Random();</div><div class="line">	HashSet&lt;Integer&gt; integers = <span class="keyword">new</span> HashSet&lt;&gt;();</div><div class="line">	<span class="keyword">while</span> (integers.size() &lt; <span class="number">4</span>) &#123;</div><div class="line">		<span class="keyword">int</span> i = random.nextInt(<span class="number">10</span>);</div><div class="line">		integers.add(i);</div><div class="line">	&#125;</div><div class="line">	StringBuffer stringBuffer = <span class="keyword">new</span> StringBuffer();</div><div class="line">	<span class="keyword">for</span> (Integer i : integers) &#123;</div><div class="line">		stringBuffer.append(<span class="string">""</span> + i);</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> stringBuffer.toString();</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="meta">@Override</span></div><div class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onMeasure</span><span class="params">(<span class="keyword">int</span> widthMeasureSpec, <span class="keyword">int</span> heightMeasureSpec)</span> </span>&#123;</div><div class="line">	<span class="keyword">int</span> widthMode = MeasureSpec.getMode(widthMeasureSpec);</div><div class="line">	<span class="keyword">int</span> widtHSize = MeasureSpec.getSize(widthMeasureSpec);</div><div class="line">	<span class="keyword">int</span> heightMode = MeasureSpec.getMode(heightMeasureSpec);</div><div class="line">	<span class="keyword">int</span> heightSize = MeasureSpec.getSize(heightMeasureSpec);</div><div class="line"></div><div class="line">	<span class="keyword">int</span> width;</div><div class="line">	<span class="keyword">int</span> height;</div><div class="line"></div><div class="line">	<span class="keyword">if</span>(widthMode == MeasureSpec.EXACTLY) &#123;</div><div class="line">		width = widtHSize;</div><div class="line">	&#125;<span class="keyword">else</span> &#123;</div><div class="line">		mPaint.setTextSize(mTitleSize);</div><div class="line">		mPaint.getTextBounds(mTitleText, <span class="number">0</span>, mTitleText.length(), mBound);</div><div class="line">		<span class="keyword">float</span> textWidth = mBound.width();</div><div class="line">		<span class="keyword">int</span> desiredWidth = (<span class="keyword">int</span>) (getPaddingLeft() + textWidth + getPaddingRight());</div><div class="line">		width = desiredWidth;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="keyword">if</span>(heightMode == MeasureSpec.EXACTLY) &#123;</div><div class="line">		height = heightSize;</div><div class="line">	&#125;<span class="keyword">else</span> &#123;</div><div class="line">		mPaint.setTextSize(mTitleSize);</div><div class="line">		mPaint.getTextBounds(mTitleText, <span class="number">0</span>, mTitleText.length(), mBound);</div><div class="line">		<span class="keyword">int</span> textHeight = mBound.height();</div><div class="line">		<span class="keyword">int</span> desiredHeight = getPaddingTop() + textHeight + getPaddingBottom();</div><div class="line">		height = desiredHeight;</div><div class="line">	&#125;</div><div class="line">	setMeasuredDimension(width,height);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="meta">@Override</span></div><div class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onDraw</span><span class="params">(Canvas canvas)</span> </span>&#123;</div><div class="line">	<span class="comment">//画出黄色背景框</span></div><div class="line">	mPaint.setColor(Color.YELLOW);</div><div class="line">	canvas.drawRect(<span class="number">0</span>, <span class="number">0</span>, getMeasuredWidth(), getMeasuredHeight(), mPaint);</div><div class="line">	<span class="comment">//设置文字的颜色</span></div><div class="line">	mPaint.setColor(mTitleColor);</div><div class="line">	canvas.drawText(mTitleText,getWidth()/<span class="number">2</span> - mBound.width() /<span class="number">2</span> ,getHeight()/<span class="number">2</span> + mBound.height()/<span class="number">2</span>,</div><div class="line">			mPaint);</div><div class="line"></div><div class="line">&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-</code></pre><h3 id="备注"><a href="#备注" class="headerlink" title="备注"></a>备注</h3><p>关于MeasureSpec的模式类型的一些解释,最简单的映射关系是：</p>
-<ul>
-<li><code>wrap_parent</code> -&gt; <code>MeasureSpec.AT_MOST</code>  </li>
-<li><code>match_parent</code> -&gt; <code>MeasureSpec.EXACTLY</code>  </li>
-<li><code>具体值</code> -&gt; <code>MeasureSpec.EXACTLY</code><br>但是上面代码由于放在<code>RelativeLayout</code> 中，<code>RelativeLayout</code> 是一个比较复杂的 <code>ViewGroup</code>，其中子 view 的大小不仅跟 layout_width、layout_height 属性相关，还更很多属性有关系，所以会改变上述映射情况，使结果变得特别复杂。</li>
-</ul>
-<hr>
-<h3 id="参看文档"><a href="#参看文档" class="headerlink" title="参看文档:"></a>参看文档:</h3><p><a href="http://blog.csdn.net/lmj623565791/article/details/24252901" target="_blank" rel="external">Android 自定义View (一)</a><br><a href="http://blog.csdn.net/a2012s/article/details/21156125" target="_blank" rel="external">Android界面刷新—— invalidate与postInvalidate</a><br><a href="http://blog.csdn.net/a396901990/article/details/36475213?utm_source=tuicool&amp;utm_medium=referral" target="_blank" rel="external"> ANDROID自定义视图——onMeasure，MeasureSpec源码 流程 思路详解</a></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="https://lorensong.github.io/2017/02/28/RxJava/RxJava进阶_RxBus/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1532,8 +343,8 @@ protected void onDraw(Canvas canvas) {
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Original/" itemprop="url" rel="index">
-                    <span itemprop="name">Original</span>
+                  <a href="/categories/Android/" itemprop="url" rel="index">
+                    <span itemprop="name">Android</span>
                   </a>
                 </span>
 
@@ -1543,7 +354,7 @@ protected void onDraw(Canvas canvas) {
                 
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Original/RxJava/" itemprop="url" rel="index">
+                  <a href="/categories/Android/RxJava/" itemprop="url" rel="index">
                     <span itemprop="name">RxJava</span>
                   </a>
                 </span>
@@ -1698,8 +509,8 @@ protected void onDraw(Canvas canvas) {
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Original/" itemprop="url" rel="index">
-                    <span itemprop="name">Original</span>
+                  <a href="/categories/Android/" itemprop="url" rel="index">
+                    <span itemprop="name">Android</span>
                   </a>
                 </span>
 
@@ -1709,7 +520,7 @@ protected void onDraw(Canvas canvas) {
                 
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Original/RxJava/" itemprop="url" rel="index">
+                  <a href="/categories/Android/RxJava/" itemprop="url" rel="index">
                     <span itemprop="name">RxJava</span>
                   </a>
                 </span>
@@ -1802,7 +613,7 @@ protected void onDraw(Canvas canvas) {
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://lorensong.github.io/2017/02/26/版本控制/Git从入门到放弃/">
+    <link itemprop="mainEntityOfPage" href="https://lorensong.github.io/2017/02/26/Tools/Git从入门到放弃/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="lorensong">
@@ -1824,7 +635,7 @@ protected void onDraw(Canvas canvas) {
             
               
                 
-                <a class="post-title-link" href="/2017/02/26/版本控制/Git从入门到放弃/" itemprop="url">
+                <a class="post-title-link" href="/2017/02/26/Tools/Git从入门到放弃/" itemprop="url">
                   Git从入门到放弃
                 </a>
               
@@ -1864,8 +675,8 @@ protected void onDraw(Canvas canvas) {
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Original/" itemprop="url" rel="index">
-                    <span itemprop="name">Original</span>
+                  <a href="/categories/Tools/" itemprop="url" rel="index">
+                    <span itemprop="name">Tools</span>
                   </a>
                 </span>
 
@@ -1875,7 +686,7 @@ protected void onDraw(Canvas canvas) {
                 
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Original/Git/" itemprop="url" rel="index">
+                  <a href="/categories/Tools/Git/" itemprop="url" rel="index">
                     <span itemprop="name">Git</span>
                   </a>
                 </span>
@@ -1892,7 +703,7 @@ protected void onDraw(Canvas canvas) {
 
           
           
-             <span id="/2017/02/26/版本控制/Git从入门到放弃/" class="leancloud_visitors" data-flag-title="Git从入门到放弃">
+             <span id="/2017/02/26/Tools/Git从入门到放弃/" class="leancloud_visitors" data-flag-title="Git从入门到放弃">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -1925,7 +736,7 @@ protected void onDraw(Canvas canvas) {
           <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>Git是一个非常牛叉的版本控制工具,不同于SVN.Git的每台主机都可以充当服务器.</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2017/02/26/版本控制/Git从入门到放弃/#more" rel="contents">
+            <a class="btn" href="/2017/02/26/Tools/Git从入门到放弃/#more" rel="contents">
               Read more &raquo;
             </a>
           </div>
@@ -2030,8 +841,8 @@ protected void onDraw(Canvas canvas) {
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Note/" itemprop="url" rel="index">
-                    <span itemprop="name">Note</span>
+                  <a href="/categories/Android/" itemprop="url" rel="index">
+                    <span itemprop="name">Android</span>
                   </a>
                 </span>
 
@@ -2041,7 +852,7 @@ protected void onDraw(Canvas canvas) {
                 
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Note/RxJava/" itemprop="url" rel="index">
+                  <a href="/categories/Android/RxJava/" itemprop="url" rel="index">
                     <span itemprop="name">RxJava</span>
                   </a>
                 </span>
@@ -2134,7 +945,7 @@ protected void onDraw(Canvas canvas) {
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://lorensong.github.io/2017/02/24/工具/采用Hexo和Gitpage搭建自己的博客/">
+    <link itemprop="mainEntityOfPage" href="https://lorensong.github.io/2017/02/24/Tools/采用Hexo和Gitpage搭建自己的博客/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="lorensong">
@@ -2156,7 +967,7 @@ protected void onDraw(Canvas canvas) {
             
               
                 
-                <a class="post-title-link" href="/2017/02/24/工具/采用Hexo和Gitpage搭建自己的博客/" itemprop="url">
+                <a class="post-title-link" href="/2017/02/24/Tools/采用Hexo和Gitpage搭建自己的博客/" itemprop="url">
                   采用Hexo和Gitpage搭建自己的博客
                 </a>
               
@@ -2196,8 +1007,8 @@ protected void onDraw(Canvas canvas) {
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Note/" itemprop="url" rel="index">
-                    <span itemprop="name">Note</span>
+                  <a href="/categories/Tools/" itemprop="url" rel="index">
+                    <span itemprop="name">Tools</span>
                   </a>
                 </span>
 
@@ -2207,7 +1018,7 @@ protected void onDraw(Canvas canvas) {
                 
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Note/Hexo/" itemprop="url" rel="index">
+                  <a href="/categories/Tools/Hexo/" itemprop="url" rel="index">
                     <span itemprop="name">Hexo</span>
                   </a>
                 </span>
@@ -2224,7 +1035,7 @@ protected void onDraw(Canvas canvas) {
 
           
           
-             <span id="/2017/02/24/工具/采用Hexo和Gitpage搭建自己的博客/" class="leancloud_visitors" data-flag-title="采用Hexo和Gitpage搭建自己的博客">
+             <span id="/2017/02/24/Tools/采用Hexo和Gitpage搭建自己的博客/" class="leancloud_visitors" data-flag-title="采用Hexo和Gitpage搭建自己的博客">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -2310,7 +1121,7 @@ protected void onDraw(Canvas canvas) {
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://lorensong.github.io/2017/02/24/工具/Hexo常用命令/">
+    <link itemprop="mainEntityOfPage" href="https://lorensong.github.io/2017/02/24/Tools/Hexo常用命令/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="lorensong">
@@ -2332,7 +1143,7 @@ protected void onDraw(Canvas canvas) {
             
               
                 
-                <a class="post-title-link" href="/2017/02/24/工具/Hexo常用命令/" itemprop="url">
+                <a class="post-title-link" href="/2017/02/24/Tools/Hexo常用命令/" itemprop="url">
                   Hexo常用命令
                 </a>
               
@@ -2372,8 +1183,8 @@ protected void onDraw(Canvas canvas) {
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Note/" itemprop="url" rel="index">
-                    <span itemprop="name">Note</span>
+                  <a href="/categories/Android/" itemprop="url" rel="index">
+                    <span itemprop="name">Android</span>
                   </a>
                 </span>
 
@@ -2383,7 +1194,7 @@ protected void onDraw(Canvas canvas) {
                 
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Note/Hexo/" itemprop="url" rel="index">
+                  <a href="/categories/Android/Hexo/" itemprop="url" rel="index">
                     <span itemprop="name">Hexo</span>
                   </a>
                 </span>
@@ -2400,7 +1211,7 @@ protected void onDraw(Canvas canvas) {
 
           
           
-             <span id="/2017/02/24/工具/Hexo常用命令/" class="leancloud_visitors" data-flag-title="Hexo常用命令">
+             <span id="/2017/02/24/Tools/Hexo常用命令/" class="leancloud_visitors" data-flag-title="Hexo常用命令">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -2463,11 +1274,312 @@ protected void onDraw(Canvas canvas) {
 
 
     
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://lorensong.github.io/2017/02/21/ListView/RecycleView/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="lorensong">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="lorensong">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/02/21/ListView/RecycleView/" itemprop="url">
+                  RecyclerView
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-21T13:52:07+08:00">
+                2017-02-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index">
+                    <span itemprop="name">Android</span>
+                  </a>
+                </span>
+
+                
+                
+                  , 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/ListView/" itemprop="url" rel="index">
+                    <span itemprop="name">ListView</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2017/02/21/ListView/RecycleView/" class="leancloud_visitors" data-flag-title="RecyclerView">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">Visitors </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h2 id="what"><a href="#what" class="headerlink" title="what?"></a>what?</h2><p>RecyclerView</p>
+<h2 id="why"><a href="#why" class="headerlink" title="why?"></a>why?</h2>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/02/21/ListView/RecycleView/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://lorensong.github.io/2017/02/20/hello-world/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="lorensong">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="lorensong">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/02/20/hello-world/" itemprop="url">
+                  Hello World
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-20T10:03:51+08:00">
+                2017-02-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2017/02/20/hello-world/" class="leancloud_visitors" data-flag-title="Hello World">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">Visitors </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p> src=”//music.163.com/outchain/player?type=2&amp;id=4940920&amp;auto=1&amp;height=66”&gt;</iframe><br>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/02/20/hello-world/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/4/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span>
   </nav>
 
 
@@ -2512,7 +1624,7 @@ protected void onDraw(Canvas canvas) {
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">32</span>
+                <span class="site-state-item-count">28</span>
                 <span class="site-state-item-name">posts</span>
               </a>
             </div>
@@ -2523,7 +1635,7 @@ protected void onDraw(Canvas canvas) {
             
             <div class="site-state-item site-state-categories">
               <a href="/categories/index.html">
-                <span class="site-state-item-count">18</span>
+                <span class="site-state-item-count">16</span>
                 <span class="site-state-item-name">categories</span>
               </a>
             </div>
@@ -2534,7 +1646,7 @@ protected void onDraw(Canvas canvas) {
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">14</span>
+                <span class="site-state-item-count">16</span>
                 <span class="site-state-item-name">tags</span>
               </a>
             </div>

@@ -71,7 +71,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="AndroidStatusBar," />
+  <meta name="keywords" content="Feature - statusbar," />
 
 
 
@@ -87,12 +87,12 @@
 
 
 
-<meta name="description" content="what?">
+<meta name="description" content="简介">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Android状态栏完全解析">
 <meta property="og:url" content="https://lorensong.github.io/2017/03/09/Android系统/AndroidStatusBar/index.html">
 <meta property="og:site_name" content="lorensong">
-<meta property="og:description" content="what?">
+<meta property="og:description" content="简介">
 <meta property="og:image" content="http://img.blog.csdn.net/20160820201433442">
 <meta property="og:image" content="http://img.blog.csdn.net/20160820201645554">
 <meta property="og:image" content="http://img.blog.csdn.net/20160820201922476">
@@ -102,10 +102,10 @@
 <meta property="og:image" content="http://img.blog.csdn.net/20160820202152211">
 <meta property="og:image" content="http://img.blog.csdn.net/20160820202256555">
 <meta property="og:image" content="http://img.blog.csdn.net/20160820202400033">
-<meta property="og:updated_time" content="2017-05-08T02:12:10.850Z">
+<meta property="og:updated_time" content="2017-08-11T04:07:48.715Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Android状态栏完全解析">
-<meta name="twitter:description" content="what?">
+<meta name="twitter:description" content="简介">
 <meta name="twitter:image" content="http://img.blog.csdn.net/20160820201433442">
 
 
@@ -349,8 +349,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Note/" itemprop="url" rel="index">
-                    <span itemprop="name">Note</span>
+                  <a href="/categories/Android/" itemprop="url" rel="index">
+                    <span itemprop="name">Android</span>
                   </a>
                 </span>
 
@@ -360,8 +360,8 @@
                 
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Note/Android/" itemprop="url" rel="index">
-                    <span itemprop="name">Android</span>
+                  <a href="/categories/Android/Feature/" itemprop="url" rel="index">
+                    <span itemprop="name">Feature</span>
                   </a>
                 </span>
 
@@ -406,9 +406,9 @@
       
 
       
-        <h2 id="what"><a href="#what" class="headerlink" title="what?"></a>what?</h2><a id="more"></a>
-<h2 id="why"><a href="#why" class="headerlink" title="why?"></a>why?</h2><h2 id="引入"><a href="#引入" class="headerlink" title="引入"></a>引入</h2><p>Android的状态栏后来不知怎么就称为了沉浸式状态栏,Android官方从来没有给出过沉浸式状态栏这样的命名，只有沉浸式模式（Immersive Mode）这种说法。而有些人在没有完全了解清楚沉浸模式到底是什么东西的情况下，就张冠李戴地认为一些系统提供的状态栏操作就是沉浸式的，并且还起了一个沉浸式状态栏的名字。<br>那么像饿了么的沉浸式状态栏的效果是怎么实现的呢?<br><img src="http://img.blog.csdn.net/20160820201433442" alt="沉浸式状态栏"></p>
-<p>######沉浸式<br>先来分析一下叫错的原因吧，之所以很多人会叫错，是因为根本就不了解沉浸式是什么意思，然后就人云亦云跟着叫了。那么沉浸式到底是什么意思呢？<br>根据百度百科上的定义，沉浸式就是要给用户提供完全沉浸的体验，使用户有一种置身于虚拟世界之中的感觉。</p>
+        <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><a id="more"></a>
+<h2 id="引入"><a href="#引入" class="headerlink" title="引入"></a>引入</h2><p>Android的状态栏后来不知怎么就称为了沉浸式状态栏,Android官方从来没有给出过沉浸式状态栏这样的命名，只有沉浸式模式（Immersive Mode）这种说法。而有些人在没有完全了解清楚沉浸模式到底是什么东西的情况下，就张冠李戴地认为一些系统提供的状态栏操作就是沉浸式的，并且还起了一个沉浸式状态栏的名字。<br>那么像饿了么的沉浸式状态栏的效果是怎么实现的呢?<br><img src="http://img.blog.csdn.net/20160820201433442" alt="沉浸式状态栏"></p>
+<h6 id="沉浸式"><a href="#沉浸式" class="headerlink" title="沉浸式"></a>沉浸式</h6><p>先来分析一下叫错的原因吧，之所以很多人会叫错，是因为根本就不了解沉浸式是什么意思，然后就人云亦云跟着叫了。那么沉浸式到底是什么意思呢？<br>根据百度百科上的定义，沉浸式就是要给用户提供完全沉浸的体验，使用户有一种置身于虚拟世界之中的感觉。</p>
 <p>那么对应到Android操作系统上面，怎样才算是沉浸式体验呢？这个可能在大多数情况下都是用不到的，不过在玩游戏或者看电影的时候就非常重要了。因为游戏或者影视类的应用都希望能让用户完全沉浸在其中，享受它们提供的娱乐内容，但如果这个时候在屏幕的上方还显示一个系统状态栏的话，可能就会让用户分分钟产生跳戏的感觉。<br>那么我们来看一下比较好的游戏都是怎么实现的，比如说海岛奇兵：<br><img src="http://img.blog.csdn.net/20160820201645554" alt="沉浸式具体体现"><br>海岛奇兵的这种模式就是典型的沉浸式模式，它的整个屏幕中显示都是游戏的内容，没有状态栏也没有导航栏，用户玩游戏的时候就可以完全沉浸在游戏当中，而不会被一些系统的界面元素所打扰。<br>然后我们再来看一下爱奇艺的实现：<br><img src="http://img.blog.csdn.net/20160820201922476" alt="爱奇艺的实现"><br>同样也是类似的，爱奇艺将整个屏幕作为影视的展示区，用户在看电影的时候眼中就只会有电影的内容，这样就不会被其他一些无关的东西所分心。这才是沉浸式模式的真正含义.<br>不过虽然听上去好像是很高大上的沉浸式效果，实际看上去貌似就是将内容全屏化了而已嘛。没错，Android沉浸式模式的本质就是全屏化，不过我们今天的内容并不仅限于此，因为还要实现饿了么那样的状态栏效果。那么下面我们就开始来一步步学习吧。<br><img src="http://img.blog.csdn.net/20160820205313182" alt="Android界面介绍"><br>而我们的沉浸式就是,隐藏状态栏,ActionBar,导航栏等,而打造沉浸式模式的用户体验，就是要将这些系统元素全部隐藏，只留下主体内容部分.</p>
 <pre><code>&lt;RelativeLayout
 xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
@@ -420,24 +420,14 @@ android:layout_height=&quot;match_parent&quot;&gt;
     android:src=&quot;@drawable/bg&quot;
     android:scaleType=&quot;centerCrop&quot; /&gt;
 </code></pre><p></p>
-<p>在我们程序上运行起来就是这样:<br><img src="http://img.blog.csdn.net/20160820202054200" alt="直接就是一张背景图"><br>但是,在这里的图片,我们并没有将状态栏和导航栏变成透明色和隐藏标题栏;<br>那我们下一步来进行,<strong>注意:</strong>Android的系统在4.1系统之下的的沉浸式状态栏完全不一样,下面我我们就是笔者统计时的Android市场的占有率:<br><img src="http://img2.tuicool.com/7fI773A.jpg!web" alt="Android市场占有率"><br>考虑到4.1版本一下的市场份额小,所以这里只做4.1以上的沉浸式状态栏:</p>
-<pre><code>View decorView = getWindow().getDecorView();//当前界面的DecorView
-    int option = View.SYSTEM_UI_FLAG_FULLSCREEN;//全屏的意思，也就是会将状态栏隐藏
-    decorView.setSystemUiVisibility(option);//来设置系统UI元素的可见性
-    ActionBar supportActionBar = getSupportActionBar();
-    supportActionBar.hide();
-</code></pre><p>根据Android的设计建议，ActionBar是不应该独立于状态栏而单独显示的，因此状态栏如果隐藏了，我们同时也需要调用ActionBar的hide()方法将ActionBar也进行隐藏。<br><img src="http://img.blog.csdn.net/20160820202152211" alt="设置全屏和隐藏ActionBar的结果"></p>
-<p>这样看上去就有点沉浸式效果的模样了。<br>虽说这才是正统的沉浸式含义，但有些朋友可能想实现的就是饿了么那样的状态栏效果，而不是直接把整个系统状态栏给隐藏掉，那么又该如何实现呢？<br>其实也很简单，只需要借助另外一种UI Flag就可以了，如下所示：</p>
-<pre><code>if(Build.VERSION.SDK_INT &gt;= 21) {//Android5.0以上设置透明状态栏;
-        View decorView = getWindow().getDecorView();
-        int i = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
-        decorView.setSystemUiVisibility(i);
-        getWindow().setStatusBarColor(Color.TRANSPARENT);
-    }
-    ActionBar supportActionBar = getSupportActionBar();
-    supportActionBar.hide();
-</code></pre><p>饿了么这样的效果是只有5.0及以上系统才支持，接下来我们使用了SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN和SYSTEM_UI_FLAG_LAYOUT_STABLE，注意两个Flag必须要结合在一起使用，表示会让应用的主体内容占用系统状态栏的空间，最后再调用Window的setStatusBarColor()方法将状态栏设置成透明色就可以了。<br>现在重新运行一下代码，效果如下图所示。<br><img src="http://img.blog.csdn.net/20160820202256555" alt="透明状态栏实现"><br>可以看到，类似于饿了么的状态栏效果就成功实现了。</p>
-<p>######隐藏导航栏<br>现在我们已经成功实现隐藏状态栏的效果了，不过屏幕下方的导航栏还比较刺眼，接下来我们就学习一下如何将导航栏也进行隐藏。<br>其实实现的原理都是一样的，隐藏导航栏也就是使用了不同的UI Flag而已，修改MainActivity中的代码，如下所示：</p>
+<p>在我们程序上运行起来就是这样:</p>
+<p><img src="http://img.blog.csdn.net/20160820202054200" alt="直接就是一张背景图"><br>但是,在这里的图片,我们并没有将状态栏和导航栏变成透明色和隐藏标题栏;<br>那我们下一步来进行,<strong>注意:</strong>Android的系统在4.1系统之下的的沉浸式状态栏完全不一样,下面我我们就是笔者统计时的Android市场的占有率:<br><img src="http://img2.tuicool.com/7fI773A.jpg!web" alt="Android市场占有率"><br>考虑到4.1版本一下的市场份额小,所以这里只做4.1以上的沉浸式状态栏:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">  View decorView = getWindow().getDecorView();<span class="comment">//当前界面的DecorView</span></div><div class="line"><span class="keyword">int</span> option = View.SYSTEM_UI_FLAG_FULLSCREEN;<span class="comment">//全屏的意思，也就是会将状态栏隐藏</span></div><div class="line">decorView.setSystemUiVisibility(option);<span class="comment">//来设置系统UI元素的可见性</span></div><div class="line">ActionBar supportActionBar = getSupportActionBar();</div><div class="line">supportActionBar.hide();</div></pre></td></tr></table></figure></p>
+<p>根据Android的设计建议，ActionBar是不应该独立于状态栏而单独显示的，因此状态栏如果隐藏了，我们同时也需要调用ActionBar的hide()方法将ActionBar也进行隐藏。</p>
+<p><img src="http://img.blog.csdn.net/20160820202152211" alt="设置全屏和隐藏ActionBar的结果"></p>
+<p>这样看上去就有点沉浸式效果的模样了。<br>虽说这才是正统的沉浸式含义，但有些朋友可能想实现的就是饿了么那样的状态栏效果，而不是直接把整个系统状态栏给隐藏掉，那么又该如何实现呢？<br>其实也很简单，只需要借助另外一种UI Flag就可以了，如下所示：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">  <span class="keyword">if</span>(Build.VERSION.SDK_INT &gt;= <span class="number">21</span>) &#123;<span class="comment">//Android5.0以上设置透明状态栏;</span></div><div class="line">	View decorView = getWindow().getDecorView();</div><div class="line">	<span class="keyword">int</span> i = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE;</div><div class="line">	decorView.setSystemUiVisibility(i);</div><div class="line">	getWindow().setStatusBarColor(Color.TRANSPARENT);</div><div class="line">&#125;</div><div class="line">ActionBar supportActionBar = getSupportActionBar();</div><div class="line">supportActionBar.hide();</div></pre></td></tr></table></figure></p>
+<p>饿了么这样的效果是只有5.0及以上系统才支持，接下来我们使用了<br><code>SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN和SYSTEM_UI_FLAG_LAYOUT_STABLE</code>，注意两个Flag必须要结合在一起使用，表示会让应用的主体内容占用系统状态栏的空间，最后再调用Window的setStatusBarColor()方法将状态栏设置成透明色就可以了。<br>现在重新运行一下代码，效果如下图所示。<br><img src="http://img.blog.csdn.net/20160820202256555" alt="透明状态栏实现"></p>
+<p>可以看到，类似于饿了么的状态栏效果就成功实现了。</p>
+<h6 id="隐藏导航栏"><a href="#隐藏导航栏" class="headerlink" title="隐藏导航栏"></a>隐藏导航栏</h6><p>现在我们已经成功实现隐藏状态栏的效果了，不过屏幕下方的导航栏还比较刺眼，接下来我们就学习一下如何将导航栏也进行隐藏。<br>其实实现的原理都是一样的，隐藏导航栏也就是使用了不同的UI Flag而已，修改MainActivity中的代码，如下所示：</p>
 <pre><code>View decorView = getWindow().getDecorView();
     int option = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
             | View.SYSTEM_UI_FLAG_FULLSCREEN;
@@ -469,7 +459,7 @@ android:layout_height=&quot;match_parent&quot;&gt;
       
         <div class="post-tags">
           
-            <a href="/tags/AndroidStatusBar/" rel="tag"># AndroidStatusBar</a>
+            <a href="/tags/Feature-statusbar/" rel="tag"># Feature - statusbar</a>
           
         </div>
       
@@ -482,8 +472,8 @@ android:layout_height=&quot;match_parent&quot;&gt;
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/03/09/greendao/greendao/" rel="next" title="数据库_Greendao">
-                <i class="fa fa-chevron-left"></i> 数据库_Greendao
+              <a href="/2017/03/09/Android自定义View/自定义View入门_理论/" rel="next" title="自定义View入门理论篇">
+                <i class="fa fa-chevron-left"></i> 自定义View入门理论篇
               </a>
             
           </div>
@@ -566,7 +556,7 @@ android:layout_height=&quot;match_parent&quot;&gt;
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">32</span>
+                <span class="site-state-item-count">28</span>
                 <span class="site-state-item-name">posts</span>
               </a>
             </div>
@@ -577,7 +567,7 @@ android:layout_height=&quot;match_parent&quot;&gt;
             
             <div class="site-state-item site-state-categories">
               <a href="/categories/index.html">
-                <span class="site-state-item-count">18</span>
+                <span class="site-state-item-count">16</span>
                 <span class="site-state-item-name">categories</span>
               </a>
             </div>
@@ -588,7 +578,7 @@ android:layout_height=&quot;match_parent&quot;&gt;
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">14</span>
+                <span class="site-state-item-count">16</span>
                 <span class="site-state-item-name">tags</span>
               </a>
             </div>
@@ -624,7 +614,7 @@ android:layout_height=&quot;match_parent&quot;&gt;
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#what"><span class="nav-number">1.</span> <span class="nav-text">what?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#why"><span class="nav-number">2.</span> <span class="nav-text">why?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#引入"><span class="nav-number">3.</span> <span class="nav-text">引入</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#简介"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#引入"><span class="nav-number">2.</span> <span class="nav-text">引入</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#沉浸式"><span class="nav-number">2.0.0.0.1.</span> <span class="nav-text">沉浸式</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#隐藏导航栏"><span class="nav-number">2.0.0.0.2.</span> <span class="nav-text">隐藏导航栏</span></a></li></ol></li></ol></li></ol></li></ol></li></ol></div>
             
 
           </div>
